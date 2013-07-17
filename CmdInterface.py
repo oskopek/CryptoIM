@@ -1,14 +1,30 @@
 import cmd, sys, string, os, readline
+import logging
+import getpass
+from optparse import OptionParser
+
+import sleekxmpp
+
+# Python versions before 3.0 do not use UTF-8 encoding
+# by default. To ensure that Unicode is handled properly
+# throughout SleekXMPP, we will set the default encoding
+# ourselves to UTF-8.
+if sys.version_info < (3, 0):
+    from sleekxmpp.util.misc_ops import setdefaultencoding
+    setdefaultencoding('utf8')
+else:
+    raw_input = input
 
 class CmdInterface(cmd.Cmd): 
 
     def __init__(self):
         cmd.Cmd.__init__(self)
-        self.prompt = "=>> "
-        self.intro  = "Welcome to console!"  ## defaults to None
+        self.prompt = "> "
+        self.intro  = "\nWelcome to CryptoIM!\n"  ## defaults to None
+
 
     ## Command definitions ##
-    def do_hist(self, args):
+    def do_history(self, args):
         """Print a list of commands that have been entered"""
         print self._hist
 
