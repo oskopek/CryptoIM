@@ -1,6 +1,4 @@
 import cmd, sys, string, os
-<<<<<<< HEAD
-=======
 import logging
 import getpass
 from optparse import OptionParser
@@ -16,7 +14,6 @@ if sys.version_info < (3, 0):
     setdefaultencoding('utf8')
 else:
     raw_input = input
->>>>>>> 71a9731e8bc28fa6bc4dea3e1567ca42612e0784
 
 class CmdInterface(cmd.Cmd): 
 
