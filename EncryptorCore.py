@@ -127,12 +127,8 @@ while q == 1: # Infinite loop for infinite messages
             Right[15] = "0"+Right[15]
         if len(Left[15])%2 != 0:
             Left[15] = "0"+Right[15]
-
         #Corrects lengths of Feistel outputs
-        Right[15] = Right[15].decode("hex")
-        Left[15] = Left[15].decode("hex")
 
-        #Encodes them into plaintext
         key = str(key)
         key = int(key,2)
         key = hex(key).rstrip("L").lstrip("0x")
