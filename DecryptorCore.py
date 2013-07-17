@@ -21,6 +21,7 @@ def makeroundkey (key1,key2,strings):
             RoundKeys.append(key2^strings[i])
     #Sorts RoundKeys in right order
     return RoundKeys
+    #Returns list of RoundKeys(16 RoundKeys)
 
 Pk = int(raw_input("Insert your private cipher key: ")) #Privatekey
 while Pk <(10000000):
@@ -36,30 +37,17 @@ q = 1
 while q == 1:
     messages = []
     keys = []
-    inp = input("Message to decrypt: ")
-    for i in range (len(inp)):
+    nope = input("Message to decrypt: ")
+    Inp = nope.split(',')
+    print Inp
+       
+    for i in range (len(Inp)):
         if i%2 == 0:
-            messages.append(inp[i])
+            messages.append(Inp[i])
         else:
-            keys.append(inp[i])
+            keys.append(Inp[i])
+    print messages
+    print keys
     #Sorts out messages from keys
-
-    for i in range (len(keys)):
-        keys[i] = keys[i].decode("hex")
-        keys[i] = int(keys[i],16)
-        K = Pk^keys[i]        
-        print K
-
-        k1 = ""
-        k2 = ""
-        K = bin(K)
-        K = K.lstrip("0b")
-        while len(K)<64:
-            K="0"+K
-        #Corrects Lengths
-        for i in range (32):
-            k1 = k1 + K[i]
-            k2 = k2 + K[32+i]
-        #Splits K into k1 and k2
-        
+    
     
