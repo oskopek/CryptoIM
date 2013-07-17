@@ -61,7 +61,6 @@ while q == 1: # Infinite loop for infinite messages
         break
     
 
-
     messages = messagedivide(M)
     while len(messages[-1]) < 8:
         messages[-1] = messages[-1] + " "
@@ -102,7 +101,6 @@ while q == 1: # Infinite loop for infinite messages
         Right = []
         Left = []
         #Creats lists for Feistel        
-        
 
         for x in range (16):
             if x == 0:
@@ -119,18 +117,22 @@ while q == 1: # Infinite loop for infinite messages
        
         Right[15] = hex(Right[15])
         Left [15] = hex(Left[15])
-
         #Converts outputs of Feistel into hex values
+
         Right[15] = Right[15].rstrip("L").lstrip("0x")
         Left[15] = Left[15].rstrip("L").lstrip("0x")
 
         #Formating of hexadecimal values
-        while len(Right[15])<16:
+        if len(Right[15])%2 != 0:
             Right[15] = "0"+Right[15]
-        while len(Left[15])<16:
-            Left[15] = "0"+Left[15]
-        #Corrects lengths of Feistel outputs
+        if len(Left[15])%2 != 0:
+            Left[15] = "0"+Right[15]
 
+        #Corrects lengths of Feistel outputs
+        Right[15] = Right[15].decode("hex")
+        Left[15] = Left[15].decode("hex")
+
+        #Encodes them into plaintext
         key = str(key)
         key = int(key,2)
         key = hex(key).rstrip("L").lstrip("0x")

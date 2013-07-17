@@ -38,6 +38,9 @@ while q == 1: #Infinite loop
     messages = []
     keys = []
     nope = input("Message to decrypt: ")
+    if nope == "*Kubinova*":
+        print "Satan"
+    #EasterEgg1
     Inp = nope.split(',')
     #Converts string to array
        
@@ -70,20 +73,43 @@ while q == 1: #Infinite loop
         #Resets default value of RS
 
         RoundKeys = makeroundkey(k1,k2,RoundStrings)
-        messages[w] = messages[w].encode("hex")
+        #messages[w] = messages[w].encode("hex")
         #Converts every message back to hex value
 
+        for i in range (16):
+            RoundKeys[i] = int(bin(RoundKeys[i]),2)
+        #Right format for RoundKeys
         while len(messages[w]) != 32:
             messages[w] = "0"+messages[w]
         #Corrects lengths in hex
-
+            
+        Output = []
         Right = []
         Left = []
         # Sets lists for Feistel
 
         for x in range (16):
             if x == 0:
-                Kubinova = messages[w]
+                Kubinova = int(messages[w][:16],16)
+                Right.append(Kubinova)
+                Satan = int(messages[w][16:],16)
+                Left.append(Satan)
+            else:
+                Right.append(Left[x-1])
+                Left.append(Right[x-1]^(Left[x-1]^RoundKeys[x-1]))
+        #16 Round Feistel Network (16RFN)
+
+        Right[15] = hex(Right[15])
+        Left[15] = hex(Left[15])
+        Right[15] = Right[15].lstrip("0x").rstrip("L")
+        Left[15] = Left[15].lstrip("0x").rstrip("L")
+
+        print Right[15]
+        print Left[15]
+        
+                
+                
+                
             
         
         
