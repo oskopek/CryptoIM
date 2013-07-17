@@ -119,19 +119,22 @@ while q == 1: # Infinite loop for infinite messages
        
         Right[15] = hex(Right[15])
         Left [15] = hex(Left[15])
+
         #Converts outputs of Feistel into hex values
         Right[15] = Right[15].rstrip("L").lstrip("0x")
         Left[15] = Left[15].rstrip("L").lstrip("0x")
+
         #Formating of hexadecimal values
         if len(Right[15])%2 != 0:
             Right[15] = "0"+Right[15]
         if len(Left[15])%2 != 0:
             Left[15] = "0"+Right[15]
+
         #Corrects lengths of Feistel outputs
         Right[15] = Right[15].decode("hex")
         Left[15] = Left[15].decode("hex")
-        #Encodes them into plaintext
 
+        #Encodes them into plaintext
         key = str(key)
         key = int(key,2)
         key = hex(key).rstrip("L").lstrip("0x")
@@ -142,7 +145,8 @@ while q == 1: # Infinite loop for infinite messages
         Output.append(Left[15]+Right[15])
         Output.append(key)
     Output = ",".join(Output)
-    
+    print Output
+    #Output of ciphertext
     
 
     

@@ -80,6 +80,11 @@ while q == 1: #Infinite loop
         Right = []
         Left = []
         # Sets lists for Feistel
+
+        for x in range (16):
+            if x == 0:
+                Kubinova = messages[w]
+            
         
         
                 
