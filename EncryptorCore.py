@@ -113,7 +113,7 @@ while q == 1: # Infinite loop for infinite messages
                 #Corrects format for xoring and sets input values
             else:
                 Left.append(Right[x-1])
-                Right.append(((RoundKeys[x]^Left[x])^Left[x-1]))
+                Right.append(((RoundKeys[x-1]^Left[x])^Left[x-1]))
                 #Does 16 rounds of Feistel network
 
        
@@ -125,16 +125,12 @@ while q == 1: # Infinite loop for infinite messages
         Left[15] = Left[15].rstrip("L").lstrip("0x")
 
         #Formating of hexadecimal values
-        if len(Right[15])%2 != 0:
+        while len(Right[15])<16:
             Right[15] = "0"+Right[15]
-        if len(Left[15])%2 != 0:
-            Left[15] = "0"+Right[15]
-
+        while len(Left[15])<16:
+            Left[15] = "0"+Left[15]
         #Corrects lengths of Feistel outputs
-        Right[15] = Right[15].decode("hex")
-        Left[15] = Left[15].decode("hex")
 
-        #Encodes them into plaintext
         key = str(key)
         key = int(key,2)
         key = hex(key).rstrip("L").lstrip("0x")
