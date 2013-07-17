@@ -6,7 +6,7 @@ def makeroundkey (key1,key2,strings):
 
     key1 = int(key1,2)
     key2 = int(key2,2)
-    #Formats key values into hex with proper length
+    #Formats key values into int with proper length
 
     for i in range(16):
         strings[i] = int(strings[i].encode("hex"),16)
@@ -34,20 +34,57 @@ Pk = int(Pk,2)
 
 
 q = 1
-while q == 1:
+while q == 1: #Infinite loop
     messages = []
     keys = []
     nope = input("Message to decrypt: ")
     Inp = nope.split(',')
-    print Inp
+    #Converts string to array
        
     for i in range (len(Inp)):
         if i%2 == 0:
             messages.append(Inp[i])
         else:
             keys.append(Inp[i])
-    print messages
-    print keys
     #Sorts out messages from keys
-    
+
+    for w in range (len(keys)):
+        keys[w] = keys[w].encode("hex")
+        keys[w] = int(keys[w],16)
+        K = Pk^keys[w]        
+        k1 = ""
+        k2 = ""
+        K = bin(K)
+        K = K.lstrip("0b")
+        while len(K)<64:
+            K="0"+K
+        #Corrects Lengths
+        for i in range (32):
+            k1 = k1 + K[i]
+            k2 = k2 + K[32+i]
+        #Splits K into k1 and k2
+
+        RoundStrings = ["aeiouywg","chjmnbtr","loqd4850","zukhq4mn","uqwrifs2",
+        "ctelmrdz","afjajc23","is2xafw8","svgw8e2r","hv2j39fs","jkdsg3e/","svls;wa4",
+        "asfh29ce", "ajv29fsa", "ajf983fc", "xiw20dfs"]
+        #Resets default value of RS
+
+        RoundKeys = makeroundkey(k1,k2,RoundStrings)
+        messages[w] = messages[w].encode("hex")
+        #Converts every message back to hex value
+
+        while len(messages[w]) != 32:
+            messages[w] = "0"+messages[w]
+        #Corrects lengths in hex
+
+        Right = []
+        Left = []
+        # Sets lists for Feistel
+        
+        
+                
+            
+        
+
+        
     

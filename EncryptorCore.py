@@ -68,7 +68,6 @@ while q == 1: # Infinite loop for infinite messages
     #corrects lengths
     Output = []
     #prepares list for final output
-    Final_Output = ""
 
     for w in range(len(messages)):
 

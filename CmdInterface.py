@@ -1,4 +1,4 @@
-import cmd, sys, string, os, readline
+import cmd, sys, string, os
 
 class CmdInterface(cmd.Cmd): 
 
