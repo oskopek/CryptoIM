@@ -1,4 +1,5 @@
 import random
+#Written by mators
 
 def generaterandom (n):
     r = ""
@@ -89,7 +90,10 @@ while q == 1: # Infinite loop for infinite messages
         K = K.lstrip("0b")
         while len(K)<64:
             K="0"+K
-        for i in range (32):
+	
+	print K
+        
+	for i in range (32):
             k1 = k1 + K[i]
             k2 = k2 + K[32+i]
         #Splits K into k1 + k2
