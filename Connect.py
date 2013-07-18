@@ -47,6 +47,8 @@ class Connect(cmd.Cmd):
 
 		opts, args = optp.parse_args()
 
+		opts.loglevel = logging.ERROR
+
 		# Setup logging.
 		logging.basicConfig(level=opts.loglevel,
 						format='%(levelname)-8s %(message)s')
@@ -55,6 +57,9 @@ class Connect(cmd.Cmd):
 			opts.jid = raw_input("Username: ")
 		if opts.password is None:
 			opts.password = getpass.getpass("Password: ")
+
+		print("")
+		print("."),
 
 		# Setup the XMPPClient and register plugins. Note that while plugins may
 		# have interdependencies, the order in which you register them does
@@ -65,7 +70,7 @@ class Connect(cmd.Cmd):
 		xmpp.register_plugin('xep_0004') # Data Forms
 		xmpp.register_plugin('xep_0060') # PubSub
 		xmpp.register_plugin('xep_0199') # XMPP Ping
-
+		print("."),
 
 		# Connect to the XMPP server and start processing XMPP stanzas.
 		if xmpp.connect():
@@ -76,10 +81,11 @@ class Connect(cmd.Cmd):
 		#
 		# if xmpp.connect(('talk.google.com', 5222)):
 		#     ...
+			print("."),
 			xmpp.process(block=False)
-			print("Done")
+			print("\nDone")
 		else:
-			print("Unable to connect.")
+			print("\nUnable to connect.")
 
 
 	## Command definitions ##
