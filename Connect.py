@@ -102,6 +102,11 @@ class Connect(cmd.Cmd):
 		global xmpp
 		xmpp.sendmessage(client, message)
 
+	def do_buddylist(self, args):
+		"""Get the buddy list"""
+		global xmpp
+		print xmpp.getbuddylist()
+
 	def message(self, msg):
 		print msg['from'], msg['body']
 

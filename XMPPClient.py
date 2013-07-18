@@ -92,3 +92,6 @@ class XMPPClient(sleekxmpp.ClientXMPP):
 
 	def sendmessage(self, client, message):
 		self.send_message(mto=client, mbody=message, mtype='chat')
+
+	def getbuddylist(self):
+		return self.get_roster()
