@@ -1,4 +1,5 @@
 def encrypt (private_key,message):
+    import random
     def generaterandom (n):
         r = ""
         rnd = random.SystemRandom()
@@ -83,13 +84,20 @@ def encrypt (private_key,message):
             
         Right = []
         Left = []
-        #Creats lists for Feistel        
+        #Creats lists for Feistel
 
         for x in range (17):
             if x == 0:
-                Hello = (messages[w][4:]).encode("hex")
+                Hello = messages[w][4:]
+                Hello = Hello.encode("hex")
+                while len(Hello) < 8:
+                    Hello = "0"+Hello
                 Right.append(int(Hello,16))
-                Kitty = (messages[w][:4]).encode("hex")
+
+                Kitty = messages[w][:4]
+                Kitty = Kitty.encode("hex")
+                while len(Kitty) <8:
+                    Kitty = "0"+Kitty                    
                 Left.append(int(Kitty,16))
                 #Corrects format for xoring and sets input values
             else:
@@ -97,18 +105,20 @@ def encrypt (private_key,message):
                 Right.append(((RoundKeys[x-1]^Left[x])^Left[x-1]))
                 #Does 16 rounds of Feistel network
 
-        Right[15] = hex(Right[15])
-        Left [15] = hex(Left[15])
+        Right[16] = hex(Right[16])
+        Left [16] = hex(Left[16])
         #Converts outputs of Feistel into hex values
+        print Left
+        print Right
 
-        Right[15] = Right[15].rstrip("L").lstrip("0x")
-        Left[15] = Left[15].rstrip("L").lstrip("0x")
+        Right[16] = Right[16].rstrip("L").lstrip("0x")
+        Left[16] = Left[16].rstrip("L").lstrip("0x")
 
         #Formating of hexadecimal values
-        while len(Right[15])<8:
-            Right[15] = "0"+Right[15]
-        while len(Left[15])<8:
-            Left[15] = "0"+Right[15]
+        while len(Right[16])<8:
+            Right[16] = "0"+Right[16]
+        while len(Left[16])<8:
+            Left[16] = "0"+Right[16]
         #Corrects lengths of Feistel outputs
 
         key = str(key)
@@ -117,7 +127,7 @@ def encrypt (private_key,message):
         while len(key)<16:
             key = "0"+key
         
-        Output.append(Left[15]+Right[15])
+        Output.append(Left[16]+Right[16])
         Output.append(key)
     Output = ",".join(Output)
     return Output
