@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-    SleekXMPP: The Sleek XMPP Library
-    Copyright (C) 2010  Nathanael C. Fritz
-    This file is part of SleekXMPP.
+	SleekXMPP: The Sleek XMPP Library
+	Copyright (C) 2010  Nathanael C. Fritz
+	This file is part of SleekXMPP.
 
-    See the file LICENSE for copying permission.
+	See the file LICENSE for copying permission.
 """
 
 import sys
@@ -21,63 +21,74 @@ import sleekxmpp
 # throughout SleekXMPP, we will set the default encoding
 # ourselves to UTF-8.
 if sys.version_info < (3, 0):
-    from sleekxmpp.util.misc_ops import setdefaultencoding
-    setdefaultencoding('utf8')
+	from sleekxmpp.util.misc_ops import setdefaultencoding
+	setdefaultencoding('utf8')
 else:
-    raw_input = input
+	raw_input = input
 
 
 class XMPPClient(sleekxmpp.ClientXMPP):
 
-    """
-    A simple SleekXMPP bot that will echo messages it
-    receives, along with a short thank you message.
-    """
+	"""
+	A simple SleekXMPP bot that will echo messages it
+	receives, along with a short thank you message.
+	"""
 
-    def __init__(self, jid, password):
-        sleekxmpp.ClientXMPP.__init__(self, jid, password)
+	def __init__(self, jid, password, CLI):
+		sleekxmpp.ClientXMPP.__init__(self, jid, password)
 
-        # The session_start event will be triggered when
-        # the bot establishes its connection with the server
-        # and the XML streams are ready for use. We want to
-        # listen for this event so that we we can initialize
-        # our roster.
-        self.add_event_handler("session_start", self.start)
+		# The session_start event will be triggered when
+		# the bot establishes its connection with the server
+		# and the XML streams are ready for use. We want to
+		# listen for this event so that we we can initialize
+		# our roster.
+		self.add_event_handler("session_start", self.start)
 
-        # The message event is triggered whenever a message
-        # stanza is received. Be aware that that includes
-        # MUC messages and error messages.
-        self.add_event_handler("message", self.message)
+		# The message event is triggered whenever a message
+		# stanza is received. Be aware that that includes
+		# MUC messages and error messages.
+		self.add_event_handler("message", self.message)
 
-    def start(self, event):
-        """
-        Process the session_start event.
+		global CMD
+		CMD = CLI
 
-        Typical actions for the session_start event are
-        requesting the roster and broadcasting an initial
-        presence stanza.
+	def start(self, event):
+		"""
+		Process the session_start event.
 
-        Arguments:
-            event -- An empty dictionary. The session_start
-                     event does not provide any additional
-                     data.
-        """
-        self.send_presence()
-        self.get_roster()
+		Typical actions for the session_start event are
+		requesting the roster and broadcasting an initial
+		presence stanza.
 
-    def message(self, msg):
-        """
-        Process incoming message stanzas. Be aware that this also
-        includes MUC messages and error messages. It is usually
-        a good idea to check the messages's type before processing
-        or sending replies.
+		Arguments:
+			event -- An empty dictionary. The session_start
+					event does not provide any additional
+					data.
+		"""
+		self.send_presence()
+		self.get_roster()
 
-        Arguments:
-            msg -- The received message stanza. See the documentation
-                   for stanza objects and the Message stanza to see
-                   how it may be used.
-        """
-        if msg['type'] in ('chat', 'normal'):
-            msg.reply("Thanks for sending\n%(body)s" % msg).send()
-            
-class XMPPConsole(cmd.Cmd)
+	def message(self, msg):
+		"""
+		Process incoming message stanzas. Be aware that this also
+		includes MUC messages and error messages. It is usually
+		a good idea to check the messages's type before processing
+		or sending replies.
+
+		Arguments:
+			msg -- The received message stanza. See the documentation
+				for stanza objects and the Message stanza to see
+				how it may be used.
+		"""
+
+		#if msg['type'] in ('chat', 'normal'):
+		#    msg.reply("Thanks for sending\n%(body)s" % msg).send()
+
+		global CMD
+		CMD.message(msg)
+
+	def quit_disconnect(self):
+		self.disconnect(wait=True)
+
+	def sendmessage(self, client, message):
+		self.send_message(mto=client, mbody=message, mtype='chat')
