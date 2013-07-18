@@ -41,7 +41,7 @@ class Connect(cmd.Cmd):
     	optp.add_option("-p", "--password", dest="password",
                     help="password to use")
 
-    	opts, args = optp.parse_args()
+    	opts, args = optp.parse_args(args)
 
     	# Setup logging.
     	logging.basicConfig(level=opts.loglevel,
@@ -95,9 +95,9 @@ class Connect(cmd.Cmd):
         """Pass command to a system shell when line begins with '!'"""
         os.system(args)
         
-    def do_connect(self, args):
+    def do_disconnect(self, args):
     	"""
-    	TODO HELP ON CONNECT
+    	TODO HELP ON DISCONNECT
     	"""
     	
     	
