@@ -45,7 +45,7 @@ class CmdInterface(cmd.Cmd):
 
 	def do_connect(self, args):
 		"""
-		TODO HELP ON CONNECT
+		Connect to server
 		"""
 		connect = Connect(args)
 		connect.cmdloop()

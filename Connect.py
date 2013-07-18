@@ -89,13 +89,14 @@ class Connect(cmd.Cmd):
 
 	def do_disconnect(self, args):
 		"""
-		TODO HELP ON DISCONNECT
+		Disconnect from server
 		"""
 		global xmpp
 		xmpp.quit_disconnect()
 		return -1
 
 	def do_message(self, args):
+		"""Send a message to a client - use full jabber id"""
 		client = raw_input("Client: ")
 		message = raw_input("Message: ")
 		global xmpp
