@@ -1,67 +1,50 @@
-import random
+def encrypt (private_key,message):
+    import random
+    def generaterandom (n):
+        r = ""
+        rnd = random.SystemRandom()
+        for i in range(n):
+            f = rnd.random()
+            if f >= 0.5:
+                r = r + "1"
+            else:
+                r = r + "0"
+        return r
+    # Generates random string of length n
 
-def generaterandom (n):
-    r = ""
-    rnd = random.SystemRandom()
-    for i in range(n):
-        f = rnd.random()
-        if f >= 0.5:
-            r = r + "1"
-        else:
-            r = r + "0"
-    return r
-# Generates random string of length n
+    def makeroundkey (key1,key2,strings):
+        a=1
+        b=2
+        RoundKeys = []
+        #Default Values
 
-def makeroundkey (key1,key2,strings):
-    a=1
-    b=2
-    RoundKeys = []
-    #Default Values
+        key1 = int(key1,2)
+        key2 = int(key2,2)
+        #Formats key values into hex with proper length
 
-    key1 = int(key1,2)
-    key2 = int(key2,2)
-    #Formats key values into hex with proper length
+        for i in range(16):
+            strings[i] = int(strings[i].encode("hex"),16)
+        #Puts strings into hex
 
-    for i in range(16):
-        strings[i] = int(strings[i].encode("hex"),16)
-    #Puts strings into hex
+        for i in range (16):
+            if i%2==0:
+                RoundKeys.append(key2^strings[i])
+            elif i%2==1:
+                RoundKeys.append(key1^strings[i])
+            else:
+                RoundKeys.append(key2^strings[i])
+        #Sorts RoundKeys in right order
+        return RoundKeys
 
-    for i in range (16):
-        if i%2==0:
-            RoundKeys.append(key2^strings[i])
-        elif i%2==1:
-            RoundKeys.append(key1^strings[i])
-        else:
-            RoundKeys.append(key2^strings[i])
-    #Sorts RoundKeys in right order
-    return RoundKeys
-
-def messagedivide (mess):
-    messages = []
-    for i in range (1,(len(mess)/8)+ 2):
-        messages.append(mess[(8*i-8):(8*i)])
-    return messages
-#Divides messages into small pieces
+    def messagedivide (mess):
+        messages = []
+        for i in range (1,(len(mess)/8)+ 2):
+            messages.append(mess[(8*i-8):(8*i)])
+        return messages
+    #Divides messages into small pieces
 
 
-Pk = int(raw_input("Insert your private cipher key: ")) #Privatekey
-while Pk <(10000000):
-    Pk = Pk + Pk
-Pk = str(Pk)
-Pk = Pk.encode("hex")
-Pk = bin(int(Pk,16))[2:]
-Pk = int(Pk,2)
-#Makes 64 bit number
-
-q = 1
-while q == 1: # Infinite loop for infinite messages
-    
-    M = raw_input ("Your message: ")
-    if M == "Break.Loop":
-        break
-    
-
-    messages = messagedivide(M)
+    messages = messagedivide(message)
     while len(messages[-1]) < 8:
         messages[-1] = messages[-1] + " "
     #corrects lengths
@@ -76,7 +59,8 @@ while q == 1: # Infinite loop for infinite messages
         #Resets default value of RS
         
         K = int(generaterandom(64),2) #Generates random key
-        key =bin(K^Pk) #creates specific key k 
+        private_key = int(private_key,10)
+        key =bin(K^private_key) #creates specific key k 
         key = key.lstrip("0b")
         while len(key)<64:
             key = "0" + key
@@ -100,13 +84,20 @@ while q == 1: # Infinite loop for infinite messages
             
         Right = []
         Left = []
-        #Creats lists for Feistel        
+        #Creats lists for Feistel
 
-        for x in range (16):
+        for x in range (17):
             if x == 0:
-                Hello = (messages[w][4:]).encode("hex")
+                Hello = messages[w][4:]
+                Hello = Hello.encode("hex")
+                while len(Hello) < 8:
+                    Hello = "0"+Hello
                 Right.append(int(Hello,16))
-                Kitty = (messages[w][:4]).encode("hex")
+
+                Kitty = messages[w][:4]
+                Kitty = Kitty.encode("hex")
+                while len(Kitty) <8:
+                    Kitty = "0"+Kitty                    
                 Left.append(int(Kitty,16))
                 #Corrects format for xoring and sets input values
             else:
@@ -114,32 +105,32 @@ while q == 1: # Infinite loop for infinite messages
                 Right.append(((RoundKeys[x-1]^Left[x])^Left[x-1]))
                 #Does 16 rounds of Feistel network
 
-       
-        Right[15] = hex(Right[15])
-        Left [15] = hex(Left[15])
+        Right[16] = hex(Right[16])
+        Left [16] = hex(Left[16])
         #Converts outputs of Feistel into hex values
+        print Left
+        print Right
 
-        Right[15] = Right[15].rstrip("L").lstrip("0x")
-        Left[15] = Left[15].rstrip("L").lstrip("0x")
+        Right[16] = Right[16].rstrip("L").lstrip("0x")
+        Left[16] = Left[16].rstrip("L").lstrip("0x")
 
         #Formating of hexadecimal values
-        if len(Right[15])%2 != 0:
-            Right[15] = "0"+Right[15]
-        if len(Left[15])%2 != 0:
-            Left[15] = "0"+Right[15]
+        while len(Right[16])<8:
+            Right[16] = "0"+Right[16]
+        while len(Left[16])<8:
+            Left[16] = "0"+Right[16]
         #Corrects lengths of Feistel outputs
 
         key = str(key)
         key = int(key,2)
         key = hex(key).rstrip("L").lstrip("0x")
-        if len(key)<16:
+        while len(key)<16:
             key = "0"+key
-        key = key.decode("hex")
         
-        Output.append(Left[15]+Right[15])
+        Output.append(Left[16]+Right[16])
         Output.append(key)
     Output = ",".join(Output)
-    print Output
+    return Output
     #Output of ciphertext
     
 
