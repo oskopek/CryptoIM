@@ -52,7 +52,6 @@ while q == 1: #Infinite loop
     #Sorts out messages from keys
 
     for w in range (len(keys)):
-        keys[w] = keys[w].encode("hex")
         keys[w] = int(keys[w],16)
         K = Pk^keys[w]        
         k1 = ""

@@ -85,7 +85,7 @@ def encrypt (private_key,message):
         Left = []
         #Creats lists for Feistel        
 
-        for x in range (16):
+        for x in range (17):
             if x == 0:
                 Hello = (messages[w][4:]).encode("hex")
                 Right.append(int(Hello,16))
@@ -105,23 +105,22 @@ def encrypt (private_key,message):
         Left[15] = Left[15].rstrip("L").lstrip("0x")
 
         #Formating of hexadecimal values
-        if len(Right[15])%2 != 0:
+        while len(Right[15])<8:
             Right[15] = "0"+Right[15]
-        if len(Left[15])%2 != 0:
+        while len(Left[15])<8:
             Left[15] = "0"+Right[15]
         #Corrects lengths of Feistel outputs
 
         key = str(key)
         key = int(key,2)
         key = hex(key).rstrip("L").lstrip("0x")
-        if len(key)<16:
+        while len(key)<16:
             key = "0"+key
-        key = key.decode("hex")
         
         Output.append(Left[15]+Right[15])
         Output.append(key)
     Output = ",".join(Output)
-    print Output
+    return Output
     #Output of ciphertext
     
 
