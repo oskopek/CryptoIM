@@ -79,7 +79,7 @@ while q == 1: #Infinite loop
         for i in range (16):
             RoundKeys[i] = int(bin(RoundKeys[i]),2)
         #Right format for RoundKeys
-        while len(messages[w]) != 32:
+        while len(messages[w]) < 32:
             messages[w] = "0"+messages[w]
         #Corrects lengths in hex
             
