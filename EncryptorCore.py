@@ -1,5 +1,6 @@
 def encrypt (private_key,message):
     import random
+
     def generaterandom (n):
         r = ""
         rnd = random.SystemRandom()
@@ -9,6 +10,7 @@ def encrypt (private_key,message):
                 r = r + "1"
             else:
                 r = r + "0"
+        r = int(r,2)
         return r
     # Generates random string of length n
 
@@ -43,100 +45,31 @@ def encrypt (private_key,message):
         return messages
     #Divides messages into small pieces
 
+    messages = messagedivide(messsage)
+##    Splits message into 64 bit parts (8 ASCII)
+##    characters, because algorithm uses only
+##    64 bits
+    private_key = int(private_key,10)
+    while private_key < 10000000:
+        private_key = 2*private_key
+    private_key = str(private_key)
+    private_key = private_key.encode("hex")
+    private_key = private_key.lstrip("0x").rstrip("L")
+    while len (private_key)< 16:
+        private_key = "0"+private_key
+    private_key = int(private_key,16)
+    #Converts private key to 64 bit number in int
 
-    messages = messagedivide(message)
-    while len(messages[-1]) < 8:
-        messages[-1] = messages[-1] + " "
-    #corrects lengths
-    Output = []
-    #prepares list for final output
-
+    for i in range (len(messages)):
+        messages[i] = messages[i]encdoe("hex")
+        messages[i] = messages[i].lstrip("0x").rstrip("L")
+        while len(messages[i])<16:
+            messages[i] = "0"+messages[i]
     for w in range(len(messages)):
-
-        RoundStrings = ["aeiouywg","chjmnbtr","loqd4850","zukhq4mn","uqwrifs2",
-        "ctelmrdz","afjajc23","is2xafw8","svgw8e2r","hv2j39fs","jkdsg3e/","svls;wa4",
-        "asfh29ce", "ajv29fsa", "ajf983fc", "xiw20dfs"]
-        #Resets default value of RS
-        
-        K = int(generaterandom(64),2) #Generates random key
-        private_key = int(private_key,10)
-        key =bin(K^private_key) #creates specific key k 
-        key = key.lstrip("0b")
-        while len(key)<64:
-            key = "0" + key
-        #Fix to excluding 0 at the beginning (len(key) = 64)
-        k1 = ""
-        k2 = ""
-        K = bin(K)
-        K = K.lstrip("0b")
-        while len(K)<64:
-            K="0"+K
-        for i in range (32):
-            k1 = k1 + K[i]
-            k2 = k2 + K[32+i]
-        #Splits K into k1 + k2
-
-        RoundKeys = makeroundkey(k1,k2,RoundStrings)
-        f = []
-        for i in range (16):
-            RoundKeys[i] = int(bin(RoundKeys[i]),2)
-        #Creates list of round keys
+        rndk = generaterandom(64) #Generates random key (64 bit)
+        key = private_key^rndk
+        if len(key) == 64:
             
-        Right = []
-        Left = []
-        #Creats lists for Feistel
-
-        for x in range (17):
-            if x == 0:
-                Hello = messages[w][4:]
-                Hello = Hello.encode("hex")
-                while len(Hello) < 8:
-                    Hello = "0"+Hello
-                Right.append(int(Hello,16))
-
-                Kitty = messages[w][:4]
-                Kitty = Kitty.encode("hex")
-                while len(Kitty) <8:
-                    Kitty = "0"+Kitty                    
-                Left.append(int(Kitty,16))
-                #Corrects format for xoring and sets input values
-            else:
-                Left.append(Right[x-1])
-                Right.append(((RoundKeys[x-1]^Left[x])^Left[x-1]))
-                #Does 16 rounds of Feistel network
-
-        Right[16] = hex(Right[16])
-        Left [16] = hex(Left[16])
-        #Converts outputs of Feistel into hex values
-        print Left
-        print Right
-
-        Right[16] = Right[16].rstrip("L").lstrip("0x")
-        Left[16] = Left[16].rstrip("L").lstrip("0x")
-
-        #Formating of hexadecimal values
-        while len(Right[16])<8:
-            Right[16] = "0"+Right[16]
-        while len(Left[16])<8:
-            Left[16] = "0"+Right[16]
-        #Corrects lengths of Feistel outputs
-
-        key = str(key)
-        key = int(key,2)
-        key = hex(key).rstrip("L").lstrip("0x")
-        while len(key)<16:
-            key = "0"+key
-        
-        Output.append(Left[16]+Right[16])
-        Output.append(key)
-    Output = ",".join(Output)
-    return Output
-    #Output of ciphertext
-    
-
-    
-
-
 
 
 

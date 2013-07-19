@@ -1,115 +1,125 @@
-def makeroundkey (key1,key2,strings):
-    a=1
-    b=2
-    RoundKeys = []
-    #Default Values
+def decrypt (private_key,ciphertext):
 
-    key1 = int(key1,2)
-    key2 = int(key2,2)
-    #Formats key values into int with proper length
+    def makeroundkey (key1,key2,strings):
+        a=1
+        b=2
+        RoundKeys = []
+        #Default Values
 
-    for i in range(16):
-        strings[i] = int(strings[i].encode("hex"),16)
-    #Puts strings into hex
+        key1 = int(key1,16)
+        key2 = int(key2,16)
+        #Formats key values into bin int
 
-    for i in range (16):
-        if i%2==0:
-            RoundKeys.append(key2^strings[i])
-        elif i%2==1:
-            RoundKeys.append(key1^strings[i])
-        else:
-            RoundKeys.append(key2^strings[i])
-    #Sorts RoundKeys in right order
-    return RoundKeys
-    #Returns list of RoundKeys(16 RoundKeys)
-
-Pk = int(raw_input("Insert your private cipher key: ")) #Privatekey
-while Pk <(10000000):
-    Pk = Pk + Pk
-Pk = str(Pk)
-Pk = Pk.encode("hex")
-Pk = bin(int(Pk,16))[2:]
-Pk = int(Pk,2)
-#Takes in private key
-
-
-q = 1
-while q == 1: #Infinite loop
-    messages = []
-    keys = []
-    nope = input("Message to decrypt: ")
-    if nope == "*Kubinova*":
-        print "Satan"
-    #EasterEgg1
-    Inp = nope.split(',')
-    #Converts string to array
-       
-    for i in range (len(Inp)):
-        if i%2 == 0:
-            messages.append(Inp[i])
-        else:
-            keys.append(Inp[i])
-    #Sorts out messages from keys
-
-    for w in range (len(keys)):
-        keys[w] = int(keys[w],16)
-        K = Pk^keys[w]        
-        k1 = ""
-        k2 = ""
-        K = bin(K)
-        K = K.lstrip("0b")
-        while len(K)<64:
-            K="0"+K
-        #Corrects Lengths
-        for i in range (32):
-            k1 = k1 + K[i]
-            k2 = k2 + K[32+i]
-        #Splits K into k1 and k2
-
-        RoundStrings = ["aeiouywg","chjmnbtr","loqd4850","zukhq4mn","uqwrifs2",
-        "ctelmrdz","afjajc23","is2xafw8","svgw8e2r","hv2j39fs","jkdsg3e/","svls;wa4",
-        "asfh29ce", "ajv29fsa", "ajf983fc", "xiw20dfs"]
-        #Resets default value of RS
-
-        RoundKeys = makeroundkey(k1,k2,RoundStrings)
-        #messages[w] = messages[w].encode("hex")
-        #Converts every message back to hex value
+        for i in range(16):
+            strings[i] = int(strings[i].encode("hex"),16)
+        #Puts strings into hex
 
         for i in range (16):
-            RoundKeys[i] = int(bin(RoundKeys[i]),2)
-        #Right format for RoundKeys
-        while len(messages[w]) < 32:
-            messages[w] = "0"+messages[w]
-        #Corrects lengths in hex
-            
-        Output = []
-        Right = []
-        Left = []
-        # Sets lists for Feistel
+            if i%2==0:
+                RoundKeys.append(key2^strings[i])
+            elif i%2==1:
+                RoundKeys.append(key1^strings[i])
+            else:
+                RoundKeys.append(key2^strings[i])
+        #Sorts RoundKeys in right order
+        return RoundKeys
+        #Returns list of RoundKeys(16 RoundKeys)
 
-        for x in range (16):
-            if x == 0:
-                Kubinova = int(messages[w][:16],16)
-                Right.append(Kubinova)
-                Satan = int(messages[w][16:],16)
-                Left.append(Satan)
+    messages = []
+    keys = []
+
+    ciphertext = ciphertext.split(",") #Converts string into list
+    for i in range (len (ciphertext)):
+        if i%2 == 0 or i%2==2:
+            messages.append(ciphertext[i])
+        if i%2 == 1:
+            keys.append(ciphertext[i])
+##    For every odd i adds to keys value
+##    from ciphertexts on position i and
+##    for every even i adds value to
+##    messages from ciphertexts on pos. i
+    
+    for i in range (len(messages)):
+        while len(messages[i])<16:
+            "0"+messages[i]
+
+
+    for i in range(len(keys)):
+        while len(keys[i])<16:
+            "0"+keys[i]
+        keys[i] = int(keys[i],16)
+
+##    Fixes lengths of keys and messages
+##    in case that they fail
+            
+    private_key = int(private_key,16)
+    #Prepares private key to xor
+
+    for w in range (len(messages)):
+        key = private_key^keys[w]
+        #Decrypts the key used for particular message
+
+        key = hex(key)
+        key = key.lstrip("0x").rstrip("L")
+        #Convers keys to hexadecimal value
+        while len(key)<16:
+            key = "0"+key
+        #Corrects possible length loss
+
+        k1 = ""
+        k2 = ""
+        for i in range (8):
+            k1 = k1 + key[i]
+            k2 = k2 + key[i+8]
+##        Splits the key into 2 smaller keys
+##        Original length of key was 64 bits
+##        = 16 hex, since original length of
+##        key was 64 bits, new length must
+##        correspond (no need to correct this)
+
+        RoundStrings = ["aeio","chjm","l0qd","z4kh","u4wr",
+        "ctel","afja","is2x","svgw","hv2j","jkds","sv;s",
+        "29ce", "v29f", "ajf9", "xiw2"]
+
+##        Roundstrings are fixed to create roundkeys
+##        They are put into loop so their value does
+##        not overwrite with every round
+
+        RoundKeys = makeroundkey(k1,k2,RoundStrings)
+
+
+        Left = []
+        Right = []
+        Output = []
+        #Prepares empty arrays for Feistel Network
+        m1 = ""
+        m2 = ""
+##        Prepares empty strings for input values of m1
+##        and m2 which have to be separated into 2 halfs
+##        due to their length which is 64 bits and Feistel
+##        input is 32 bits on each side
+
+        m1 = m1 + messages[w][:8]
+        m2 = m2 + messages[w][8:]
+        #Splits the messages
+
+        for x in range(17):
+            if x ==0:
+                Right.append(int(m2,16))
+                Left.append(int(m1,16))
             else:
                 Right.append(Left[x-1])
-                Left.append(Right[x-1]^(Left[x-1]^RoundKeys[x-1]))
-        #16 Round Feistel Network (16RFN)
-
-        Right[15] = hex(Right[15])
-        Left[15] = hex(Left[15])
-        Right[15] = Right[15].lstrip("0x").rstrip("L")
-        Left[15] = Left[15].lstrip("0x").rstrip("L")
-
-        print Right[15]
-        print Left[15]
+                Left.append((Right[x-1]^RoundKeys[16-x])^Left[x-1])
+        Left[16] = hex(Left[16]).lstrip("0x").rstrip("L")
+        Right[16] = hex(Right[16]).lstrip("0x").rstrip("L")
+        Output.append (Left[16]+Right[16])
+        Output[w] = Output[w].decode("hex")
+        return Output
         
-                
-                
-                
-            
+        
+
+        
+        
         
         
                 
