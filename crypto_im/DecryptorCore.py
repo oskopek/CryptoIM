@@ -38,7 +38,7 @@ def decrypt (private_key,ciphertext):
 ##    from ciphertexts on position i and
 ##    for every even i adds value to
 ##    messages from ciphertexts on pos. i
-    
+
     for i in range (len(messages)):
         while len(messages[i])<16:
             "0"+messages[i]
@@ -51,7 +51,7 @@ def decrypt (private_key,ciphertext):
 
 ##    Fixes lengths of keys and messages
 ##    in case that they fail
-            
+
     private_key = int(private_key,16)
     #Prepares private key to xor
 
@@ -120,16 +120,3 @@ def decrypt (private_key,ciphertext):
         print Output
         Output[w] = Output[w].decode("hex")
         return Output
-        
-        
-
-        
-        
-        
-        
-                
-            
-        
-
-        
-    
