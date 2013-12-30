@@ -16,6 +16,6 @@ setup(
     install_requires = [
         "docutils >= 0.3",
         "pygpgme >= 0.3",
-	"nosetests >= 1.3.0",
+	"nose >= 1.3.0",
     ],
 )
