@@ -1,1 +1,2 @@
-nosetests
+#!/bin/bash
+nosetests .
