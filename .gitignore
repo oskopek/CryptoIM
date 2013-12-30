@@ -3,3 +3,5 @@
 *.pyo
 MANIFEST
 dist/
+*.egg-info/
+build/
