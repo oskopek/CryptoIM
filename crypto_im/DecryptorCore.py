@@ -1,23 +1,23 @@
-def decrypt (private_key,ciphertext):
+def decrypt (private_key, ciphertext):
 
-    def makeroundkey (key1,key2,strings):
-        a=1
-        b=2
+    def makeroundkey (key1, key2, strings):
+        #a = 1
+        #b = 2
         RoundKeys = []
         #Default Values
 
-        key1 = int(key1,16)
-        key2 = int(key2,16)
+        key1 = int(key1, 16)
+        key2 = int(key2, 16)
         #Formats key values into bin int
 
         for i in range(16):
-            strings[i] = int(strings[i].encode("hex"),16)
+            strings[i] = int(strings[i].encode("hex"), 16)
         #Puts strings into hex
 
         for i in range (16):
-            if i%2==0:
+            if i %2 == 0:
                 RoundKeys.append(key2^strings[i])
-            elif i%2==1:
+            elif i %2 == 1:
                 RoundKeys.append(key1^strings[i])
             else:
                 RoundKeys.append(key2^strings[i])
@@ -30,9 +30,9 @@ def decrypt (private_key,ciphertext):
 
     ciphertext = ciphertext.split(",") #Converts string into list
     for i in range (len (ciphertext)):
-        if i%2 == 0 or i%2==2:
+        if i % 2 == 0 or i % 2 == 2:
             messages.append(ciphertext[i])
-        if i%2 == 1:
+        if i % 2 == 1:
             keys.append(ciphertext[i])
 ##    For every odd i adds to keys value
 ##    from ciphertexts on position i and
@@ -41,18 +41,18 @@ def decrypt (private_key,ciphertext):
 
     for i in range (len(messages)):
         while len(messages[i])<16:
-            "0"+messages[i]
+            "0" + messages[i]
 
 
     for i in range(len(keys)):
-        while len(keys[i])<16:
-            "0"+keys[i]
-        keys[i] = int(keys[i],16)
+        while len(keys[i]) < 16:
+            "0" + keys[i]
+        keys[i] = int(keys[i], 16)
 
 ##    Fixes lengths of keys and messages
 ##    in case that they fail
 
-    private_key = int(private_key,16)
+    private_key = int(private_key, 16)
     #Prepares private key to xor
 
     for w in range (len(messages)):
@@ -63,7 +63,7 @@ def decrypt (private_key,ciphertext):
         key = key.lstrip("0x").rstrip("L")
         #Convers keys to hexadecimal value
         while len(key)<16:
-            key = "0"+key
+            key = "0" + key
         #Corrects possible length loss
 
         k1 = ""
@@ -77,15 +77,15 @@ def decrypt (private_key,ciphertext):
 ##        key was 64 bits, new length must
 ##        correspond (no need to correct this)
 
-        RoundStrings = ["aeio","chjm","l0qd","z4kh","u4wr",
-        "ctel","afja","is2x","svgw","hv2j","jkds","sv;s",
+        RoundStrings = ["aeio", "chjm", "l0qd", "z4kh", "u4wr",
+        "ctel", "afja", "is2x", "svgw", "hv2j", "jkds", "sv;s",
         "29ce", "v29f", "ajf9", "xiw2"]
 
 ##        Roundstrings are fixed to create roundkeys
 ##        They are put into loop so their value does
 ##        not overwrite with every round
 
-        RoundKeys = makeroundkey(k1,k2,RoundStrings)
+        RoundKeys = makeroundkey(k1, k2, RoundStrings)
 
 
         Left = []
@@ -106,9 +106,9 @@ def decrypt (private_key,ciphertext):
         print m2
         print RoundKeys
         for x in range(17):
-            if x ==0:
-                Right.append(int(m2,16))
-                Left.append(int(m1,16))
+            if x == 0:
+                Right.append(int(m2, 16))
+                Left.append(int(m1, 16))
             else:
                 Right.append(Left[x-1])
                 Left.append((Right[x-1]^RoundKeys[16-x])^Left[x-1])
