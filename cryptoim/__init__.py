@@ -14,6 +14,6 @@
    limitations under the License.
 """
 
-from cryptoim import fib
+from cryptoim import decryptor_core, encryptor_core
 
-__all__ = ["fib",]
+__all__ = ["decryptor_core", "encryptor_core", ]
