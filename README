@@ -20,6 +20,6 @@ Building
 
 * **Build**: ``python setup.py install``
 
-* To run **unit tests**: ``./tests/run_tests.sh``
+* To run **unit tests**: ``python setup.py nosetests``
 
 * To **clean**, run: ``python setup.py clean``
