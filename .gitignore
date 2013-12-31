@@ -24,6 +24,7 @@ pip-log.txt
 
 # Unit test / coverage reports
 .coverage
+coverage.xml
 .tox
 nosetests.xml
 
@@ -38,3 +39,4 @@ nosetests.xml
 # Text Editors
 *.kate-swp
 *~
+*.swp
