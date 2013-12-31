@@ -1,17 +1,20 @@
 language: python
 
 python:
-  - "2.6"
-  - "2.7"
-  - "3.2"
-  - "3.3"
+  - '2.6'
+  - '2.7'
+  - '3.2'
+  - '3.3'
 
-# command to install dependencies
+env:
+  global:
+    - secure: GMUWLBrNBeYmVLr+KBXnFhKGb3RLrY6qgApQ9JgMiNBTlmcgVq5tpUYSpQpQTHXVmnU0Xho/NpWo27+ud2QJqXEtgp9q/ZGxrEJsX3SAtUBONphMSjEbaHiH90MgMmgS2wtyxuptKoL66vJ3SLtbTgcMWmEvyMbN0n+f/qIRtlk=
+
 install:
-  #  - "pip install ."
-  #  - "pip install -r requirements.txt"
-  - "python setup.py build"
+  - python setup.py install
 
-# command to run tests
 script:
-  - "./tests/run_tests.sh"
+  - python setup.py nosetests
+
+after_success:
+  - coveralls

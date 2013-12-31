@@ -4,6 +4,9 @@ CryptoIM
 
 .. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop
     :target: https://travis-ci.org/oskopek/CryptoIM
+    
+.. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png
+    :target: https://coveralls.io/r/oskopek/CryptoIM
 
 A crypto-aware instant messenger.
 
@@ -15,8 +18,8 @@ CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model si
 Building
 ========
 
-* **Build**: ``./setup.py build``
+* **Build**: ``python setup.py build`` and ``sudo python setup.py install``
 
-* To run **unit tests**: ``./tests/run_tests.sh``
+* To run **unit tests**: ``python setup.py nosetests``
 
-* To **clean**, run: ``./setup.py clean``
+* To **clean**, run: ``python setup.py clean --all``
