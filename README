@@ -2,12 +2,12 @@
 CryptoIM
 ========
 
-TODO catchphrase
+A crypto-aware instant messenger.
 
 Info
 ====
 
-CryptoIM uses `semantic versioning <http://semver.org/>` and branching model similar to `this <http://nvie.com/posts/a-successful-git-branching-model/>`_.
+CryptoIM uses `semantic versioning <http://semver.org/>`_and branching model similar to `this <http://nvie.com/posts/a-successful-git-branching-model/>`_.
 
 Building
 ========
