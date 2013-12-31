@@ -12,7 +12,7 @@ env:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq python-gpgme
+  - sudo apt-get install -qq python-gpgme libgpgme11-dev
 
 install:
   - python setup.py install
