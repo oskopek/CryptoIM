@@ -17,7 +17,11 @@
    limitations under the License.
 """
 
-def Encrypt(plaintext,key): #Plaintext = string, key = string (256 bytes)
+def Encrypt(plaintext,key):
+"""
+plaintext = string
+key = string (256 bytes)
+"""
     def KeyExpansion(key):
         import hashlib
         extendedkey = ''
@@ -41,6 +45,9 @@ def Encrypt(plaintext,key): #Plaintext = string, key = string (256 bytes)
             roundkeys.append(roundkey)
         return roundkeys
 
-##    Returns list of 16 matrices, these are 128 bit roundkeys used for encryption,
-##    from there 16 matrices will be only 14 used. For opimization purpose was used
-##    index k instead of another cycle.
+"""
+Returns list of 16 matrices, these are 128 bit roundkeys used for encryption,
+from there 16 matrices will be only 14 used. For opimization purpose was used
+index k instead of another cycle.
+"""
+    
