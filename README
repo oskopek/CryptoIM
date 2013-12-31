@@ -1,7 +1,10 @@
 ========
 CryptoIM
 ========
-.. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop   :target: https://travis-ci.org/oskopek/CryptoIM
+
+.. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop
+    :target: https://travis-ci.org/oskopek/CryptoIM
+
 A crypto-aware instant messenger.
 
 Info
