@@ -4,6 +4,9 @@ CryptoIM
 
 .. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop
     :target: https://travis-ci.org/oskopek/CryptoIM
+    
+.. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png
+    :target: https://coveralls.io/r/oskopek/CryptoIM
 
 A crypto-aware instant messenger.
 
