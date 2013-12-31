@@ -41,9 +41,8 @@ setup(
     long_description = open("README").read(),
     install_requires = [
         "docutils >= 0.3",
-        "pygpgme >= 0.3",
         "nose >= 1.3.0",
-	"nosexcover >= 1.0.8",
-	"python-coveralls >= 2.4.2",
+        "nosexcover >= 1.0.8",
+        "python-coveralls >= 2.4.2",
     ],
 )

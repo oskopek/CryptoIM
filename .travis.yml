@@ -10,10 +10,6 @@ env:
   global:
     - secure: GMUWLBrNBeYmVLr+KBXnFhKGb3RLrY6qgApQ9JgMiNBTlmcgVq5tpUYSpQpQTHXVmnU0Xho/NpWo27+ud2QJqXEtgp9q/ZGxrEJsX3SAtUBONphMSjEbaHiH90MgMmgS2wtyxuptKoL66vJ3SLtbTgcMWmEvyMbN0n+f/qIRtlk=
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq python-gpgme libgpgme11-dev
-
 install:
   - python setup.py install
 
