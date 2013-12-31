@@ -17,6 +17,30 @@
    limitations under the License.
 """
 
-def Encrypt(plaintext,key):
+def Encrypt(plaintext,key): #Plaintext = string, key = string (256 bytes)
     def KeyExpansion(key):
-        print("Write prints like this from now on :-)")
+        import hashlib
+        extendedkey = ''
+        keyhash = key       #Assigns key value to the keyhash, for later use in cycle
+        for i in range(32):
+            keyhash = hashlib.sha224(keyhash.encode('utf-8')).hexdigest()
+            extendedkey += keyhash
+        extendedkey = extendedkey[:256]
+        return extendedkey
+
+    def RoundKeySeparator(extendedkey):
+        k = 0
+        roundkeys = []
+        for i in range(16):
+            roundkey = [[],[],[],[]] #Matrix (list of lists)
+            for i in range(4):
+                for j in range(4):
+                    hexadecimal = int(hex(ord(extendedkey[k])),16) #Converts letter to decimal number
+                    roundkey[i].append(hexadecimal)
+                    k += 1
+            roundkeys.append(roundkey)
+        return roundkeys
+
+##    Returns list of 16 matrices, these are 128 bit roundkeys used for encryption,
+##    from there 16 matrices will be only 14 used. For opimization purpose was used
+##    index k instead of another cycle.
