@@ -1,0 +1,19 @@
+========
+CryptoIM
+========
+
+A crypto-aware instant messenger.
+
+Info
+====
+
+CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model similar to `this <http://nvie.com/posts/a-successful-git-branching-model/>`_.
+
+Building
+========
+
+* **Build**: ``./setup.py build``
+
+* To run **unit tests**: ``./tests/run_tests.sh``
+
+* To **clean**, run: ``./setup.py clean``
