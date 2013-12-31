@@ -29,6 +29,7 @@ setup(
     license = "Apache License 2.0",
     description = "Crypto Instant Messenger",
     keywords = "crypto instant messenger",
+    test_suite = "nose.collector",
     classifiers = [
         "Development Status :: 1 - Planning",
         "Environment :: Console",
