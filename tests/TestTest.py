@@ -18,16 +18,16 @@
 """
 
 # A failing test
-def testFail():
-    assert False
+#def testFail():
+#    assert False
 
 # A passing test
 def testPass():
     pass
 
 # A tests that throws an error
-def testError():
-    int("lol")
+#def testError():
+#    int("lol")
 
 # A test generator
 def test_evens():
