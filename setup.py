@@ -28,7 +28,7 @@ setup(
     url = "http://pypi.python.org/pypi/CryptoIM/",
     license = "LICENSE.txt",
     description = "Crypto Instant Messenger",
-    long_description = open("README.adoc").read(),
+    long_description = open("README").read(),
     install_requires = [
         "docutils >= 0.3",
         "pygpgme >= 0.3",
