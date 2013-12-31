@@ -19,4 +19,4 @@
 
 def Encrypt(plaintext,key):
     def KeyExpansion(key):
-        
+        print("Write prints like this from now on :-)")

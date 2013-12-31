@@ -121,9 +121,9 @@ def decrypt (private_key, ciphertext):
         m1 = m1 + messages[w][:8]
         m2 = m2 + messages[w][8:]
         #Splits the messages
-        print m1
-        print m2
-        print RoundKeys
+        print(m1)
+        print(m2)
+        print(RoundKeys)
         for x in range(17):
             if x == 0:
                 Right.append(int(m2, 16))
@@ -133,9 +133,9 @@ def decrypt (private_key, ciphertext):
                 Left.append((Right[x-1]^RoundKeys[16-x])^Left[x-1])
         Left[16] = hex(Left[16]).lstrip("0x").rstrip("L")
         Right[16] = hex(Right[16]).lstrip("0x").rstrip("L")
-        print Left[16]
-        print Right[16]
+        print(Left[16])
+        print(Right[16])
         Output.append (Left[16]+Right[16])
-        print Output
+        print(Output)
         Output[w] = Output[w].decode("hex")
         return Output
