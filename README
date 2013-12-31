@@ -18,8 +18,8 @@ CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model si
 Building
 ========
 
-* **Build**: ``./setup.py build``
+* **Build**: ``python setup.py install``
 
 * To run **unit tests**: ``./tests/run_tests.sh``
 
-* To **clean**, run: ``./setup.py clean``
+* To **clean**, run: ``python setup.py clean``

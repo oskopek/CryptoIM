@@ -14,4 +14,4 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-nosetests --with-xcoverage --cover-package=crypto-im --cover-tests .
+nosetests --with-xcoverage --cover-package=cryptoim --cover-tests .

@@ -1,15 +1,20 @@
 language: python
 
 python:
-  - "2.6"
-  - "2.7"
-  - "3.2"
-  - "3.3"
+  - '2.6'
+  - '2.7'
+  - '3.2'
+  - '3.3'
 
-# command to install dependencies
+env:
+  global:
+    - secure: GMUWLBrNBeYmVLr+KBXnFhKGb3RLrY6qgApQ9JgMiNBTlmcgVq5tpUYSpQpQTHXVmnU0Xho/NpWo27+ud2QJqXEtgp9q/ZGxrEJsX3SAtUBONphMSjEbaHiH90MgMmgS2wtyxuptKoL66vJ3SLtbTgcMWmEvyMbN0n+f/qIRtlk=
+
 install:
-  - "python setup.py build"
+  - python setup.py install
 
-# command to run tests
 script:
-  - "./tests/coverage_run_tests.sh"
+  - ./tests/coverage_run_tests.sh
+
+after_success:
+  - $COVERALLS_REPO_TOKEN coveralls
