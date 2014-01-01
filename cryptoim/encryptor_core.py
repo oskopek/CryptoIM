@@ -63,7 +63,6 @@ def Encrypt(plaintext, key):
     message_chunk = ''
     for character in plaintext:
         message_chunk += character
-
         # After 16 characters appends 1 chunk into a list of chunks
         if len(message_chunk) == 16:
             message_chunks.append(message_chunk)
@@ -78,5 +77,13 @@ def Encrypt(plaintext, key):
                 matrix[j].append(number)
         messages.append(matrix)
     return messages
-
     # TODO: Check if this works as expected
+
+    def AddRoundKey(message,roundkey):
+        #Uses one matrix of each as input
+        for i in range(4):
+            for j in range(4):
+                message[i][j]=message[i][j]^roundkey[i][j]#xor
+        return message
+    
+        
