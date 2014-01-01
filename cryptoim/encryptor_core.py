@@ -120,3 +120,16 @@ def Encrypt(plaintext, key):
                 message[i][j] = sbox[int(hexadecimal[0], 16)][int(hexadecimal[1], 16)]
         return message
         # TODO: Check if returns in decimal or hexadecimal
+
+    def ShiftRows(message):
+        """
+            Rotates 2nd, 3rd and 4th row of matrix, each by different amount.
+            This rotation is done by using list slicing.
+        """
+        message[1] = message[1:] + message[:1]
+        message[2] = message[2:] + message[:2]
+        message[3] = message[3:] + message[:3]
+        return message
+
+    
+    
