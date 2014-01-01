@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 """
-   Copyright 2013,2014 CryptoIM Development Team
+   Copyright 2013-2014 CryptoIM Development Team
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -33,10 +33,10 @@ def decrypt (private_key, ciphertext):
             strings[i] = int(strings[i].encode("hex"), 16)
         #Puts strings into hex
 
-        for i in range (16):
-            if i %2 == 0:
+        for i in range(16):
+            if i % 2 == 0:
                 RoundKeys.append(key2^strings[i])
-            elif i %2 == 1:
+            elif i % 2 == 1:
                 RoundKeys.append(key1^strings[i])
             else:
                 RoundKeys.append(key2^strings[i])
@@ -48,7 +48,7 @@ def decrypt (private_key, ciphertext):
     keys = []
 
     ciphertext = ciphertext.split(",") #Converts string into list
-    for i in range (len (ciphertext)):
+    for i in range(len (ciphertext)):
         if i % 2 == 0 or i % 2 == 2:
             messages.append(ciphertext[i])
         if i % 2 == 1:
@@ -58,8 +58,8 @@ def decrypt (private_key, ciphertext):
 ##    for every even i adds value to
 ##    messages from ciphertexts on pos. i
 
-    for i in range (len(messages)):
-        while len(messages[i])<16:
+    for i in range(len(messages)):
+        while len(messages[i]) < 16:
             "0" + messages[i]
 
 
@@ -74,20 +74,20 @@ def decrypt (private_key, ciphertext):
     private_key = int(private_key, 16)
     #Prepares private key to xor
 
-    for w in range (len(messages)):
+    for w in range(len(messages)):
         key = private_key^keys[w]
         #Decrypts the key used for particular message
 
         key = hex(key)
         key = key.lstrip("0x").rstrip("L")
         #Convers keys to hexadecimal value
-        while len(key)<16:
+        while len(key) < 16:
             key = "0" + key
         #Corrects possible length loss
 
         k1 = ""
         k2 = ""
-        for i in range (8):
+        for i in range(8):
             k1 = k1 + key[i]
             k2 = k2 + key[i+8]
 ##        Splits the key into 2 smaller keys
