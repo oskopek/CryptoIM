@@ -126,10 +126,21 @@ def Encrypt(plaintext, key):
             Rotates 2nd, 3rd and 4th row of matrix, each by different amount.
             This rotation is done by using list slicing.
         """
-        message[1] = message[1:] + message[:1]
-        message[2] = message[2:] + message[:2]
-        message[3] = message[3:] + message[:3]
+        for i in range(4):
+            message[i] = message[i:] + message[:i]
         return message
 
-    
+    def MixColumns(message):
+        mat = [[2,3,1,1],
+               [1,2,3,1],
+               [1,1,2,3],
+               [3,1,1,2]]
+        resultmat = [[],
+                     [],
+                     [],
+                     []]
+        
+        
+                
+                
     
