@@ -12,8 +12,8 @@ CryptoIM
     :target: https://crate.io/packages/CryptoIM/
     :alt: Latest PyPI version
 
-.. image:: https://pypip.in/d/CryptoIM/badge.png
-    :target: https://crate.io/packages/CryptoIM/
+.. image:: https://preview-pypi.python.org/project/CryptoIM/badge.png
+    :target: https://preview-pypi.python.org/project/CryptoIM/
     :alt: Number of PyPI downloads
 
 A crypto-aware instant messenger.
