@@ -25,10 +25,10 @@ def encrypt(plaintext, key):
 
     messages = __split_message(plaintext)
     roundkeys = __roundkey_separator(__key_expansion(key))
-    return encrypt_round(messages,roundkeys)
+    return encrypt_round(messages, roundkeys)
 
 
-def encrypt_round(messages,roundkeys):
+def encrypt_round(messages, roundkeys):
     """
         encrypt_round
     """
@@ -45,7 +45,6 @@ def encrypt_round(messages,roundkeys):
         msg = __add_roundkey(msg,roundkeys[15])
         ciphertext += __message_fusion(msg)
     return ciphertext
-        
 
 def __key_expansion(key):
     """
@@ -54,7 +53,7 @@ def __key_expansion(key):
     import hashlib
     extendedkey = ''
     keyhash = key       # Assigns key value to the keyhash, for later use in cycle
-    for i in range(32):
+    for _ in range(32):
         keyhash = hashlib.sha224(keyhash.encode('utf-8')).hexdigest()
         extendedkey += keyhash
     extendedkey = extendedkey[:256]
@@ -71,7 +70,7 @@ def __roundkey_separator(extendedkey):
     for k in range(16):
         roundkey = [[], [], [], []] # Matrix (list of lists)
         for i in range(4):
-            for j in range(4):
+            for _ in range(4):
                 # Converts letter to decimal number
                 decimal = ord(extendedkey[k])
                 # Appends 4 numbers into each row of matrix
@@ -100,11 +99,13 @@ def __split_message(plaintext):
     messages = []
     for chunk in message_chunks:
         matrix = [[], [], [], []]
+
         for i in range(4):
             for j in range(4):
                 # Cool way to iterate and transform at the same time
                 number = ord(chunk[4*i+j])
                 matrix[i].append(number)
+
         messages.append(matrix)
     return messages
     # TODO: Check if this works as expected
@@ -122,7 +123,6 @@ def __add_roundkey(message, roundkey):
 def __sub_bytes(message):
     """
         subbytes
-        TODO: The lines are too long according to pylint (sbox list definiton)
     """
     sbox = [[0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E, 0x81, 0xF3, 0xD7, 0xFB],
             [0x7C, 0xE3, 0x39, 0x82, 0x9B, 0x2F, 0xFF, 0x87, 0x34, 0x8E, 0x43, 0x44, 0xC4, 0xDE, 0xE9, 0xCB],
@@ -183,7 +183,7 @@ def __g_mul(a, b):
         g_mul, Bitwise multiplication
     """
     result = 0
-    for i in range(8):
+    for _ in range(8):
         if ((b & 1) != 0):
             result ^= a
         hi_bit_set = (a & 0x80)
