@@ -26,11 +26,13 @@ def encrypt(plaintext, key):
     messages = __split_message(plaintext)
     roundkeys = __roundkey_separator(__key_expansion(key))
     return encrypt_round(messages,roundkeys)
-    
+
 
 def encrypt_round(messages,roundkeys):
-    
-    
+    """
+        encrypt_round
+    """
+    print('stub')
 
 def __key_expansion(key):
     """
@@ -174,4 +176,3 @@ def __g_mul(a, b):
             a ^= 0x1b # Polynomial x^8 + x^4 + x^3 + x + 1
         b >>= 1
     return result
-
