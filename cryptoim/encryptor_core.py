@@ -130,15 +130,48 @@ def Encrypt(plaintext, key):
             message[i] = message[i:] + message[:i]
         return message
 
-    def MixColumns(message):
-        """
-            MixColumns
-        """
-        mat = [[2, 3, 1, 1],
-               [1, 2, 3, 1],
-               [1, 1, 2, 3],
-               [3, 1, 1, 2]]
-        resultmat = [[],
-                     [],
-                     [],
-                     []]
+def __MixColumns2(message):
+    """
+        MixColumns2
+    """
+    mat = [[2, 3, 1, 1],
+            [1, 2, 3, 1],
+            [1, 1, 2, 3],
+            [3, 1, 1, 2]]
+    resultmat = [[],
+                [],
+                [],
+                []]
+
+# 's' is the main State matrix, 'ss' is a temp matrix of the same dimensions as 's'.
+def __MixColumns(s):
+    """
+        MixColumns
+    """
+    GMul = __GMul
+    ss = [[]] # Array.Clear(ss, 0, ss.Length);
+
+    for c in range(4):
+        ss[0, c] = (GMul(0x02, s[0, c]) ^ GMul(0x03, s[1, c]) ^ s[2, c] ^ s[3, c])
+        ss[1, c] = (s[0, c] ^ GMul(0x02, s[1, c]) ^ GMul(0x03, s[2, c]) ^ s[3, c])
+        ss[2, c] = (s[0, c] ^ s[1, c] ^ GMul(0x02, s[2, c]) ^ GMul(0x03, s[3, c]))
+        ss[3, c] = (GMul(0x03, s[0, c]) ^ s[1, c] ^ s[2, c] ^ GMul(0x02, s[3, c]))
+
+    s = ss # ss.CopyTo(s, 0);
+
+def __GMul(a, b):
+    """
+        GMul
+        NOTE:   I had to move it to a global function in order to test it.
+                Why aren't all those functions global, but private?
+    """
+    p = 0
+    for counter in range(8):
+        if ((b & 1) != 0):
+            p ^= a
+        hi_bit_set = (a & 0x80)
+        a <<= 1
+        if (hi_bit_set != 0):
+            a ^= 0x1b # Polynomial x^8 + x^4 + x^3 + x + 1
+        b >>= 1
+    return p

@@ -17,6 +17,8 @@
    limitations under the License.
 """
 
+from nose.tools import ok_
+
 # A failing test
 #def testFail():
 #    assert False
@@ -36,4 +38,4 @@ def test_evens():
 
 # A test generator checker
 def check_even(n, nn):
-    assert n % 2 == 0 or nn % 2 == 0
+    ok_(n % 2 == 0 or nn % 2 == 0)

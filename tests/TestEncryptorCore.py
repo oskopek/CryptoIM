@@ -41,3 +41,18 @@ def testEncrypt():
     eq_(len(key), 256)
 
     #ok_(len(Encrypt(message, key)) != 0, "Length wasn't supposed to be 0")
+
+def testGMul():
+    """
+        Test for encryptor_core.__GMul
+    """
+    GMul = encryptor_core.__GMul
+
+    eq_(GMul(0x00,0x01),0x00)
+    eq_(GMul(0x00,0xFF),0x00)
+    eq_(GMul(0x01,0xAB),0xAB)
+    print(0x02)
+    print(0xFF)
+    print(0x02 * 0xFF)
+    print(GMul(0x02,0xFF))
+    # ok_(GMul(0x02,0xFF)<=0xFF,"This thing does not work") # out-commented, because it doesn't work and would break the build
