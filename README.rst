@@ -7,15 +7,19 @@ CryptoIM
 
 .. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png?branch=develop
     :target: https://coveralls.io/r/oskopek/CryptoIM?branch=develop
-
+    
 .. image:: https://pypip.in/v/CryptoIM/badge.png
-    :target: https://crate.io/packages/CryptoIM/
-    :alt: Latest PyPI version
+    :target: https://pypi.python.org/pypi/CryptoIM/
+    :alt: Latest Version
 
 .. image:: https://pypip.in/d/CryptoIM/badge.png
-    :target: https://crate.io/packages/CryptoIM/
-    :alt: Number of PyPI downloads
-
+    :target: https://pypi.python.org/pypi/CryptoIM/
+    :alt: Downloads
+    
+.. image:: https://pypip.in/license/CryptoIM/badge.png
+    :target: https://pypi.python.org/pypi/CryptoIM/
+    :alt: License
+    
 A crypto-aware instant messenger.
 
 Info
