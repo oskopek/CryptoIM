@@ -5,8 +5,8 @@ CryptoIM
 .. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop
     :target: https://travis-ci.org/oskopek/CryptoIM
 
-.. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png
-    :target: https://coveralls.io/r/oskopek/CryptoIM
+.. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png?branch=develop
+    :target: https://coveralls.io/r/oskopek/CryptoIM?branch=develop
 
 .. image:: https://pypip.in/v/CryptoIM/badge.png
     :target: https://crate.io/packages/CryptoIM/
