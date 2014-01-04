@@ -36,11 +36,8 @@ def encrypt_round(messages,roundkeys):
     for msg in messages:
         msg = __add_roundkey(msg,roundkeys[14])
         for i in range(14):
-            print (msg)
             msg = __sub_bytes(msg)
-            print (msg)
             msg = __shift_rows(msg)
-            print (msg)
             msg = __mix_columns(msg)
             msg = __add_roundkey(msg,roundkeys[i])
         msg = __sub_bytes(msg)
@@ -159,7 +156,7 @@ def __shift_rows(message):
         This rotation is done by using list slicing.
     """
     for i in range(4):
-        message[i] = message[i:] + message[:i]
+        message[i] = message[i][i:] + message[i][:i]
     return message
 
 # 'state_mat' is the main State matrix, 'temp_mat' is a temp matrix of the same dimensions as 'state_mat'.
