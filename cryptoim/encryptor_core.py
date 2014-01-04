@@ -99,13 +99,13 @@ def __split_message(plaintext):
             message_chunks.append(message_chunk)
             message_chunk = ''
     messages = []
-    for i in range(len(message_chunks)):
+    for chunk in message_chunks:
         matrix = [[], [], [], []]
-        for j in range(4):
-            for k in range(4):
+        for i in range(4):
+            for j in range(4):
                 # Cool way to iterate and transform at the same time
-                number = ord(message_chunks[4*i+j])
-                matrix[j].append(number)
+                number = ord(chunk[4*i+j])
+                matrix[i].append(number)
         messages.append(matrix)
     return messages
     # TODO: Check if this works as expected
@@ -167,10 +167,10 @@ def __mix_columns(state_mat):
     temp_mat = [[]] # Array.Clear(temp_mat, 0, temp_mat.Length);
 
     for column in range(4):
-        temp_mat[0, column] = (g_mul(0x02, state_mat[0, column]) ^ g_mul(0x03, state_mat[1, column]) ^ state_mat[2, column] ^ state_mat[3, column])
-        temp_mat[1, column] = (state_mat[0, column] ^ g_mul(0x02, state_mat[1, column]) ^ g_mul(0x03, state_mat[2, column]) ^ state_mat[3, column])
-        temp_mat[2, column] = (state_mat[0, column] ^ state_mat[1, column] ^ g_mul(0x02, state_mat[2, column]) ^ g_mul(0x03, state_mat[3, column]))
-        temp_mat[3, column] = (g_mul(0x03, state_mat[0, column]) ^ state_mat[1, column] ^ state_mat[2, column] ^ g_mul(0x02, state_mat[3, column]))
+        temp_mat[0][column] = (g_mul(0x02, state_mat[0][column]) ^ g_mul(0x03, state_mat[1][column]) ^ state_mat[2][column] ^ state_mat[3][column])
+        temp_mat[1][column] = (state_mat[0][column] ^ g_mul(0x02, state_mat[1][column]) ^ g_mul(0x03, state_mat[2][column]) ^ state_mat[3][column])
+        temp_mat[2][column] = (state_mat[0][column] ^ state_mat[1][column] ^ g_mul(0x02, state_mat[2][column]) ^ g_mul(0x03, state_mat[3][column]))
+        temp_mat[3][column] = (g_mul(0x03, state_mat[0][column]) ^ state_mat[1][column] ^ state_mat[2][column] ^ g_mul(0x02, state_mat[3][column]))
 
     state_mat = temp_mat # temp_mat.CopyTo(s, 0);
     return state_mat
