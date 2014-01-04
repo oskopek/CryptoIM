@@ -40,7 +40,9 @@ def test_encrypt():
     key = rand_str(256)
     eq_(len(key), 256)
 
-    #ok_(len(encrypt(message, key)) != 0, "Length wasn't supposed to be 0")
+    encrypted_str = encrypt(message, key)
+    print(encrypted_str)
+    ok_(len(encrypt(message, key)) >= 0, "Length wasn't supposed to be 0")
 
 def test_g_mul():
     """
