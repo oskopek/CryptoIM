@@ -23,6 +23,15 @@ def encrypt(plaintext, key):
         key = string (256 bytes)
     """
 
+    messages = __split_message(plaintext)
+    roundkeys = __roundkey_separator(__key_expansion(key))
+    return encrypt_round(messages,roundkeys)
+    
+
+def encrypt_round(messages,roundkeys):
+    
+    
+
 def __key_expansion(key):
     """
         key_expansion
@@ -68,6 +77,10 @@ def __split_message(plaintext):
         message_chunk += character
         # After 16 characters appends 1 chunk into a list of chunks
         if len(message_chunk) == 16:
+            message_chunks.append(message_chunk)
+            message_chunk = ''
+        else:
+            message_chunk += (16-len(message_chunk))*'\x00'
             message_chunks.append(message_chunk)
             message_chunk = ''
     messages = []
@@ -145,13 +158,11 @@ def __mix_columns(state_mat):
         temp_mat[3, column] = (g_mul(0x03, state_mat[0, column]) ^ state_mat[1, column] ^ state_mat[2, column] ^ g_mul(0x02, state_mat[3, column]))
 
     state_mat = temp_mat # temp_mat.CopyTo(s, 0);
+    return state_mat
 
 def __g_mul(a, b):
     """
-        g_mul
-        NOTE:   I had to move it to a global function in order to test it.
-                Why aren't all those functions global, but private?
-                No idea.
+        g_mul, Bitwise multiplication
     """
     result = 0
     for i in range(8):
@@ -163,3 +174,4 @@ def __g_mul(a, b):
             a ^= 0x1b # Polynomial x^8 + x^4 + x^3 + x + 1
         b >>= 1
     return result
+
