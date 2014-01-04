@@ -207,6 +207,8 @@ def __message_fusion(message):
             hexadecimal = hex(message[i][j]).lstrip('0x')
             if len(hexadecimal) == 0:
                 hexadecimal = '00'
+            if len(hexadecimal) == 1:
+                hexadecimal = '0'+hexadecimal
             result_string += hexadecimal
     return result_string
 
