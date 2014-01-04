@@ -77,11 +77,19 @@ def test_sub_bytes():
 
     eq_(sub_bytes(input_mat), expected_mat)
 
-##def test_message_fusion():
-##    """
-##        Test for encryptor_core.__message_fusion
-##    """
-##    message_fusion = encryptor_core.__message_fusion
-##
-##    input_mat= [[],[],[],[]]
+def test_message_fusion():
+    """
+        Test for encryptor_core.__message_fusion
+    """
+    message_fusion = encryptor_core.__message_fusion
+
+    input_mat= [[39, 225, 248, 242],
+                [148, 88, 11, 253],
+                [109, 38, 230, 13],
+                [12, 229, 160, 182]]
+
+    ok_(variable._type(message_fusion(input_mat))=str,"Not a string!")
+    eq_(len(message_fusion(input_mat)),32)
+
+
     
