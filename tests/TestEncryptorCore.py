@@ -25,8 +25,7 @@ def test_encrypt():
         Test for encryptor_core.encrypt
     """
     encrypt = encryptor_core.encrypt
-
-    message = "test"
+    message = "This is a test message!"
 
     def rand_str(limit):
         from string import ascii_letters, digits
@@ -83,13 +82,20 @@ def test_message_fusion():
     """
     message_fusion = encryptor_core.__message_fusion
 
-    input_mat= [[39, 225, 248, 242],
+    input_mat = [[39, 225, 248, 242],
                 [148, 88, 11, 253],
                 [109, 38, 230, 13],
                 [12, 229, 160, 182]]
 
+    input_mat_zeros = [[0,0,0,0],
+                       [0,0,0,0],
+                       [0,0,0,0],
+                       [0,0,0,0]]
+
     ok_(type(message_fusion(input_mat))==str,"Not a string!")
+    ok_(type(message_fusion(input_mat_zeros))==str,"Zeros - Not a string!")
     eq_(len(message_fusion(input_mat)),32)
+    eq_(len(message_fusion(input_mat_zeros)),32)
 
 def test_key_expansion():
     """
