@@ -144,11 +144,7 @@ def __sub_bytes(message):
 
     for i in range(4):
         for j in range(4):
-            hexadecimal = hex(message[i][j]).lstrip("0x")
-            if hexadecimal == '':
-                hexadecimal = '00'
-            if len(hexadecimal)<2:
-                hexadecimal = "0"+hexadecimal
+            hexadecimal = hex(message[i][j])[2:]
             message[i][j] = sbox[int(hexadecimal[0], 16)][int(hexadecimal[1], 16)]
     return message
     # TODO: Check if returns in decimal or hexadecimal
@@ -204,11 +200,7 @@ def __message_fusion(message):
     result_string = ""
     for i in range(4):
         for j in range(4):
-            hexadecimal = hex(message[i][j]).lstrip('0x')
-            if len(hexadecimal) == 0:
-                hexadecimal = '00'
-            if len(hexadecimal) == 1:
-                hexadecimal = '0'+hexadecimal
+            hexadecimal = hex(message[i][j])[2:]
             result_string += hexadecimal
     return result_string
 
