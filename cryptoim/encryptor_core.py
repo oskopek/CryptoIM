@@ -175,3 +175,9 @@ def __g_mul(a, b):
         b >>= 1
     return result
 
+def __message_fusion(message):
+    result_string = ""
+    for i in range(4):
+        for j in range(4):
+            letter = chr(message[i][j])
+            result_string += letter
