@@ -93,10 +93,10 @@ def test_message_fusion():
 
 def test_key_expansion():
     """
-        Test for encryptor_core.__message_fusion
+        Test for encryptor_core.__key_separator
     """
 
-    key_expansion - encryptor_core.__key_expansion
+    key_expansion = encryptor_core.__key_expansion
 
     def rand_str(limit):
         from string import ascii_letters, digits
