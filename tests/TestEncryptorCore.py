@@ -77,11 +77,11 @@ def test_sub_bytes():
 
     eq_(sub_bytes(input_mat), expected_mat)
 
-def test_message_fusion():
-    """
-        Test for encryptor_core.__message_fusion
-    """
-    message_fusion = encryptor_core.__message_fusion
-
-    input_mat= [[],[],[],[]]
+##def test_message_fusion():
+##    """
+##        Test for encryptor_core.__message_fusion
+##    """
+##    message_fusion = encryptor_core.__message_fusion
+##
+##    input_mat= [[],[],[],[]]
     
