@@ -204,7 +204,9 @@ def __message_fusion(message):
     result_string = ""
     for i in range(4):
         for j in range(4):
-            letter = chr(message[i][j])
-            result_string += letter
+            hexadecimal = hex(message[i][j]).lstrip('0x')
+            if len(hexadecimal) == 0:
+                hexadecimal = '00'
+            result_string += hexadecimal
     return result_string
 

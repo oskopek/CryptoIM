@@ -75,4 +75,13 @@ def test_sub_bytes():
                     [0x36,0xA3,0xF3,0xFB],
                     [0x92,0x8B,0x71,0x12]]
 
-    eq_(sub_bytes(input_mat),expected_mat)
+    eq_(sub_bytes(input_mat), expected_mat)
+
+def test_message_fusion():
+    """
+        Test for encryptor_core.__message_fusion
+    """
+    message_fusion = encryptor_core.__message_fusion
+
+    input_mat= [[],[],[],[]]
+    
