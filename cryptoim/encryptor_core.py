@@ -144,6 +144,8 @@ def __sub_bytes(message):
     for i in range(4):
         for j in range(4):
             hexadecimal = hex(message[i][j]).lstrip("0x")
+            if hexadecimal == '':
+                hexadecimal = '00'
             if len(hexadecimal)<2:
                 hexadecimal = "0"+hexadecimal
             message[i][j] = sbox[int(hexadecimal[0], 16)][int(hexadecimal[1], 16)]
