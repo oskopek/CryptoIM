@@ -151,6 +151,7 @@ def __g_mul(a, b):
         g_mul
         NOTE:   I had to move it to a global function in order to test it.
                 Why aren't all those functions global, but private?
+                No idea.
     """
     result = 0
     for i in range(8):
