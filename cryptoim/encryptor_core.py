@@ -43,7 +43,7 @@ def encrypt_round(messages,roundkeys):
         msg = __sub_bytes(msg)
         msg = __shift_rows(msg)
         msg = __add_roundkey(msg,roundkeys[15])
-        ciphertext += msg
+        ciphertext += __message_fusion(msg)
     return ciphertext
         
 
@@ -165,7 +165,7 @@ def __mix_columns(state_mat):
         mix_columns
     """
     g_mul = __g_mul
-    temp_mat = [[]] # Array.Clear(temp_mat, 0, temp_mat.Length);
+    temp_mat = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]] # Array.Clear(temp_mat, 0, temp_mat.Length);
 
     for column in range(4):
         temp_mat[0][column] = (g_mul(0x02, state_mat[0][column]) ^ g_mul(0x03, state_mat[1][column]) ^ state_mat[2][column] ^ state_mat[3][column])
