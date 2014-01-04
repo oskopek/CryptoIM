@@ -25,8 +25,7 @@ def test_encrypt():
         Test for encryptor_core.encrypt
     """
     encrypt = encryptor_core.encrypt
-
-    message = "test"
+    message = "This is a test message!"
 
     def rand_str(limit):
         from string import ascii_letters, digits
@@ -77,9 +76,50 @@ def test_sub_bytes():
                  [0x05,0x0A,0x0D,0x0F],
                  [0x4F,0x3D,0xA3,0xC9]]
 
-    expected_mat = [[0x09,0x6A,0x7D,0x37],
-                    [0x9B,0x52,0x99,0x7B],
-                    [0x30,0x40,0x31,0xFB],
-                    [0x25,0x42,0x74,0x14]]
+    expected_mat = [[0x09,0x6A,0x7D,0x0E],
+                    [0x2F,0x52,0x99,0xA1],
+                    [0x36,0xA3,0xF3,0xFB],
+                    [0x92,0x8B,0x71,0x12]]
 
-    #eq_(sub_bytes(input_mat),expected_mat)
+    eq_(sub_bytes(input_mat), expected_mat)
+
+def test_message_fusion():
+    """
+        Test for encryptor_core.__message_fusion
+    """
+    message_fusion = encryptor_core.__message_fusion
+
+    input_mat = [[39, 225, 248, 242],
+                [148, 88, 11, 253],
+                [109, 38, 230, 13],
+                [12, 229, 160, 182]]
+
+    input_mat_zeros = [[0,0,0,0],
+                       [0,0,0,0],
+                       [0,0,0,0],
+                       [0,0,0,0]]
+
+    ok_(type(message_fusion(input_mat))==str,"Not a string!")
+    ok_(type(message_fusion(input_mat_zeros))==str,"Zeros - Not a string!")
+    eq_(len(message_fusion(input_mat)),32)
+    eq_(len(message_fusion(input_mat_zeros)),32)
+
+def test_key_expansion():
+    """
+        Test for encryptor_core.__key_separator
+    """
+
+    key_expansion = encryptor_core.__key_expansion
+
+    def rand_str(limit):
+        from string import ascii_letters, digits
+        from random import choice
+
+        rand = ""
+        for i in range(limit):
+            rand += choice(ascii_letters)
+        return rand
+
+    key = rand_str(32)
+    eq_(len(key_expansion(key)),256)
+    
