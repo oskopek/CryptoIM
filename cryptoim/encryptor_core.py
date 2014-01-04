@@ -36,8 +36,11 @@ def encrypt_round(messages,roundkeys):
     for msg in messages:
         msg = __add_roundkey(msg,roundkeys[14])
         for i in range(14):
+            print (msg)
             msg = __sub_bytes(msg)
+            print (msg)
             msg = __shift_rows(msg)
+            print (msg)
             msg = __mix_columns(msg)
             msg = __add_roundkey(msg,roundkeys[i])
         msg = __sub_bytes(msg)
@@ -88,14 +91,13 @@ def __split_message(plaintext):
     """
     message_chunks = []
     message_chunk = ''
-    for character in plaintext:
-        message_chunk += character
-        # After 16 characters appends 1 chunk into a list of chunks
+    for i in range(len(plaintext)):
+        message_chunk += plaintext[i]
         if len(message_chunk) == 16:
             message_chunks.append(message_chunk)
             message_chunk = ''
-        else:
-            message_chunk += (16-len(message_chunk))*'\x00'
+        if i == (len(plaintext)-1) and len(message_chunk) < 16:
+            message_chunk += (16-len(message_chunk))*"\x00"
             message_chunks.append(message_chunk)
             message_chunk = ''
     messages = []
@@ -145,6 +147,8 @@ def __sub_bytes(message):
     for i in range(4):
         for j in range(4):
             hexadecimal = hex(message[i][j]).lstrip("0x")
+            if len(hexadecimal)<2:
+                hexadecimal = "0"+hexadecimal
             message[i][j] = sbox[int(hexadecimal[0], 16)][int(hexadecimal[1], 16)]
     return message
     # TODO: Check if returns in decimal or hexadecimal
