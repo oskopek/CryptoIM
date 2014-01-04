@@ -88,8 +88,25 @@ def test_message_fusion():
                 [109, 38, 230, 13],
                 [12, 229, 160, 182]]
 
-    ok_(variable._type(message_fusion(input_mat))=str,"Not a string!")
+    ok_(type(message_fusion(input_mat))==str,"Not a string!")
     eq_(len(message_fusion(input_mat)),32)
 
+def test_key_expansion():
+    """
+        Test for encryptor_core.__message_fusion
+    """
 
+    key_expansion - encryptor_core.__key_expansion
+
+    def rand_str(limit):
+        from string import ascii_letters, digits
+        from random import choice
+
+        rand = ""
+        for i in range(limit):
+            rand += choice(ascii_letters)
+        return rand
+
+    key = rand_str(32)
+    eq_(len(key_expansion(key)),256)
     
