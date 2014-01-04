@@ -32,7 +32,20 @@ def encrypt_round(messages,roundkeys):
     """
         encrypt_round
     """
-    print('stub')
+    ciphertext = ""
+    for msg in messages:
+        msg = __add_roundkey(msg,roundkeys[14])
+        for i in range(14):
+            msg = __sub_bytes(msg)
+            msg = __shift_rows(msg)
+            msg = __mix_columns(msg)
+            msg = __add_roundkey(msg,roundkeys[i])
+        msg = __sub_bytes(msg)
+        msg = __shift_rows(msg)
+        msg = __add_roundkey(msg,roundkeys[15])
+        ciphertext += msg
+    return ciphertext
+        
 
 def __key_expansion(key):
     """
