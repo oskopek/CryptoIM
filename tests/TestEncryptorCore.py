@@ -42,7 +42,14 @@ def test_encrypt():
 
     encrypted_str = encrypt(message, key)
     print(encrypted_str)
-    ok_(len(encrypt(message, key)) >= 0, "Length wasn't supposed to be 0")
+    ok_(len(encrypted_str) >= 0, "Length wasn't supposed to be 0")
+
+    encrypted1 = encrypt("014730f80ac625fe84f026c60bfd547d", "0000000000000000000000000000000000000000000000000000000000000000")
+    print(encrypted1)
+    expected1 = "5c9d844ed46f9885085e5d6a4f94c7d7"
+    ok_(len(encrypted1) >= 0, "Length wasn't supposed to be 0")
+    #eq_(encrypted1, expected1)
+
 
 def test_g_mul():
     """
