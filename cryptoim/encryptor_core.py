@@ -34,15 +34,15 @@ def encrypt_round(messages, roundkeys):
     """
     ciphertext = ""
     for msg in messages:
-        msg = __add_roundkey(msg,roundkeys[14])
+        msg = __add_roundkey(msg, roundkeys[14])
         for i in range(14):
             msg = __sub_bytes(msg)
             msg = __shift_rows(msg)
             msg = __mix_columns(msg)
-            msg = __add_roundkey(msg,roundkeys[i])
+            msg = __add_roundkey(msg, roundkeys[i])
         msg = __sub_bytes(msg)
         msg = __shift_rows(msg)
-        msg = __add_roundkey(msg,roundkeys[15])
+        msg = __add_roundkey(msg, roundkeys[15])
         ciphertext += __message_fusion(msg)
     return ciphertext
 
@@ -167,7 +167,10 @@ def __mix_columns(state_mat):
         mix_columns
     """
     g_mul = __g_mul
-    temp_mat = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]] # Array.Clear(temp_mat, 0, temp_mat.Length);
+    temp_mat = [[0, 0 , 0, 0], # Array.Clear(temp_mat, 0, temp_mat.Length);
+                [0, 0 , 0, 0],
+                [0, 0 , 0, 0],
+                [0, 0 , 0, 0]]
 
     for column in range(4):
         temp_mat[0][column] = (g_mul(0x02, state_mat[0][column]) ^ g_mul(0x03, state_mat[1][column]) ^ state_mat[2][column] ^ state_mat[3][column])
@@ -194,6 +197,9 @@ def __g_mul(a, b):
     return result
 
 def __message_fusion(message):
+    """
+        message_fusion
+    """
     result_string = ""
     for i in range(4):
         for j in range(4):
