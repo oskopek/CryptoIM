@@ -170,10 +170,10 @@ def __mix_columns(state_mat):
                 [0, 0 , 0, 0]]
 
     for column in range(4):
-        temp_mat[0][column] = (g_mul(0x02, state_mat[0][column]) ^ g_mul(0x03, state_mat[1][column]) ^ state_mat[2][column] ^ state_mat[3][column])
-        temp_mat[1][column] = (state_mat[0][column] ^ g_mul(0x02, state_mat[1][column]) ^ g_mul(0x03, state_mat[2][column]) ^ state_mat[3][column])
-        temp_mat[2][column] = (state_mat[0][column] ^ state_mat[1][column] ^ g_mul(0x02, state_mat[2][column]) ^ g_mul(0x03, state_mat[3][column]))
-        temp_mat[3][column] = (g_mul(0x03, state_mat[0][column]) ^ state_mat[1][column] ^ state_mat[2][column] ^ g_mul(0x02, state_mat[3][column]))
+        temp_mat[0][column] = (g_mul(state_mat[0][column], 0x02) ^ g_mul(state_mat[1][column], 0x03) ^ state_mat[2][column] ^ state_mat[3][column])
+        temp_mat[1][column] = (state_mat[0][column] ^ g_mul(state_mat[1][column], 0x02) ^ g_mul(state_mat[2][column], 0x03) ^ state_mat[3][column])
+        temp_mat[2][column] = (state_mat[0][column] ^ state_mat[1][column] ^ g_mul(state_mat[2][column], 0x02) ^ g_mul(state_mat[3][column], 0x03))
+        temp_mat[3][column] = (g_mul(state_mat[0][column], 0x03) ^ state_mat[1][column] ^ state_mat[2][column] ^ g_mul(state_mat[2][column], 0x02))
 
     state_mat = temp_mat # temp_mat.CopyTo(s, 0);
     return state_mat
@@ -183,15 +183,12 @@ def __g_mul(a, b):
         g_mul, Bitwise multiplication
     """
     result = 0
-    for _ in range(8):
-        if ((b & 1) != 0):
-            result ^= a
-        hi_bit_set = (a & 0x80)
-        a <<= 1
-        if (hi_bit_set != 0):
-            a ^= 0x1b # Polynomial x^8 + x^4 + x^3 + x + 1
-        b >>= 1
+    a <<= 1
+    a = bin(a)[3:]
+    a = int(a,2)
+    result = a^b
     return result
+    
 
 def __message_fusion(message):
     """
