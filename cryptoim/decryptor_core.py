@@ -25,9 +25,9 @@ def decrypt(ciphertext, key):
         decrypt
     """
     ciphertexts = __ciphertext_fission(ciphertext)
+    print(ciphertexts)
     extendedkey = encryptor_core.__key_expansion(key)
     roundkeys = encryptor_core.__roundkey_separator(extendedkey)
-    print(ciphertexts)
     return decrypt_round(ciphertexts,roundkeys)
     
 def decrypt_round(ciphertexts,roundkeys):
@@ -44,6 +44,7 @@ def decrypt_round(ciphertexts,roundkeys):
         ct = encryptor_core.__add_roundkey(ct,roundkeys[14])
         ct = __message_completion(ct)
         plaintext += ct
+        plaintext = plaintext.replace('\x00', '')
     return plaintext
 
 def __ciphertext_fission(ciphertext):
@@ -64,6 +65,7 @@ def __ciphertext_fission(ciphertext):
                 matrix[int(i/8)].append(int(hexadecimal, 16))
                 hexadecimal = ''
         ciphertexts.append(matrix)
+        ciphertext = ciphertext[32:]
     return ciphertexts
 
 def __mat_search(mat, elem):
@@ -75,7 +77,7 @@ def __mat_search(mat, elem):
             mat[i].index(elem)
             return i, mat[i].index(elem)
         except ValueError:
-            print('Expected ValueError')
+            pass
 
 def __rsub_bytes(ciphertext):
     chex = encryptor_core.__convert_char_hex
@@ -85,7 +87,7 @@ def __rsub_bytes(ciphertext):
     for i in range(4):
         for j in range(4):
             idx = __mat_search(encryptor_core.SBOX, ciphertext[i][j])
-            ciphertext[i][j] = int((chex(idx[0]) + chex(idx[1])), 16)
+            ciphertext[i][j] = int((chex(idx[0])[1:] + chex(idx[1])[1:]), 16)
     return ciphertext
 
 def __rshift_rows(ciphertext):
@@ -144,3 +146,4 @@ def __message_completion(ct):
             letter = chr(ct[i][j])
             result_string += letter
     return result_string
+
