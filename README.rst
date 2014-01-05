@@ -7,7 +7,7 @@ CryptoIM
 
 .. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png?branch=develop
     :target: https://coveralls.io/r/oskopek/CryptoIM?branch=develop
-    
+
 .. image:: https://pypip.in/v/CryptoIM/badge.png
     :target: https://pypi.python.org/pypi/CryptoIM/
     :alt: Latest Version
@@ -15,12 +15,12 @@ CryptoIM
 .. image:: https://pypip.in/d/CryptoIM/badge.png
     :target: https://pypi.python.org/pypi/CryptoIM/
     :alt: Downloads
-    
+
 .. image:: https://pypip.in/license/CryptoIM/badge.png
     :target: https://pypi.python.org/pypi/CryptoIM/
     :alt: License
-    
-A crypto-aware instant messenger written out of sheer fun.
+
+A crypto-aware instant messenger written in Python out of sheer fun.
 
 Info
 ====

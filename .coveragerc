@@ -1,4 +1,10 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-omit = /usr/*
+omit = */python?.?/*
+    */site-packages/nose/*
+
+[report]
+omit =
+    */python?.?/*
+    */site-packages/nose/*
