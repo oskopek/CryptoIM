@@ -17,8 +17,8 @@
    limitations under the License.
 """
 
-from cryptoim import decryptor_core
-from cryptoim import encryptor_core
+from cryptoim.decryptor_core import decryptor_core
+from cryptoim.encryptor_core import encryptor_core
 from nose.tools import ok_, eq_
 
 def test_decrypt():
@@ -29,21 +29,24 @@ def test_decrypt():
     encrypt = encryptor_core.encrypt
 
     def rand_str(limit):
-        from string import ascii_letters, digits
+        """
+            rand_str
+        """
+        from string import ascii_letters
         from random import choice
 
         rand = ""
-        for i in range(limit):
+        for _ in range(limit):
             rand += choice(ascii_letters)
         return rand
-    
+
     message = "This is a test message"
     key = rand_str(32)
-    CT = encrypt(message,key)
-    PT = decrypt(CT, key)
-    eq_(message,PT)
-    
-    # ok_(len(decrypt(message, key)) != 0, "Length wasn't supposed to be 0") # Doesn't work yet
+    ctext = encrypt(message, key)
+    ptext = decrypt(ctext, key)
+    eq_(message, ptext)
+
+    # ok_(len(decrypt(message, key)) != 0, "Length wasn't supposed to be 0")
 
 def test_ciphertext_fission():
     """
@@ -52,14 +55,14 @@ def test_ciphertext_fission():
 
     ciphertext_fission = decryptor_core.__ciphertext_fission
 
-    CT = '969afe5697ae7805308929daeb94c65b6e85768bc40dccd4bc616dd7345e6ec6'
-    ciphertexts = ciphertext_fission(CT)
+    ctext = '969afe5697ae7805308929daeb94c65b6e85768bc40dccd4bc616dd7345e6ec6'
+    ciphertexts = ciphertext_fission(ctext)
     for cts in ciphertexts:
-        eq_(len(cts),4)
+        eq_(len(cts), 4)
         for row in cts:
-            eq_(len(row),4)
-            
-    
+            eq_(len(row), 4)
+
+
 def test_rsub_bytes():
     """
        Test for decryptor_core.__rsub_bytes
@@ -74,21 +77,21 @@ def test_rsub_bytes():
                  [0x2c, 0xe1, 0x12, 0x3a]]
 
     subbed_mat = sub_bytes(input_mat)
-    eq_(input_mat,rsub_bytes(subbed_mat))
+    eq_(input_mat, rsub_bytes(subbed_mat))
 
 def test_rshift_rows():
     """
-       Test for decryptor_core.__rshift_rows 
+       Test for decryptor_core.__rshift_rows
     """
 
     rshift_rows = decryptor_core.__rshift_rows
 
-    input_mat = [[1,2,3,4],
-                 [2,3,4,1],
-                 [3,4,1,2],
-                 [4,1,2,3]]
-    expected_mat = [[1,2,3,4],
-                    [1,2,3,4],
-                    [1,2,3,4],
-                    [1,2,3,4]]
-    eq_(rshift_rows(input_mat),expected_mat)
+    input_mat = [[1, 2, 3, 4],
+                 [2, 3, 4, 1],
+                 [3, 4, 1, 2],
+                 [4 ,1, 2, 3]]
+    expected_mat = [[1, 2, 3, 4],
+                    [1, 2, 3, 4],
+                    [1, 2, 3, 4],
+                    [1, 2, 3, 4]]
+    eq_(rshift_rows(input_mat), expected_mat)
