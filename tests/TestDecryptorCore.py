@@ -58,8 +58,7 @@ def test_ciphertext_fission():
         eq_(len(cts),4)
         for row in cts:
             eq_(len(row),4)
-            for element in row:
-                eq_(len(hex(element)),4)
+            
     
 def test_rsub_bytes():
     """

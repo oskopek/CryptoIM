@@ -17,15 +17,17 @@
    limitations under the License.
 """
 
-from cryptoim.common import __key_expansion, __roundkey_separator, __add_roundkey, __convert_char_hex
-import cryptoim.const as const
+
+import const
+import encryptor_core
+import common
+from common import __roundkey_separator,__key_expansion,__add_roundkey,__convert_char_hex
 
 def decrypt(ciphertext, key):
     """
         decrypt
     """
     ciphertexts = __ciphertext_fission(ciphertext)
-    print(ciphertexts)
     extendedkey = __key_expansion(key)
     roundkeys = __roundkey_separator(extendedkey)
     return decrypt_round(ciphertexts, roundkeys)
@@ -107,7 +109,9 @@ def __rmix_columns(state_mat):
         Reversed mix_columns
     """
     g_mul = __g_mul
-    temp_mat = const.EMPTY_MAT_4_4
+    #temp_mat = const.EMPTY_MAT_4_4
+    temp_mat = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+    print(temp_mat)
 
     for column in range(4):
         temp_mat[0][column] = (g_mul(state_mat[0][column], 0x0E) ^ g_mul(state_mat[1][column], 0x0B) ^

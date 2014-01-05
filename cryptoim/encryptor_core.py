@@ -17,8 +17,10 @@
    limitations under the License.
 """
 
-from cryptoim.common import __key_expansion, __roundkey_separator, __add_roundkey, __convert_char_hex
-import cryptoim.const as const
+import const
+import decryptor_core
+import common
+from common import __roundkey_separator,__key_expansion,__add_roundkey,__convert_char_hex
 
 def encrypt(plaintext, key):
     """
