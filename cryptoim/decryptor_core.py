@@ -106,10 +106,10 @@ def __rmix_columns(state_mat):
     """
         Reversed mix_columns
     """
+    import copy
+
     g_mul = __g_mul
-    #temp_mat = const.EMPTY_MAT_4_4
-    temp_mat = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-    print(temp_mat)
+    temp_mat = copy.deepcopy(const.EMPTY_MAT_4_4)
 
     for column in range(4):
         temp_mat[0][column] = (g_mul(state_mat[0][column], 0x0E) ^ g_mul(state_mat[1][column], 0x0B) ^

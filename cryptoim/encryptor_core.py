@@ -107,9 +107,10 @@ def __mix_columns(state_mat):
     """
         mix_columns
     """
+    import copy
+
     g_mul = __g_mul
-    #temp_mat = const.EMPTY_MAT_4_4
-    temp_mat = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+    temp_mat = copy.deepcopy(const.EMPTY_MAT_4_4)
 
     for column in range(4):
         temp_mat[0][column] = (g_mul(state_mat[0][column], 0x02) ^ g_mul(state_mat[1][column], 0x03) ^ state_mat[2][column] ^ state_mat[3][column])
