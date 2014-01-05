@@ -75,6 +75,42 @@ def __rshift_rows(ciphertext):
         ciphertext[i] = ciphertext[i][-i:] + ciphertext[i][:-i]
     return ciphertext
 
+def __rmix_columns(ciphertext):
+     """
+        Reversed mix_columns
+    """
+    g_mul = __g_mul
+    temp_mat = [[0, 0 , 0, 0], # Array.Clear(temp_mat, 0, temp_mat.Length);
+                [0, 0 , 0, 0],
+                [0, 0 , 0, 0],
+                [0, 0 , 0, 0]]
 
-    
+    for column in range(4):
+        temp_mat[0][column] = (g_mul(state_mat[0][column], 0x0E) ^ g_mul(state_mat[1][column], 0x0B) ^ g_mul(state_mat[2][column], 0x0D) ^ g_mul(state_mat[3][column], 0x09))
+        temp_mat[1][column] = (g_mul(state_mat[0][column], 0x09) ^ g_mul(state_mat[1][column], 0x0E) ^ g_mul(state_mat[2][column], 0x0B) ^ g_mul(state_mat[3][column], 0x0D))
+        temp_mat[2][column] = (g_mul(state_mat[0][column], 0x0D) ^ g_mul(state_mat[1][column], 0x09) ^ g_mul(state_mat[2][column], 0x0E) ^ g_mul(state_mat[3][column], 0x0B))
+        temp_mat[3][column] = (g_mul(state_mat[0][column], 0x0B) ^ g_mul(state_mat[1][column], 0x0D) ^ g_mul(state_mat[2][column], 0x09) ^ g_mul(state_mat[3][column], 0x0E))
 
+    state_mat = temp_mat # temp_mat.CopyTo(s, 0);
+    return state_mat
+
+def __g_mul(a, b):
+    """
+        g_mul, Bitwise multiplication
+    """
+    if b == 9:
+        a = __convert_char_hex(a)
+        result = galois_tables.nine[int(a[0],16)][int(a[1],16)]
+        return result
+    if b == 11:
+        a = __convert_char_hex(a)
+        result = galois_tables.eleven[int(a[0],16)][int(a[1],16)]
+        return result
+    if b == 13:
+        a = __convert_char_hex(a)
+        result = galois_tables.thirteen[int(a[0],16)][int(a[1],16)]
+        return result
+    if b == 14:
+        a = __convert_char_hex(a)
+        result = galois_tables.fourteen[int(a[0],16)][int(a[1],16)]
+        return result
