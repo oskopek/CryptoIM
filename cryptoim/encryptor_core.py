@@ -173,7 +173,7 @@ def __mix_columns(state_mat):
         temp_mat[0][column] = (g_mul(state_mat[0][column], 0x02) ^ g_mul(state_mat[1][column], 0x03) ^ state_mat[2][column] ^ state_mat[3][column])
         temp_mat[1][column] = (state_mat[0][column] ^ g_mul(state_mat[1][column], 0x02) ^ g_mul(state_mat[2][column], 0x03) ^ state_mat[3][column])
         temp_mat[2][column] = (state_mat[0][column] ^ state_mat[1][column] ^ g_mul(state_mat[2][column], 0x02) ^ g_mul(state_mat[3][column], 0x03))
-        temp_mat[3][column] = (g_mul(state_mat[0][column], 0x03) ^ state_mat[1][column] ^ state_mat[2][column] ^ g_mul(state_mat[2][column], 0x02))
+        temp_mat[3][column] = (g_mul(state_mat[0][column], 0x03) ^ state_mat[1][column] ^ state_mat[2][column] ^ g_mul(state_mat[3][column], 0x02))
 
     state_mat = temp_mat # temp_mat.CopyTo(s, 0);
     return state_mat
@@ -185,6 +185,8 @@ def __g_mul(a, b):
     result = 0
     a <<= 1
     a = bin(a)[3:]
+    if len(a) == 0:
+        a = '0'
     a = int(a,2)
     result = a^b
     return result
