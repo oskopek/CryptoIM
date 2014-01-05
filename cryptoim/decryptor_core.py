@@ -17,14 +17,34 @@
    limitations under the License.
 """
 
-from cryptoim import encryptor_core
+import encryptor_core
 import  galois_tables
 
 def decrypt(ciphertext, key):
     """
         decrypt
     """
-    print(ciphertext, key)
+    ciphertexts = __ciphertext_fission(ciphertext)
+    extendedkey = encryptor_core.__key_expansion(key)
+    roundkeys = encryptor_core._roundkey_separator(extendedkey)
+
+    return decrypt_round(ciphertexts,roundkeys)
+    
+def decrypt_round(ciphertexts,roundkeys):
+    plaintext = ''
+    for ct in ciphertexts:
+        ct = encryptor_core.__add_roundkey(ct,roundkeys[15])
+        ct = __rshiftrows(ct)
+        ct = __rsub_bytes(ct)
+        for i in range(13,-1,-1):
+            ct = encryptor_core.__add_roundkey(ct,roundkeys[i])
+            ct = __rmixcolumns(ct)
+            ct = __rshiftrows(ct)
+            ct = __rsubbytes(ct)
+        ct = encryptor_core.__add_roundkey(ct,roundkeys[14])
+        ct = __message_completion(ct)
+        plaintext += ct
+    return plaintext
 
 def __ciphertext_fission(ciphertext):
     """
@@ -33,7 +53,7 @@ def __ciphertext_fission(ciphertext):
     """
     assert len(ciphertext) % 2 == 0
 
-    ciphertext = []
+    ciphertexts = []
     hexadecimal = ''
 
     for _ in range((len(ciphertext)/32 + 1)):
@@ -42,8 +62,8 @@ def __ciphertext_fission(ciphertext):
             hexadecimal += ciphertext[i]
             if len(hexadecimal) == 2:
                 matrix[i/8].append(int(hexadecimal, 16))
-            ciphertext.append(matrix)
-    return ciphertext
+            ciphertexts.append(matrix)
+    return ciphertexts
 
 def __mat_search(mat, elem):
     """
@@ -76,7 +96,7 @@ def __rshift_rows(ciphertext):
     return ciphertext
 
 def __rmix_columns(ciphertext):
-     """
+    """
         Reversed mix_columns
     """
     g_mul = __g_mul
@@ -114,3 +134,11 @@ def __g_mul(a, b):
         a = __convert_char_hex(a)
         result = galois_tables.fourteen[int(a[0],16)][int(a[1],16)]
         return result
+
+def __message_completion(ct):
+    result_string = ''
+    for i in range(4):
+        for j in range(4):
+            letter = chr(ct[i][j])
+            result_string += letter
+    return result_string
