@@ -17,8 +17,8 @@
    limitations under the License.
 """
 
-from cryptoim.decryptor_core import decryptor_core
-from cryptoim.encryptor_core import encryptor_core
+import cryptoim.decryptor_core as decryptor_core
+import cryptoim.encryptor_core as encryptor_core
 from nose.tools import ok_, eq_
 
 def test_decrypt():
@@ -46,7 +46,7 @@ def test_decrypt():
     ptext = decrypt(ctext, key)
     eq_(message, ptext)
 
-    # ok_(len(decrypt(message, key)) != 0, "Length wasn't supposed to be 0")
+    #TODO ok_(len(decrypt(message, key)) != 0, "Length wasn't supposed to be 0")
 
 def test_ciphertext_fission():
     """
