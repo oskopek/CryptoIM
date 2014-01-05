@@ -53,14 +53,24 @@ def __mat_search(mat, elem):
             mat[i].index(elem)
             return i, mat[i].index(elem)
         except ValueError:
-            print('ValueError')
+            print('Expected ValueError')
 
 def __rsub_bytes(ciphertext):
+    chex = encryptor_core.__convert_char_hex
     """
         Reversed SubBytes step
     """
     for i in range(4):
         for j in range(4):
             idx = __mat_search(encryptor_core.SBOX, ciphertext[i][j])
-            ciphertext[i][j] = int((hex(idx[0])[2:] + hex(idx[1])[2:]), 16)
+            ciphertext[i][j] = int((chex(idx[0]) + chex(idx[1])), 16)
     return ciphertext
+
+def __rshift_rows(ciphertext):
+    """
+        Reversed shift rows
+    """
+    for i in range(4):
+        ciphertext[i] = ciphertext[i][-i:] + ciphertext[i][:-i]
+    return ciphertext
+
