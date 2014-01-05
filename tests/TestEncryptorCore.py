@@ -56,13 +56,8 @@ def test_g_mul():
     """
     g_mul = encryptor_core.__g_mul
 
-    eq_(g_mul(0x00,0x01),0x00)
-    eq_(g_mul(0x00,0xFF),0x00)
-    eq_(g_mul(0x01,0xAB),0xAB)
-    print(0x02)
-    print(0xFF)
-    print(0x02 * 0xFF)
-    print(g_mul(0x02,0xFF))
+    eq_(g_mul(0x01,0x02),0x02)
+    eq_(g_mul(0xFF,0x03),0x1a)
     #ok_(g_mul(0x02,0xFF)<=0xFF,"This thing does not work") # out-commented, because it doesn't work and would break the build
 
 def test_sub_bytes():
