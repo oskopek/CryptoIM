@@ -20,7 +20,7 @@ CryptoIM
     :target: https://pypi.python.org/pypi/CryptoIM/
     :alt: License
     
-A crypto-aware instant messenger written out of sheer fun.
+A crypto-aware instant messenger written in Python out of sheer fun.
 
 Info
 ====
