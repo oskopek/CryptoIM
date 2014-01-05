@@ -18,6 +18,7 @@
 """
 
 from cryptoim import encryptor_core
+import  galois_tables
 
 def decrypt(ciphertext, key):
     """
@@ -73,4 +74,7 @@ def __rshift_rows(ciphertext):
     for i in range(4):
         ciphertext[i] = ciphertext[i][-i:] + ciphertext[i][:-i]
     return ciphertext
+
+
+    
 

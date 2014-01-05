@@ -122,4 +122,21 @@ def test_key_expansion():
 
     key = rand_str(32)
     eq_(len(key_expansion(key)),256)
-    
+
+def test_mix_columns():
+    """
+       Test for encryptor_core.__mix_columns
+    """
+
+    mix_columns = encryptor_core.__mix_columns
+
+    input_mat = [[0xdb, 0xf2, 0xd4, 0x2d],
+                 [0x13, 0x0a, 0xd4, 0x26],
+                 [0x53, 0x22, 0xd4, 0x31],
+                 [0x45, 0x5c, 0xd5, 0x4c]]
+
+    expected_mat = [[0x8e, 0x9f, 0xd5, 0x4d ],
+                    [0x4d, 0xdc, 0xd5, 0x7e],
+                    [0xa1, 0x58, 0xd7, 0xbd],
+                    [0xbc, 0x9d, 0xd6, 0xf8]]
+    eq_(mix_columns(input_mat),expected_mat)

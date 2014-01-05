@@ -35,6 +35,8 @@ SBOX = [[0x52, 0x09, 0x6A, 0xD5, 0x30, 0x36, 0xA5, 0x38, 0xBF, 0x40, 0xA3, 0x9E,
         [0xA0, 0xE0, 0x3B, 0x4D, 0xAE, 0x2A, 0xF5, 0xB0, 0xC8, 0xEB, 0xBB, 0x3C, 0x83, 0x53, 0x99, 0x61], #E
         [0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0C, 0x7D]] #F
 
+import galois_tables
+
 def encrypt(plaintext, key):
     """
         plaintext = string
@@ -182,15 +184,15 @@ def __g_mul(a, b):
     """
         g_mul, Bitwise multiplication
     """
-    result = 0
-    a <<= 1
-    a = bin(a)[3:]
-    if len(a) == 0:
-        a = '0'
-    a = int(a,2)
-    result = a^b
-    return result
-    
+    if b == 2:
+        a = __convert_char_hex(a)
+        result = galois_tables.two[int(a[0],16)][int(a[1],16)]
+        return result
+    if b == 3:
+        a = __convert_char_hex(a)
+        result = galois_tables.three[int(a[0],16)][int(a[1],16)]
+        return result
+        
 
 def __message_fusion(message):
     """
