@@ -17,8 +17,8 @@
    limitations under the License.
 """
 
-import encryptor_core
-import galois_tables
+from cryptoim.common import __key_expansion, __roundkey_separator, __add_roundkey, __convert_char_hex
+import cryptoim.const as const
 
 def decrypt(ciphertext, key):
     """
@@ -26,24 +26,27 @@ def decrypt(ciphertext, key):
     """
     ciphertexts = __ciphertext_fission(ciphertext)
     print(ciphertexts)
-    extendedkey = encryptor_core.__key_expansion(key)
-    roundkeys = encryptor_core.__roundkey_separator(extendedkey)
-    return decrypt_round(ciphertexts,roundkeys)
-    
-def decrypt_round(ciphertexts,roundkeys):
+    extendedkey = __key_expansion(key)
+    roundkeys = __roundkey_separator(extendedkey)
+    return decrypt_round(ciphertexts, roundkeys)
+
+def decrypt_round(ciphertexts, roundkeys):
+    """
+        decrypt_round
+    """
     plaintext = ''
-    for ct in ciphertexts:
-        ct = encryptor_core.__add_roundkey(ct,roundkeys[15])
-        ct = __rshift_rows(ct)
-        ct = __rsub_bytes(ct)
-        for i in range(13,-1,-1):
-            ct = encryptor_core.__add_roundkey(ct,roundkeys[i])
-            ct = __rmix_columns(ct)
-            ct = __rshift_rows(ct)
-            ct = __rsub_bytes(ct)
-        ct = encryptor_core.__add_roundkey(ct,roundkeys[14])
-        ct = __message_completion(ct)
-        plaintext += ct
+    for ctext in ciphertexts:
+        ctext = __add_roundkey(ctext, roundkeys[15])
+        ctext = __rshift_rows(ctext)
+        ctext = __rsub_bytes(ctext)
+        for i in range(13, -1, -1):
+            ctext = __add_roundkey(ctext, roundkeys[i])
+            ctext = __rmix_columns(ctext)
+            ctext = __rshift_rows(ctext)
+            ctext = __rsub_bytes(ctext)
+        ctext = __add_roundkey(ctext, roundkeys[14])
+        ctext = __message_completion(ctext)
+        plaintext += ctext
         plaintext = plaintext.replace('\x00', '')
     return plaintext
 
@@ -80,13 +83,14 @@ def __mat_search(mat, elem):
             pass
 
 def __rsub_bytes(ciphertext):
-    chex = encryptor_core.__convert_char_hex
     """
         Reversed SubBytes step
     """
+    chex = __convert_char_hex
+
     for i in range(4):
         for j in range(4):
-            idx = __mat_search(encryptor_core.SBOX, ciphertext[i][j])
+            idx = __mat_search(const.SBOX, ciphertext[i][j])
             ciphertext[i][j] = int((chex(idx[0])[1:] + chex(idx[1])[1:]), 16)
     return ciphertext
 
@@ -103,16 +107,17 @@ def __rmix_columns(state_mat):
         Reversed mix_columns
     """
     g_mul = __g_mul
-    temp_mat = [[0, 0 , 0, 0], # Array.Clear(temp_mat, 0, temp_mat.Length);
-                [0, 0 , 0, 0],
-                [0, 0 , 0, 0],
-                [0, 0 , 0, 0]]
+    temp_mat = const.EMPTY_MAT_4_4
 
     for column in range(4):
-        temp_mat[0][column] = (g_mul(state_mat[0][column], 0x0E) ^ g_mul(state_mat[1][column], 0x0B) ^ g_mul(state_mat[2][column], 0x0D) ^ g_mul(state_mat[3][column], 0x09))
-        temp_mat[1][column] = (g_mul(state_mat[0][column], 0x09) ^ g_mul(state_mat[1][column], 0x0E) ^ g_mul(state_mat[2][column], 0x0B) ^ g_mul(state_mat[3][column], 0x0D))
-        temp_mat[2][column] = (g_mul(state_mat[0][column], 0x0D) ^ g_mul(state_mat[1][column], 0x09) ^ g_mul(state_mat[2][column], 0x0E) ^ g_mul(state_mat[3][column], 0x0B))
-        temp_mat[3][column] = (g_mul(state_mat[0][column], 0x0B) ^ g_mul(state_mat[1][column], 0x0D) ^ g_mul(state_mat[2][column], 0x09) ^ g_mul(state_mat[3][column], 0x0E))
+        temp_mat[0][column] = (g_mul(state_mat[0][column], 0x0E) ^ g_mul(state_mat[1][column], 0x0B) ^
+                               g_mul(state_mat[2][column], 0x0D) ^ g_mul(state_mat[3][column], 0x09))
+        temp_mat[1][column] = (g_mul(state_mat[0][column], 0x09) ^ g_mul(state_mat[1][column], 0x0E) ^
+                               g_mul(state_mat[2][column], 0x0B) ^ g_mul(state_mat[3][column], 0x0D))
+        temp_mat[2][column] = (g_mul(state_mat[0][column], 0x0D) ^ g_mul(state_mat[1][column], 0x09) ^
+                               g_mul(state_mat[2][column], 0x0E) ^ g_mul(state_mat[3][column], 0x0B))
+        temp_mat[3][column] = (g_mul(state_mat[0][column], 0x0B) ^ g_mul(state_mat[1][column], 0x0D) ^
+                               g_mul(state_mat[2][column], 0x09) ^ g_mul(state_mat[3][column], 0x0E))
 
     state_mat = temp_mat # temp_mat.CopyTo(s, 0);
     return state_mat
@@ -121,29 +126,30 @@ def __g_mul(a, b):
     """
         g_mul, Bitwise multiplication
     """
-    convert_char_hex = encryptor_core.__convert_char_hex
     if b == 9:
-        a = convert_char_hex(a)
-        result = galois_tables.nine[int(a[0],16)][int(a[1],16)]
+        a = __convert_char_hex(a)
+        result = const.GALOIS_NINE[int(a[0], 16)][int(a[1], 16)]
         return result
     if b == 11:
-        a = convert_char_hex(a)
-        result = galois_tables.eleven[int(a[0],16)][int(a[1],16)]
+        a = __convert_char_hex(a)
+        result = const.GALOIS_ELEVEN[int(a[0], 16)][int(a[1], 16)]
         return result
     if b == 13:
-        a = convert_char_hex(a)
-        result = galois_tables.thirteen[int(a[0],16)][int(a[1],16)]
+        a = __convert_char_hex(a)
+        result = const.GALOIS_THIRTEEN[int(a[0], 16)][int(a[1], 16)]
         return result
     if b == 14:
-        a = convert_char_hex(a)
-        result = galois_tables.fourteen[int(a[0],16)][int(a[1],16)]
+        a = __convert_char_hex(a)
+        result = const.GALOIS_FOURTEEN[int(a[0], 16)][int(a[1], 16)]
         return result
 
-def __message_completion(ct):
+def __message_completion(ctext):
+    """
+        message_completion
+    """
     result_string = ''
     for i in range(4):
         for j in range(4):
-            letter = chr(ct[i][j])
+            letter = chr(ctext[i][j])
             result_string += letter
     return result_string
-
