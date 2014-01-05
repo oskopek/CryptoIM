@@ -18,7 +18,7 @@
 """
 
 import encryptor_core
-import  galois_tables
+import galois_tables
 
 def decrypt(ciphertext, key):
     """
@@ -26,21 +26,21 @@ def decrypt(ciphertext, key):
     """
     ciphertexts = __ciphertext_fission(ciphertext)
     extendedkey = encryptor_core.__key_expansion(key)
-    roundkeys = encryptor_core._roundkey_separator(extendedkey)
-
+    roundkeys = encryptor_core.__roundkey_separator(extendedkey)
+    print(ciphertexts)
     return decrypt_round(ciphertexts,roundkeys)
     
 def decrypt_round(ciphertexts,roundkeys):
     plaintext = ''
     for ct in ciphertexts:
         ct = encryptor_core.__add_roundkey(ct,roundkeys[15])
-        ct = __rshiftrows(ct)
+        ct = __rshift_rows(ct)
         ct = __rsub_bytes(ct)
         for i in range(13,-1,-1):
             ct = encryptor_core.__add_roundkey(ct,roundkeys[i])
-            ct = __rmixcolumns(ct)
-            ct = __rshiftrows(ct)
-            ct = __rsubbytes(ct)
+            ct = __rmix_columns(ct)
+            ct = __rshift_rows(ct)
+            ct = __rsub_bytes(ct)
         ct = encryptor_core.__add_roundkey(ct,roundkeys[14])
         ct = __message_completion(ct)
         plaintext += ct
@@ -56,13 +56,14 @@ def __ciphertext_fission(ciphertext):
     ciphertexts = []
     hexadecimal = ''
 
-    for _ in range((len(ciphertext)/32 + 1)):
+    for _ in range((int(len(ciphertext)/32) )):
         matrix = [[], [], [], []]
         for i in range(32):
             hexadecimal += ciphertext[i]
             if len(hexadecimal) == 2:
-                matrix[i/8].append(int(hexadecimal, 16))
-            ciphertexts.append(matrix)
+                matrix[int(i/8)].append(int(hexadecimal, 16))
+                hexadecimal = ''
+        ciphertexts.append(matrix)
     return ciphertexts
 
 def __mat_search(mat, elem):
@@ -95,7 +96,7 @@ def __rshift_rows(ciphertext):
         ciphertext[i] = ciphertext[i][-i:] + ciphertext[i][:-i]
     return ciphertext
 
-def __rmix_columns(ciphertext):
+def __rmix_columns(state_mat):
     """
         Reversed mix_columns
     """
@@ -118,20 +119,21 @@ def __g_mul(a, b):
     """
         g_mul, Bitwise multiplication
     """
+    convert_char_hex = encryptor_core.__convert_char_hex
     if b == 9:
-        a = __convert_char_hex(a)
+        a = convert_char_hex(a)
         result = galois_tables.nine[int(a[0],16)][int(a[1],16)]
         return result
     if b == 11:
-        a = __convert_char_hex(a)
+        a = convert_char_hex(a)
         result = galois_tables.eleven[int(a[0],16)][int(a[1],16)]
         return result
     if b == 13:
-        a = __convert_char_hex(a)
+        a = convert_char_hex(a)
         result = galois_tables.thirteen[int(a[0],16)][int(a[1],16)]
         return result
     if b == 14:
-        a = __convert_char_hex(a)
+        a = convert_char_hex(a)
         result = galois_tables.fourteen[int(a[0],16)][int(a[1],16)]
         return result
 
