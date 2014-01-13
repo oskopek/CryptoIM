@@ -36,7 +36,7 @@ Building
 
 * **Build**: ``python setup.py build`` and ``sudo python setup.py install``
 
-* To **run**: ``python main.py`` -- TODO
+* To **run**: ``python main.py``
 
 * To run **unit tests**: ``python setup.py nosetests``
 
