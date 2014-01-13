@@ -4,9 +4,11 @@ CryptoIM
 
 .. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop
     :target: https://travis-ci.org/oskopek/CryptoIM
+    :alt: TravisCI
 
 .. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png?branch=develop
     :target: https://coveralls.io/r/oskopek/CryptoIM?branch=develop
+    :alt: Coveralls
 
 .. image:: https://pypip.in/v/CryptoIM/badge.png
     :target: https://pypi.python.org/pypi/CryptoIM/
@@ -20,7 +22,9 @@ CryptoIM
     :target: https://pypi.python.org/pypi/CryptoIM/
     :alt: License
 
-A crypto-aware instant messenger written in Python out of sheer fun.
+A secure* instant messenger written in Python out of sheer fun.
+
+* not really secure (at least not yet)
 
 Info
 ====
