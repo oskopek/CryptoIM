@@ -45,6 +45,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
     """
     A simple SleekXMPP client.
     """
+    in_session = False
+    is_connected = False
 
     def __init__(self, jid, password):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
@@ -54,12 +56,37 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         # and the XML streams are ready for use. We want to
         # listen for this event so that we we can initialize
         # our roster.
-        self.add_event_handler("session_start", self.start)
+        self.add_event_handler('session_start', self.start)
+        self.add_event_handler('session_end', self.session_end)
 
         # The message event is triggered whenever a message
         # stanza is received. Be aware that that includes
         # MUC messages and error messages.
-        self.add_event_handler("message", self.message)
+        self.add_event_handler('message', self.message)
+
+        self.add_event_handler('connected', self.connected)
+        self.add_event_handler('disconnected', self.disconnected)
+
+    def connected(self, event):
+        """
+            Process the connected event.
+        """
+
+        self.is_connected = True
+
+    def disconnected(self, event):
+        """
+            Process the disconnected event.
+        """
+
+        self.is_connected = False
+
+    def session_end(self, event):
+        """
+            Process the session_end event.
+        """
+
+        self.in_session = False
 
     def start(self, event):
         """
@@ -76,6 +103,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         """
         self.send_presence()
         self.get_roster()
+        self.in_session = True
 
     def message(self, msg):
         """
@@ -89,9 +117,12 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
                    for stanza objects and the Message stanza to see
                    how it may be used.
         """
+
+        # TODO Implement a queue here: http://docs.python.org/3.3/library/queue.html
+
         if msg['type'] in ('chat', 'normal'):
-            msg.reply("Thanks for sending\n%(body)s" % msg).send()
-        print("DEBUG: MSG: %(body)s" % msg)
+            msg.reply('Thanks for sending\n%(body)s' % msg).send()
+        print('DEBUG: MSG: %(body)s' % msg)
 
 
 class XMPPClient(object):
@@ -118,13 +149,13 @@ class XMPPClient(object):
         self.xmpp.register_plugin('xep_0199') # XMPP Ping
 
 
-    def connect_server(self, should_block=False):
+    def connect_server(self, should_block=False, should_reattempt=True):
         """
             Connects the ClientXMPP to the server, specify thread blocking.
         """
 
         # Connect to the XMPP server and start processing XMPP stanzas.
-        if self.xmpp.connect():
+        if self.xmpp.connect(reattempt=should_reattempt):
             # If you do not have the dnspython library installed, you will need
             # to manually specify the name of the server if it does not match
             # the one in the JID. For example, to use Google Talk you would
@@ -133,9 +164,9 @@ class XMPPClient(object):
             # if xmpp.connect(('talk.google.com', 5222)):
             #     ...
             self.xmpp.process(block=should_block)
-            print("Connected.")
+            print('Connected.')
         else:
-            print("Unable to connect.")
+            print('Unable to connect.')
 
     def disconnect_server(self):
         """
@@ -149,4 +180,18 @@ class XMPPClient(object):
             Checks if the ClientXMPP is currently connected to the server.
         """
 
-        return self.xmpp.state.current_state() == "connected"
+        return self.xmpp.is_connected
+
+    def is_in_session(self):
+        """
+            Checks if the ClientXMPP is currently in a session
+        """
+
+        return self.xmpp.in_session
+
+    def send_message(self, recipient, msg):
+        """
+            Sends a chat message to the designated recipient.
+        """
+
+        self.xmpp.send_message(mto = recipient, mbody = msg, mtype = 'chat')
