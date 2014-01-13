@@ -78,4 +78,4 @@ Submitting a Pull Request
 4. Run ``python setup.py nosetests``. If the tests fail, return to step 3.
 5. If applicable, add tests for your feature or bug fix.
 6. Add, commit, and push your changes.
-7. `Submit a pull request<http://help.github.com/send-pull-requests/>`_.
+7. `Submit a pull request <http://help.github.com/send-pull-requests/>`_.
