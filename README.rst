@@ -24,7 +24,7 @@ CryptoIM
 
 A secure* instant messenger written in Python out of sheer fun.
 
-* not really secure (at least not yet)
+\* not really secure (at least not yet)
 
 Info
 ====
