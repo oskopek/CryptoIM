@@ -23,7 +23,7 @@ class CryptoShell(cmd.Cmd):
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
     prompt = '(cryptoim) '
 
-    # ----- basic commands -----
+    # -- basic commands --
     def do_exit(self, arg):
         'Quit CryptoIM'
 
@@ -35,6 +35,7 @@ class CryptoShell(cmd.Cmd):
     def emptyline(self):
         return
 
+    # -- xmpp commands --
 
 def parse(arg):
     'Convert a series of zero or more numbers to an argument tuple'
