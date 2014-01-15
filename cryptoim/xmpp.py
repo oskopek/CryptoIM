@@ -15,9 +15,9 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-"""
 
-"""
+Original LICENSE:
+
     SleekXMPP: The Sleek XMPP Library
     Copyright (C) 2010  Nathanael C. Fritz
     This file is part of SleekXMPP.
