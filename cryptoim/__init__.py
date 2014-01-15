@@ -14,6 +14,6 @@
    limitations under the License.
 """
 
-from cryptoim import decryptor_core, encryptor_core, const, common, xmpp
+from cryptoim import decryptor_core, encryptor_core, const, common, xmpp, cli
 
-__all__ = ["decryptor_core", "encryptor_core", "const", "common", "xmpp", ]
+__all__ = ["decryptor_core", "encryptor_core", "const", "common", "xmpp", "cli", ]

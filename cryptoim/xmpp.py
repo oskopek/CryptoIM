@@ -28,6 +28,9 @@ Original LICENSE:
 import logging
 import sleekxmpp
 
+from cryptoim.cli import CryptoShell
+
+
 # Python versions before 3.0 do not use UTF-8 encoding
 # by default. To ensure that Unicode is handled properly
 # throughout SleekXMPP, we will set the default encoding
@@ -40,15 +43,16 @@ else:
     raw_input = input
 """
 
-class CryptoXMPP(sleekxmpp.ClientXMPP):
+class CryptoXMPP(sleekxmpp.ClientXMPP, CryptoShell):
 
     """
     A simple SleekXMPP client.
     """
     in_session = False
     is_connected = False
+    parent = None
 
-    def __init__(self, jid, password):
+    def __init__(self, jid, password, parent):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
 
         # The session_start event will be triggered when
@@ -66,6 +70,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
 
         self.add_event_handler('connected', self.connected)
         self.add_event_handler('disconnected', self.disconnected)
+
+        self.parent = parent
 
     def connected(self, event):
         """
@@ -104,6 +110,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.send_presence()
         self.get_roster()
         self.in_session = True
+        self.parent.print_debug('Session started!')
 
     def message(self, msg):
         """
@@ -120,9 +127,11 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
 
         # TODO Implement a queue here: http://docs.python.org/3.3/library/queue.html
 
-        if msg['type'] in ('chat', 'normal'):
-            msg.reply('Thanks for sending\n%(body)s' % msg).send()
-        print('DEBUG: MSG: %(body)s' % msg)
+        self.parent.print_msg(msg['from'].bare, msg['body'])
+
+        #if msg['type'] in ('chat', 'normal'):
+            #msg.reply('Thanks for sending\n%(body)s' % msg).send()
+        #print('DEBUG: MSG: %(body)s' % msg)
 
 
 class XMPPClient(object):
@@ -130,7 +139,9 @@ class XMPPClient(object):
         The XMPP client object, used as a wrapper for the SleekXMPP client.
     """
 
-    def __init__(self, jid, password, loglevel=logging.DEBUG):
+    xmpp = None
+
+    def __init__(self, jid, password, parent, loglevel=logging.CRITICAL):
         """
             Initializes the ClientXMPP, logging, etc
         """
@@ -142,7 +153,7 @@ class XMPPClient(object):
         # Setup the ClientXMPP and register plugins. Note that while plugins may
         # have interdependencies, the order in which you register them does
         # not matter.
-        self.xmpp = CryptoXMPP(jid, password)
+        self.xmpp = CryptoXMPP(jid, password, parent)
         self.xmpp.register_plugin('xep_0030') # Service Discovery
         self.xmpp.register_plugin('xep_0004') # Data Forms
         self.xmpp.register_plugin('xep_0060') # PubSub
@@ -164,9 +175,6 @@ class XMPPClient(object):
             # if xmpp.connect(('talk.google.com', 5222)):
             #     ...
             self.xmpp.process(block=should_block)
-            print('Connected.')
-        else:
-            print('Unable to connect.')
 
     def disconnect_server(self):
         """
