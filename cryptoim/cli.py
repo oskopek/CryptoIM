@@ -97,10 +97,22 @@ class CryptoShell(cmd.Cmd):
             return
 
         splitted = arg.split(' ')
-        self.xmpp_client.send_message(splitted[0], splitted[1])
+        recipient = splitted[0]
+        message = ''.join(splitted[1:])
+        self.xmpp_client.send_message(recipient, message)
 
         # TODO fix the jid part
-        self.print_msg(self.xmpp_client.xmpp.jid, splitted[1])
+        self.print_msg(self.xmpp_client.xmpp.jid, message)
+
+    def do_addfriend(self, arg):
+        splitted = arg.split(' ')
+        Friends = self.config['friends'] 
+        Friends[splitted[0]] = splitted[1]
+        return
+        
+    
+    
+
 
 
     # -- tools --
