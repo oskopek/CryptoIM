@@ -17,10 +17,15 @@
    limitations under the License.
 """
 
-import cmd, sys
-import configparser as configparser
+import cmd, sys, copy
 
 import cryptoim.xmpp
+
+if sys.version_info < (3, 0):
+    import ConfigParser as configparser
+else:
+    import configparser as configparser
+
 
 class CryptoShell(cmd.Cmd):
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
@@ -30,7 +35,8 @@ class CryptoShell(cmd.Cmd):
 
 
     def __init__(self, configfile):
-        super().__init__()
+        # super().__init__() # Python 3 only
+        cmd.Cmd.__init__(self)
         self.config = configparser.ConfigParser()
         self.config.read(configfile)
 
@@ -39,7 +45,7 @@ class CryptoShell(cmd.Cmd):
         'Quit CryptoIM'
 
         self.do_disconnect(arg)
-        print('Thank you for using CryptoIM!')
+        self.print_cmd('Thank you for using CryptoIM!')
         quit()
 
     def do_q(self, arg):
@@ -54,7 +60,7 @@ class CryptoShell(cmd.Cmd):
     def do_connect(self, arg):
         'connect JID PASSWORD or connect CONNECTION_NAME'
         splitted = arg.split(' ')
-        if not len(splitted) in range(1,2):
+        if not arg or (not len(splitted) == 1 and not len(splitted) == 2):
             self.print_cmd('Invalid number of arguments!')
             return
 
@@ -67,10 +73,10 @@ class CryptoShell(cmd.Cmd):
 
         if len(splitted) == 1:
             if splitted[0] in self.config.sections():
-                username = self.config[arg]['Username']
-                host = self.config[arg]['Host']
+                username = self.config.get(arg, 'Username') # self.config[arg]['Username']
+                host = self.config.get(arg, 'Host') # self.config[arg]['Host']
                 conn_jid = username + '@' + host
-                conn_pass = self.config[arg]['Password']
+                conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist');
 
@@ -78,6 +84,7 @@ class CryptoShell(cmd.Cmd):
             conn_jid = splitted[0]
             conn_pass = splitted[1]
 
+        conn_jid += '/cryptoim' # Adds a static resource
         self.xmpp_client = cryptoim.xmpp.XMPPClient(conn_jid, conn_pass, self)
         self.xmpp_client.connect_server()
 
@@ -100,30 +107,32 @@ class CryptoShell(cmd.Cmd):
         recipient = splitted[0]
         message = ' '.join(splitted[1:])
         self.xmpp_client.send_message(recipient, message)
-
-        # TODO fix the jid part
-        self.print_msg(self.xmpp_client.xmpp.jid, message)
+        self.print_cmd(self.address_format(self.xmpp_client.xmpp.jid, message))
 
     def do_addfriend(self, arg):
         splitted = arg.split(' ')
-        Friends = self.config['friends'] 
+        Friends = self.config['friends']
         Friends[splitted[0]] = splitted[1]
-        return
-        
-    
-    
-
 
 
     # -- tools --
 
     def print_cmd(self, string):
-        self.stdout.write(string+'\n')
+        self.stdout.write(string + '\n')
+        self.stdout.flush()
+
+    def address_format(self, jid, msg):
+        return jid + ': ' + msg
 
     def print_msg(self, jid, msg):
-        # TODO interface with cmd in a normal way
-        self.print_cmd(jid + ': ' + msg)
+        # TODO implement backup
+        backup = copy.copy(self.prompt)
+        self.stdout.write('\r')
+        self.stdout.flush()
+        self.print_cmd(self.address_format(jid, msg))
+        self.stdout.write(backup)
+        self.stdout.flush()
 
     def print_debug(self, msg):
         #self.print_cmd('DEBUG: ' + msg)
-        return
+        pass
