@@ -5,7 +5,7 @@
    Copyright 2014 CryptoIM Development Team
 
    Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this logfile except in compliance with the License.
+   you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
@@ -28,6 +28,10 @@ else:
 
 
 class CryptoShell(cmd.Cmd):
+    """
+        CryptoShell
+    """
+
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
     prompt = '(cryptoim) '
     xmpp_client = None
@@ -35,6 +39,10 @@ class CryptoShell(cmd.Cmd):
 
 
     def __init__(self, configfile):
+        """
+            CryptoShell init
+        """
+
         # super().__init__() # Python 3 only
         cmd.Cmd.__init__(self)
         self.config = configparser.ConfigParser()
@@ -49,6 +57,7 @@ class CryptoShell(cmd.Cmd):
         quit()
 
     def do_q(self, arg):
+        'Alias for quit'
         self.do_exit(arg)
 
 
@@ -78,7 +87,7 @@ class CryptoShell(cmd.Cmd):
                 conn_jid = username + '@' + host
                 conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
             else:
-                self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist');
+                self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
 
         elif len(splitted) == 2:
             conn_jid = splitted[0]
@@ -107,32 +116,48 @@ class CryptoShell(cmd.Cmd):
         recipient = splitted[0]
         message = ' '.join(splitted[1:])
         self.xmpp_client.send_message(recipient, message)
-        self.print_cmd(self.address_format(self.xmpp_client.xmpp.jid, message))
+        self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
 
     def do_addfriend(self, arg):
+        'addfriend name jid'
         splitted = arg.split(' ')
-        Friends = self.config['friends']
-        Friends[splitted[0]] = splitted[1]
+        friends = self.config['friends']
+        friends[splitted[0]] = splitted[1]
 
 
     # -- tools --
 
     def print_cmd(self, string):
+        """
+            Prints a string to the console
+        """
         self.stdout.write(string + '\n')
         self.stdout.flush()
 
-    def address_format(self, jid, msg):
-        return jid + ': ' + msg
-
     def print_msg(self, jid, msg):
-        # TODO implement backup
+        """
+            Prints a message (jid + msg), correctly formatted using address_format
+            without erasing typed content. TODO implement the erasing and backup
+        """
+
         backup = copy.copy(self.prompt)
         self.stdout.write('\r')
         self.stdout.flush()
-        self.print_cmd(self.address_format(jid, msg))
+        self.print_cmd(address_format(jid, msg))
         self.stdout.write(backup)
         self.stdout.flush()
 
     def print_debug(self, msg):
+        """
+            Prints debug messages
+        """
         #self.print_cmd('DEBUG: ' + msg)
         pass
+
+# End of class
+
+def address_format(jid, msg):
+    """
+        Formats a jid and message to correctly display in the log
+    """
+    return(jid + ': ' + msg)
