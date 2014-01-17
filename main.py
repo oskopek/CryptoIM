@@ -20,4 +20,4 @@
 from cryptoim.cli import CryptoShell
 
 if __name__ == "__main__":
-    CryptoShell().cmdloop()
+    CryptoShell('main.cfg').cmdloop()

@@ -17,7 +17,8 @@
    limitations under the License.
 """
 
-import cmd
+import cmd, sys
+import configparser as configparser
 
 import cryptoim.xmpp
 
@@ -25,7 +26,13 @@ class CryptoShell(cmd.Cmd):
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
     prompt = '(cryptoim) '
     xmpp_client = None
+    config = None
 
+
+    def __init__(self, configfile):
+        super().__init__()
+        self.config = configparser.ConfigParser()
+        self.config.read(configfile)
 
     # -- basic commands --
     def do_exit(self, arg):
@@ -35,23 +42,45 @@ class CryptoShell(cmd.Cmd):
         print('Thank you for using CryptoIM!')
         quit()
 
+    def do_q(self, arg):
+        self.do_exit(arg)
+
 
     # -- overrides --
     def emptyline(self):
         return
 
-
     # -- xmpp commands --
     def do_connect(self, arg):
-        'connect JID PASSWORD'
+        'connect JID PASSWORD or connect CONNECTION_NAME'
+        splitted = arg.split(' ')
+        if not len(splitted) in range(1,2):
+            self.print_cmd('Invalid number of arguments!')
+            return
 
         if self.xmpp_client and self.xmpp_client.is_connected():
             self.print_cmd('Already connected!')
             return
 
-        splitted = arg.split(' ')
-        self.xmpp_client = cryptoim.xmpp.XMPPClient(splitted[0], splitted[1], self)
+        conn_jid = None
+        conn_pass = None
+
+        if len(splitted) == 1:
+            if splitted[0] in self.config.sections():
+                username = self.config[arg]['Username']
+                host = self.config[arg]['Host']
+                conn_jid = username + '@' + host
+                conn_pass = self.config[arg]['Password']
+            else:
+                self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist');
+
+        elif len(splitted) == 2:
+            conn_jid = splitted[0]
+            conn_pass = splitted[1]
+
+        self.xmpp_client = cryptoim.xmpp.XMPPClient(conn_jid, conn_pass, self)
         self.xmpp_client.connect_server()
+
 
     def do_disconnect(self, arg):
         'disconnect'
@@ -77,7 +106,7 @@ class CryptoShell(cmd.Cmd):
     # -- tools --
 
     def print_cmd(self, string):
-        print(string)
+        self.stdout.write(string+'\n')
 
     def print_msg(self, jid, msg):
         # TODO interface with cmd in a normal way

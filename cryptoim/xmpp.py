@@ -30,19 +30,6 @@ import sleekxmpp
 
 from cryptoim.cli import CryptoShell
 
-
-# Python versions before 3.0 do not use UTF-8 encoding
-# by default. To ensure that Unicode is handled properly
-# throughout SleekXMPP, we will set the default encoding
-# ourselves to UTF-8.
-"""
-if sys.version_info < (3, 0):
-    from sleekxmpp.util.misc_ops import setdefaultencoding
-    setdefaultencoding('utf8')
-else:
-    raw_input = input
-"""
-
 class CryptoXMPP(sleekxmpp.ClientXMPP, CryptoShell):
 
     """
