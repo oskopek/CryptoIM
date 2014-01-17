@@ -48,7 +48,7 @@ class CryptoShell(cmd.Cmd):
 
     # -- overrides --
     def emptyline(self):
-        return
+        pass
 
     # -- xmpp commands --
     def do_connect(self, arg):

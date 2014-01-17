@@ -28,7 +28,11 @@ Original LICENSE:
 import logging
 import sleekxmpp
 
+import cryptoim.encryptor_core as encryptor
+import cryptoim.decryptor_core as decryptor
+
 from cryptoim.cli import CryptoShell
+
 
 class CryptoXMPP(sleekxmpp.ClientXMPP, CryptoShell):
 
@@ -112,9 +116,9 @@ class CryptoXMPP(sleekxmpp.ClientXMPP, CryptoShell):
                    how it may be used.
         """
 
-        # TODO Implement a queue here: http://docs.python.org/3.3/library/queue.html
-
-        self.parent.print_msg(msg['from'].bare, msg['body'])
+        ciphertext = msg['body']
+        decrypted_message = decryptor.decrypt(ciphertext, 'This is a secret key')
+        self.parent.print_msg(msg['from'].bare, decrypted_message)
 
         #if msg['type'] in ('chat', 'normal'):
             #msg.reply('Thanks for sending\n%(body)s' % msg).send()
@@ -188,5 +192,6 @@ class XMPPClient(object):
         """
             Sends a chat message to the designated recipient.
         """
-
-        self.xmpp.send_message(mto = recipient, mbody = msg, mtype = 'chat')
+        plaintext = msg
+        plaintext = encryptor.encrypt(plaintext, 'This is a secret key')
+        self.xmpp.send_message(mto = recipient, mbody = plaintext, mtype = 'chat')
