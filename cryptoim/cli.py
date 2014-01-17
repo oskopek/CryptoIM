@@ -37,8 +37,8 @@ class CryptoShell(cmd.Cmd):
     def __init__(self, configfile):
         # super().__init__() # Python 3 only
         cmd.Cmd.__init__(self)
-        self.config = configparser.ConfigParser()
-        self.config.read(configfile)
+        self.config = configparser.RawConfigParser()
+        self.configfile = self.config.read(configfile)
 
     # -- basic commands --
     def do_exit(self, arg):
@@ -111,8 +111,9 @@ class CryptoShell(cmd.Cmd):
 
     def do_addfriend(self, arg):
         splitted = arg.split(' ')
-        Friends = self.config['friends']
-        Friends[splitted[0]] = splitted[1]
+        self.config.set('friends',splitted[0],splitted[1])
+        with open(self.configfile, 'wb') as cf:
+            self.config.write(cf)
 
 
     # -- tools --
