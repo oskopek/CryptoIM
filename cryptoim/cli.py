@@ -98,7 +98,7 @@ class CryptoShell(cmd.Cmd):
 
         splitted = arg.split(' ')
         recipient = splitted[0]
-        message = ''.join(splitted[1:])
+        message = ' '.join(splitted[1:])
         self.xmpp_client.send_message(recipient, message)
 
         # TODO fix the jid part
