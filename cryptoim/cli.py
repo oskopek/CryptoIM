@@ -113,10 +113,25 @@ class CryptoShell(cmd.Cmd):
 
     def do_addfriend(self, arg):
         splitted = arg.split(' ')
+
+        if splitted[0] in self.config['friends']:
+            self.print_cmd('Already in your friend list.')
+            return
+
         self.config.set('friends', splitted[0], splitted[1])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
 
+    def do_removefriend(self,arg):
+        splitted = arg.split(' ')
+
+        if splitted[0] not in self.config['friends']:
+            self.print_cmd('Not in your friend list.')
+            return
+
+        self.config.remove_option('friends',splitted[0])
+        with open(self.config_file, 'w') as conf:
+            self.config.write(conf)
 
     # -- tools --
 
