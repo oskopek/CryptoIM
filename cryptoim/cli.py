@@ -84,6 +84,7 @@ class CryptoShell(cmd.Cmd):
             conn_jid = splitted[0]
             conn_pass = splitted[1]
 
+        conn_jid += '/cryptoim' # Adds a static resource
         self.xmpp_client = cryptoim.xmpp.XMPPClient(conn_jid, conn_pass, self)
         self.xmpp_client.connect_server()
 
