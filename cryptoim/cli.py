@@ -17,10 +17,15 @@
    limitations under the License.
 """
 
-import cmd, sys
-import configparser as configparser
+import cmd, sys, copy
 
 import cryptoim.xmpp
+
+if sys.version_info < (3, 0):
+    import ConfigParser as configparser
+else:
+    import configparser as configparser
+
 
 class CryptoShell(cmd.Cmd):
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
@@ -30,7 +35,8 @@ class CryptoShell(cmd.Cmd):
 
 
     def __init__(self, configfile):
-        super().__init__()
+        # super().__init__() # Python 3 only
+        cmd.Cmd.__init__(self)
         self.config = configparser.ConfigParser()
         self.config.read(configfile)
 
@@ -39,7 +45,7 @@ class CryptoShell(cmd.Cmd):
         'Quit CryptoIM'
 
         self.do_disconnect(arg)
-        print('Thank you for using CryptoIM!')
+        self.print_cmd('Thank you for using CryptoIM!')
         quit()
 
     def do_q(self, arg):
@@ -54,7 +60,7 @@ class CryptoShell(cmd.Cmd):
     def do_connect(self, arg):
         'connect JID PASSWORD or connect CONNECTION_NAME'
         splitted = arg.split(' ')
-        if not len(splitted) in range(1,2):
+        if not arg or (not len(splitted) == 1 and not len(splitted) == 2):
             self.print_cmd('Invalid number of arguments!')
             return
 
@@ -67,10 +73,10 @@ class CryptoShell(cmd.Cmd):
 
         if len(splitted) == 1:
             if splitted[0] in self.config.sections():
-                username = self.config[arg]['Username']
-                host = self.config[arg]['Host']
+                username = self.config.get(arg, 'Username') # self.config[arg]['Username']
+                host = self.config.get(arg, 'Host') # self.config[arg]['Host']
                 conn_jid = username + '@' + host
-                conn_pass = self.config[arg]['Password']
+                conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist');
 
@@ -106,6 +112,10 @@ class CryptoShell(cmd.Cmd):
     # -- tools --
 
     def print_cmd(self, string):
+        #backup = copy(string)
+        #for i in range(len(string)):
+
+
         self.stdout.write(string+'\n')
 
     def print_msg(self, jid, msg):
