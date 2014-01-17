@@ -32,13 +32,15 @@ class CryptoShell(cmd.Cmd):
     prompt = '(cryptoim) '
     xmpp_client = None
     config = None
+    config_file = None
 
 
-    def __init__(self, configfile):
+    def __init__(self, config_file):
         # super().__init__() # Python 3 only
         cmd.Cmd.__init__(self)
-        self.config = configparser.RawConfigParser()
-        self.configfile = self.config.read(configfile)
+        self.config = configparser.ConfigParser()
+        self.config.read(config_file)
+        self.config_file = config_file
 
     # -- basic commands --
     def do_exit(self, arg):
@@ -111,9 +113,9 @@ class CryptoShell(cmd.Cmd):
 
     def do_addfriend(self, arg):
         splitted = arg.split(' ')
-        self.config.set('friends',splitted[0],splitted[1])
-        with open(self.configfile, 'wb') as cf:
-            self.config.write(cf)
+        self.config.set('friends', splitted[0], splitted[1])
+        with open(self.config_file, 'w') as conf:
+            self.config.write(conf)
 
 
     # -- tools --
