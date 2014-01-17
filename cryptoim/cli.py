@@ -106,7 +106,6 @@ class CryptoShell(cmd.Cmd):
         splitted = arg.split(' ')
         self.xmpp_client.send_message(splitted[0], splitted[1])
 
-        # TODO fix the jid part
         self.print_cmd(self.address_format(self.xmpp_client.xmpp.jid, splitted[1]))
 
 
@@ -120,9 +119,9 @@ class CryptoShell(cmd.Cmd):
         return jid + ': ' + msg
 
     def print_msg(self, jid, msg):
-        # TODO interface with cmd in a normal way
+        # TODO implement backup
         backup = copy.copy(self.prompt)
-        self.stdout.write('\r                                                                                                                                                        \r')
+        self.stdout.write('\r')
         self.stdout.flush()
         self.print_cmd(self.address_format(jid, msg))
         self.stdout.write(backup)
