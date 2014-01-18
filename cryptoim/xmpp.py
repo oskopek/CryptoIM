@@ -31,10 +31,7 @@ import sleekxmpp
 import cryptoim.encryptor_core as encryptor
 import cryptoim.decryptor_core as decryptor
 
-from cryptoim.cli import CryptoShell
-
-
-class CryptoXMPP(sleekxmpp.ClientXMPP, CryptoShell):
+class CryptoXMPP(sleekxmpp.ClientXMPP):
 
     """
     A simple SleekXMPP client.
