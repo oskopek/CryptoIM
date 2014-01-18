@@ -99,6 +99,9 @@ class CryptoShell(cmd.Cmd):
 
         self.xmpp_client.disconnect_server()
 
+    current_chat = None
+    chatmode = False
+
     def do_send(self, arg):
         'send toJID msg'
         if not self.xmpp_client or not self.xmpp_client.is_in_session():
@@ -106,10 +109,17 @@ class CryptoShell(cmd.Cmd):
             return
 
         splitted = arg.split(' ')
-        recipient = splitted[0]
-        message = ' '.join(splitted[1:])
-        self.xmpp_client.send_message(recipient, message)
-        self.print_cmd(self.address_format(self.xmpp_client.xmpp.jid, message))
+
+        if self.chatmode == False:
+            recipient = splitted[0]
+            message = ' '.join(splitted[1:])
+            self.xmpp_client.send_message(recipient, message)
+            self.print_cmd(self.address_format(self.xmpp_client.xmpp.jid, message))
+        if self.chatmode == True:
+            recipient = self.curent_chat
+            message = ' '.join(splitted)
+            self.xmpp_client.send_message(recipient, message)
+            self.print_cmd(self.address_format(self.xmpp_client.xmpp.jid, message))
 
     def do_addfriend(self, arg):
         splitted = arg.split(' ')
@@ -122,7 +132,7 @@ class CryptoShell(cmd.Cmd):
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
 
-    def do_removefriend(self,arg):
+    def do_removefriend(self, arg):
         splitted = arg.split(' ')
 
         if splitted[0] not in self.config['friends']:
@@ -132,6 +142,15 @@ class CryptoShell(cmd.Cmd):
         self.config.remove_option('friends',splitted[0])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
+
+    def do_chat(self, arg):
+        splitted = arg.split(' ')
+        self.chatmode = True
+        self.current_chat = splitted[0]
+
+    def do_stopchat(self):
+        self.chatmode = False
+        self.current_chat = None
 
     # -- tools --
 
