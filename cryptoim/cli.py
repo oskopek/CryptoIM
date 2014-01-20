@@ -221,7 +221,7 @@ class CryptoShell(cmd.Cmd):
         """
             Returns True, if length of input array is in <numberLo, numberHi>
         """
-        if len(input_array) <= numberHi and len(array) >= numberLo:
+        if len(input_array) <= numberHi and len(input_array) >= numberLo:
             return True
         return False
 
