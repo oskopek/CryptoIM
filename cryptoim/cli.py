@@ -72,7 +72,7 @@ class CryptoShell(cmd.Cmd):
     def do_connect(self, arg):
         'connect JID PASSWORD or connect CONNECTION_NAME'
         splitted = arg.split(' ')
-        if not arg or (not len(splitted) == 1 and not len(splitted) == 2):
+        if self.sanit_argCount(splitted,2) == False:
             self.print_cmd('Invalid number of arguments!')
             return False
 
@@ -178,6 +178,11 @@ class CryptoShell(cmd.Cmd):
         """
             stopchat
         """
+        if not self.current_chat:
+            self.print_cmd('No open chat to close.')
+            return False
+        if arg is not None:
+            self.print_cmd('Usage: stopchat, not stopchat <argument>')
         self.prompt = '(cryptoim) '
         self.current_chat = None
         self.print_cmd('Closing chat window.')
@@ -211,6 +216,14 @@ class CryptoShell(cmd.Cmd):
         """
         #self.print_cmd('DEBUG: ' + msg)
         pass
+
+    def sanit_argCount(self, arg, number):
+        """
+            Returns True, if number of arguments is equal or less to the length of args
+        """      
+        if len(arg) <= number:
+            return True
+        return False
 
 # End of class
 
