@@ -72,7 +72,7 @@ class CryptoShell(cmd.Cmd):
     def do_connect(self, arg):
         'connect JID PASSWORD or connect CONNECTION_NAME'
         splitted = arg.split(' ')
-        if self.sanit_argCount(splitted, 0, 2) == False:
+        if sanit_arg_count(splitted, 0, 2) == False:
             self.print_cmd('Invalid number of arguments!')
             return False
 
@@ -83,7 +83,7 @@ class CryptoShell(cmd.Cmd):
         conn_jid = None
         conn_pass = None
 
-        if self.sanit_argCountExact(splitted, 1) == True:
+        if sanit_arg_count_exact(splitted, 1) == True:
             if splitted[0] in self.config.sections():
                 username = self.config.get(arg, 'Username') # self.config[arg]['Username']
                 host = self.config.get(arg, 'Host') # self.config[arg]['Host']
@@ -93,7 +93,7 @@ class CryptoShell(cmd.Cmd):
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
                 return False
 
-        elif self.sanit_argCountExact(splitted, 2) == True:
+        elif sanit_arg_count_exact(splitted, 2) == True:
             conn_jid = splitted[0]
             conn_pass = splitted[1]
 
@@ -109,7 +109,11 @@ class CryptoShell(cmd.Cmd):
             self.print_cmd('Already disconnected!')
             return False
 
+        if arg: # arg nonempty
+            self.print_cmd('Don\'t use any arguments!\tUsage: disconnect')
+
         self.xmpp_client.disconnect_server()
+        self.print_cmd('Disconnected from server.')
         return True
 
     def do_s(self, arg):
@@ -200,7 +204,7 @@ class CryptoShell(cmd.Cmd):
     def print_msg(self, jid, msg):
         """
             Prints a message (jid + msg), correctly formatted using address_format
-            without erasing typed content. TODO implement the erasing and backup
+            without erasing typed content.
         """
 
         backup = copy.copy(self.prompt)
@@ -217,19 +221,19 @@ class CryptoShell(cmd.Cmd):
         #self.print_cmd('DEBUG: ' + msg)
         pass
 
-    def sanit_argCount(self, input_array, numberLo, numberHi):
-        """
-            Returns True, if length of input array is in <numberLo, numberHi>
-        """
-        if len(input_array) <= numberHi and len(input_array) >= numberLo:
-            return True
-        return False
+def sanit_arg_count(input_array, number_lo, number_hi):
+    """
+        Returns True, if length of input array is in <number_lo, number_hi>
+    """
+    if len(input_array) <= number_hi and len(input_array) >= number_lo:
+        return True
+    return False
 
-    def sanit_argCountExact(self, input_array, number):
-        """
-            Returns True, if length of input_array is equal to number
-        """
-        return self.sanit_argCount(input_array, number, number)
+def sanit_arg_count_exact(input_array, number):
+    """
+        Returns True, if length of input_array is equal to number
+    """
+    return sanit_arg_count(input_array, number, number)
 
 # End of class
 
