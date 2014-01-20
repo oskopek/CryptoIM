@@ -91,6 +91,7 @@ class CryptoShell(cmd.Cmd):
                 conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
+                return False
 
         elif len(splitted) == 2:
             conn_jid = splitted[0]

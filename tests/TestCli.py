@@ -30,3 +30,4 @@ def test_connect_disconnect():
     eq_(cshell.do_connect('cryptoim1'), True)
     eq_(cshell.do_connect('cryptoim1'), False)
     eq_(cshell.do_disconnect(''), True)
+    eq_(cshell.do_disconnect(''), False)
