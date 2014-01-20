@@ -72,7 +72,7 @@ class CryptoShell(cmd.Cmd):
     def do_connect(self, arg):
         'connect JID PASSWORD or connect CONNECTION_NAME'
         splitted = arg.split(' ')
-        if self.sanit_argCount(splitted,2) == False:
+        if self.sanit_argCount(splitted, 0, 2) == False:
             self.print_cmd('Invalid number of arguments!')
             return False
 
@@ -83,7 +83,7 @@ class CryptoShell(cmd.Cmd):
         conn_jid = None
         conn_pass = None
 
-        if len(splitted) == 1:
+        if self.sanit_argCountExact(splitted, 1) == True:
             if splitted[0] in self.config.sections():
                 username = self.config.get(arg, 'Username') # self.config[arg]['Username']
                 host = self.config.get(arg, 'Host') # self.config[arg]['Host']
@@ -93,7 +93,7 @@ class CryptoShell(cmd.Cmd):
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
                 return False
 
-        elif len(splitted) == 2:
+        elif self.sanit_argCountExact(splitted, 2) == True:
             conn_jid = splitted[0]
             conn_pass = splitted[1]
 
@@ -217,13 +217,19 @@ class CryptoShell(cmd.Cmd):
         #self.print_cmd('DEBUG: ' + msg)
         pass
 
-    def sanit_argCount(self, arg, number):
+    def sanit_argCount(self, input_array, numberLo, numberHi):
         """
-            Returns True, if number of arguments is equal or less to the length of args
-        """      
-        if len(arg) <= number:
+            Returns True, if length of input array is in <numberLo, numberHi>
+        """
+        if len(input_array) <= numberHi and len(array) >= numberLo:
             return True
         return False
+
+    def sanit_argCountExact(self, input_array, number):
+        """
+            Returns True, if length of input_array is equal to number
+        """
+        return self.sanit_argCount(input_array, number, number)
 
 # End of class
 
