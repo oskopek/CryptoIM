@@ -160,14 +160,20 @@ class CryptoShell(cmd.Cmd):
         """
             chat JID
         """
-        splitted = arg.split(' ')
-        self.current_chat = splitted[0]
+        if not arg:
+            return
+        else:
+            self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
+            self.current_chat = arg.split(' ')[0]
+            self.prompt = '(' + self.current_chat.split('@')[0] + ') '
 
-    def do_stopchat(self):
+    def do_stopchat(self, arg):
         """
             stopchat
         """
+        self.prompt = '(cryptoim) '
         self.current_chat = None
+        self.print_cmd('Closing chat window.')
 
     # -- tools --
 
