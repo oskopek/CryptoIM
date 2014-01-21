@@ -76,14 +76,19 @@ def check_send_message(xmpp_client):
 
     while not xmpp_client.is_in_session():
         time.sleep(0.1)
-
-    # TODO Works, but check
-    xmpp_client.send_message('cryptoim2@jabber.de', 'Hello, CryptoIM check_send_message!')
+    msg = 'Hello, CryptoIM check_send_message!'
+    recipient = 'cryptoim2@jabber.de'
+    xmpp_client.send_message(recipient, msg)
 
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
 
-
+    # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)
+    crypto_shell = xmpp_client.xmpp.parent
+    ok_(0 != len(crypto_shell.sent_msg_list))
+    eq_(len(crypto_shell.sent_jid_list), len(crypto_shell.sent_msg_list))
+    eq_(msg, crypto_shell.sent_msg_list[-1])
+    eq_(recipient, crypto_shell.sent_jid_list[-1])
 
 def test_not_connect():
     """
@@ -145,10 +150,10 @@ def check_receive_message(xmpp_client):
     waitForConnection(xmpp_client, False)
 
     # Assert that xmpp_client2 got it (it is bound to be received after disconnect if it waits)
-    ok_(0 != len(crypto_shell.msg_list))
-    eq_(len(crypto_shell.jid_list), len(crypto_shell.msg_list))
-    eq_(plaintext, crypto_shell.msg_list[-1])
-    eq_(xmpp_client.xmpp.jid, crypto_shell.jid_list[-1])
+    ok_(0 != len(crypto_shell.received_msg_list))
+    eq_(len(crypto_shell.received_jid_list), len(crypto_shell.received_msg_list))
+    eq_(plaintext, crypto_shell.received_msg_list[-1])
+    eq_(xmpp_client.xmpp.jid, crypto_shell.received_jid_list[-1])
 
 def waitForConnection(xmpp_client, should_be_connected):
     """

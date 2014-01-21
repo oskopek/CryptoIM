@@ -35,11 +35,7 @@ class CryptoShell(cmd.Cmd):
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
     prompt = '(cryptoim) '
     xmpp_client = None
-    config = None
-    config_file = None
     current_chat = None
-    msg_list = None
-    jid_list = None
 
 
     def __init__(self, config_file):
@@ -54,8 +50,10 @@ class CryptoShell(cmd.Cmd):
         self.config_file = config_file
 
         # Logging
-        self.msg_list = []
-        self.jid_list = []
+        self.received_msg_list = []
+        self.received_jid_list = []
+        self.sent_msg_list = []
+        self.sent_jid_list = []
 
     # -- basic commands --
     def do_exit(self, arg):
@@ -111,7 +109,7 @@ class CryptoShell(cmd.Cmd):
     def do_addconnection(self, arg):
         #Usage addconnection <username> <JID> <password>
         splitted = arg.split(' ')
-        
+
         if self.config_find(splitted[0]):
             self.print_cmd(splitted[0] + ' is already in your connection list')
             return False
@@ -127,7 +125,7 @@ class CryptoShell(cmd.Cmd):
         self.config.set(splitted[0], 'username', splitted[0])
         self.config.set(splitted[0], 'host', (splitted[1].split('@') [1]) )
         self.config.set(splitted[0], 'password', splitted[2])
-        
+
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
         return True
@@ -135,7 +133,7 @@ class CryptoShell(cmd.Cmd):
     def do_removeconnection(self, arg):
         #Usage removeconnection <username>
         splitted = arg.split(' ')
-        
+
         if not self.config_find(splitted[0]):
             self.print_cmd(splitted[0] + ' is not in your connection list')
             return False
@@ -148,7 +146,7 @@ class CryptoShell(cmd.Cmd):
 
 
         self.config.remove_section(splitted[0])
-        
+
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
         return True
@@ -188,6 +186,7 @@ class CryptoShell(cmd.Cmd):
 
         self.xmpp_client.send_message(recipient, message)
         self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
+
         return True
 
     def do_addfriend(self, arg):
@@ -263,10 +262,6 @@ class CryptoShell(cmd.Cmd):
         self.print_cmd(address_format(jid, msg))
         self.stdout.write(backup)
         self.stdout.flush()
-
-        # Log:
-        self.msg_list.append(msg)
-        self.jid_list.append(jid)
 
     def print_debug(self, msg):
         """

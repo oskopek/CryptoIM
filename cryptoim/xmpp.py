@@ -117,6 +117,10 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         decrypted_message = decryptor.decrypt(ciphertext, 'This is a secret key')
         self.parent.print_msg(msg['from'].bare, decrypted_message)
 
+        # Log:
+        self.parent.received_jid_list.append(msg['from'].bare)
+        self.parent.received_msg_list.append(decrypted_message)
+
         #if msg['type'] in ('chat', 'normal'):
             #msg.reply('Thanks for sending\n%(body)s' % msg).send()
         #print('DEBUG: MSG: %(body)s' % msg)
@@ -191,4 +195,9 @@ class XMPPClient(object):
         """
         ciphertext = encryptor.encrypt(msg, 'This is a secret key')
         self.xmpp.send_message(mto = recipient, mbody = ciphertext, mtype = 'chat')
+
+        # Log:
+        self.xmpp.parent.sent_jid_list.append(recipient)
+        self.xmpp.parent.sent_msg_list.append(msg)
+
         return ciphertext

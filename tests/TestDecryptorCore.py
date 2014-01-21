@@ -20,6 +20,44 @@
 import cryptoim.decryptor_core as decryptor_core
 import cryptoim.encryptor_core as encryptor_core
 from nose.tools import ok_, eq_
+import random, string
+
+
+def random_message_range(lo, hi):
+    length = random.randint(lo, hi)
+    return ''.join(random.choice(string.printable) for _ in range(length))
+
+def random_message(limit):
+    return random_message_range(1, limit)
+
+def test_random_encrypt_decrypt():
+    test_count = 10
+    limit = 100
+
+    for _ in range(test_count):
+        originaltext = random_message(limit)
+        key = random_message(limit)
+        ciphertext = encryptor_core.encrypt(originaltext, key)
+        check_decrypt(originaltext, ciphertext, key)
+
+def check_decrypt(originaltext, ciphertext, key):
+    decryptedtext = decryptor_core.decrypt(ciphertext, key)
+    eq_(originaltext, decryptedtext)
+
+def test_random_key():
+    length = 100
+    originaltext = 'Secret message!'
+    key = random_message_range(length, length)
+    ciphertext = encryptor_core.encrypt(originaltext, key)
+    check_decrypt(originaltext, ciphertext, key)
+
+def test_long_string():
+    length = 1000
+    originaltext = random_message_range(length, length)
+    key = 'This is a secret key!'
+    ciphertext = encryptor_core.encrypt(originaltext, key)
+    check_decrypt(originaltext, ciphertext, key)
+
 
 def test_decrypt():
     """
@@ -40,13 +78,11 @@ def test_decrypt():
             rand += choice(ascii_letters)
         return rand
 
-    message = "This is a test message"
+    message = 'This is a test message'
     key = rand_str(32)
     ctext = encrypt(message, key)
     ptext = decrypt(ctext, key)
     eq_(message, ptext)
-
-    #TODO ok_(len(decrypt(message, key)) != 0, "Length wasn't supposed to be 0")
 
 def test_ciphertext_fission():
     """
