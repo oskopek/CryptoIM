@@ -189,6 +189,6 @@ class XMPPClient(object):
         """
             Sends a chat message to the designated recipient.
         """
-        plaintext = msg
-        plaintext = encryptor.encrypt(plaintext, 'This is a secret key')
-        self.xmpp.send_message(mto = recipient, mbody = plaintext, mtype = 'chat')
+        ciphertext = encryptor.encrypt(msg, 'This is a secret key')
+        self.xmpp.send_message(mto = recipient, mbody = ciphertext, mtype = 'chat')
+        return ciphertext

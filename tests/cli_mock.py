@@ -17,11 +17,13 @@
    limitations under the License.
 """
 
-def CryptoShell(object):
+class CryptoShell(object):
+    jid_list = []
     msg_list = []
 
     def print_msg(self, jid, msg):
-        self.msg_list.append(jid + '@' + msg)
+        self.jid_list.append(jid)
+        self.msg_list.append(msg)
 
     def print_debug(self, msg):
         print(msg)

@@ -24,30 +24,29 @@ from nose.tools import ok_, eq_, nottest
 import time
 
 def test_xmpp():
-    crypto_shell = CryptoShell(None)
-
-    xmpp_cli = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
-    xmpp_cli.connect_server(should_block=False)
-
-    eq_(xmpp_cli.is_connected(), True)
-
+    """
+        Test for various xmpp methods: connect, send_message, receive message
+    """
+    xmpp_cli = init_xmpp_cli()
     yield check_connect, xmpp_cli
 
-    # TODO fix this reuse
-    xmpp_cli = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
-    xmpp_cli.connect_server(should_block=False)
-
-    eq_(xmpp_cli.is_connected(), True)
-
+    xmpp_cli = init_xmpp_cli()
     yield check_send_message, xmpp_cli
 
-    # TODO fix this reuse
+    xmpp_cli = init_xmpp_cli()
+    yield check_receive_message, xmpp_cli
+
+def init_xmpp_cli():
+    """
+        Initializes the xmpp_client and connects it
+    """
+    crypto_shell = CryptoShell()
+
     xmpp_cli = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
     xmpp_cli.connect_server(should_block=False)
 
     eq_(xmpp_cli.is_connected(), True)
-
-    yield check_receive_message, xmpp_cli
+    return xmpp_cli
 
 def check_connect(xmpp_client):
     """
@@ -91,43 +90,38 @@ def test_not_connect():
         Check for xmpp.XMPPClient.connect_server and disconnect_server
     """
 
-    crypto_shell = CryptoShell(None)
+    crypto_shell = CryptoShell()
 
     # Wrong host
     xmpp_client = xmpp.XMPPClient('cryptoim@jabber2.de', 'crypto_test', crypto_shell)
-    xmpp_client.connect_server(should_block=False, should_reattempt=False)
-
-    waitForConnection(xmpp_client, False)
-
-    xmpp_client.disconnect_server()
-    waitForConnection(xmpp_client, False)
+    assertDisconnect(xmpp_client)
 
 
     # Wrong pass
     xmpp_client = xmpp.XMPPClient('cryptoim@jabber.de', 'wrong_pass', crypto_shell)
-    xmpp_client.connect_server(should_block=False, should_reattempt=False)
-
-    waitForConnection(xmpp_client, False)
-
-    xmpp_client.disconnect_server()
-    waitForConnection(xmpp_client, False)
+    assertDisconnect(xmpp_client)
 
     # Wrong name
     xmpp_client = xmpp.XMPPClient('cryptoim0@jabber.de', 'crypto_test', crypto_shell)
+    assertDisconnect(xmpp_client)
+
+def assertDisconnect(xmpp_client):
+    """
+        Conencts, disconnects and asserts it happened
+    """
     xmpp_client.connect_server(should_block=False, should_reattempt=False)
 
     waitForConnection(xmpp_client, False)
 
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
-
 
 def check_receive_message(xmpp_client):
     """
         Check for CryptoXMPP.message
     """
 
-    crypto_shell = CryptoShell(None)
+    crypto_shell = CryptoShell()
 
     # Assert connected
 
@@ -140,9 +134,8 @@ def check_receive_message(xmpp_client):
         time.sleep(0.1)
 
     # Send and receive message
-    xmpp_client.send_message(xmpp_client2.xmpp.jid, 'Hello, CryptoIM check_receive_message!')
-
-    # TODO Assert that xmpp_client2 got it
+    plaintext = 'Hello, CryptoIM check_receive_message!'
+    ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.jid, plaintext)
 
     # Disconnect
     xmpp_client.disconnect_server();
@@ -151,7 +144,16 @@ def check_receive_message(xmpp_client):
     waitForConnection(xmpp_client2, False)
     waitForConnection(xmpp_client, False)
 
+    # Assert that xmpp_client2 got it (it is bound to be received after disconnect if it waits)
+    ok_(0 != len(crypto_shell.msg_list))
+    eq_(len(crypto_shell.jid_list), len(crypto_shell.msg_list))
+    eq_(plaintext, crypto_shell.msg_list[-1])
+    eq_(xmpp_client.xmpp.jid, crypto_shell.jid_list[-1])
+
 def waitForConnection(xmpp_client, should_be_connected):
+    """
+        Waits until a connection is estabilished
+    """
     while not xmpp_client.is_connected() == should_be_connected:
         time.sleep(0.1)
     eq_(xmpp_client.is_connected(), should_be_connected)
