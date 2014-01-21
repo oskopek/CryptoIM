@@ -73,9 +73,7 @@ def check_send_message(xmpp_client):
     """
 
     waitForConnection(xmpp_client, True)
-
-    while not xmpp_client.is_in_session():
-        time.sleep(0.1)
+    waitForSession(xmpp_client, True)
     msg = 'Hello, CryptoIM check_send_message!'
     recipient = 'cryptoim2@jabber.de'
     xmpp_client.send_message(recipient, msg)
@@ -132,11 +130,11 @@ def check_receive_message(xmpp_client):
 
     xmpp_client2 = xmpp.XMPPClient('cryptoim2@jabber.de', 'crypto_test2', crypto_shell)
     xmpp_client2.connect_server(should_block=False)
+
     waitForConnection(xmpp_client, True)
     waitForConnection(xmpp_client2, True)
-
-    while not (xmpp_client.is_in_session() and xmpp_client2.is_in_session()):
-        time.sleep(0.1)
+    waitForSession(xmpp_client, True)
+    waitForSession(xmpp_client2, True)
 
     # Send and receive message
     plaintext = 'Hello, CryptoIM check_receive_message!'
@@ -162,4 +160,12 @@ def waitForConnection(xmpp_client, should_be_connected):
     while not xmpp_client.is_connected() == should_be_connected:
         time.sleep(0.1)
     eq_(xmpp_client.is_connected(), should_be_connected)
+
+def waitForSession(xmpp_client, should_be_in_session):
+    """
+        Waits until a session is estabilished
+    """
+    while not xmpp_client.is_in_session() == should_be_in_session:
+        time.sleep(0.1)
+    eq_(xmpp_client.is_in_session(), should_be_in_session)
 

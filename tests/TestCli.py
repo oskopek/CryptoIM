@@ -18,14 +18,13 @@
 """
 
 from cryptoim.cli import CryptoShell
+import TestXMPP
 
-from nose.tools import ok_, eq_, nottest
-import time
-
-cshell = CryptoShell('main.cfg')
+from nose.tools import ok_, eq_
 
 def test_connect_disconnect():
 
+    cshell = CryptoShell('main.cfg')
     eq_(cshell.do_connect(''), False)
     eq_(cshell.do_connect('cryptoim1'), True)
     eq_(cshell.do_connect('cryptoim1'), False)
@@ -34,7 +33,9 @@ def test_connect_disconnect():
 
 def test_send():
 
-    cshell.do_connect('cryptoim2')
+    cshell = CryptoShell('main.cfg')
+    eq_(cshell.do_connect('cryptoim2'), True)
+    TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send(''), False)
     eq_(cshell.do_send('shouldntwork message'), False)
     eq_(cshell.do_send('cryptoim1 message'), True)

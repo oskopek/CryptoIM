@@ -160,7 +160,7 @@ class CryptoShell(cmd.Cmd):
             self.print_cmd(splitted[0] + ' is not in your connection list')
             return False
 
-        if not self.sanit_arg_count_exact(splitted, 1) or self.sanit_is_jid(splitted[0]):
+        if not sanit_arg_count_exact(splitted, 1) or sanit_is_jid(splitted[0]):
             self.print_cmd('Usage: removeconnection <username>')
             return False
 
@@ -182,32 +182,32 @@ class CryptoShell(cmd.Cmd):
 
         splitted = arg.split(' ')
 
-        if self.current_chat == None and splitted[0] not in self.config['friends'] or not self.sanit_is_jid(splitted[0]):
-            #input: send blablabla message (username not defined, jid isnt jid, chatmode off)
-            self.print_cmd(splitted[0] + ' is not recognized. Please enter valid JID or username.')
-            self.print_cmd('Usage: send <username> <message> or send <JID> <message>')
-            return False
-
-        if self.current_chat == None and self.sanit_arg_count_exact(splitted, 0):
-            #input: send (empty argument, chatmode off)
-            self.print_cmd('Usage: send <username> or send <JID>')
-            return False
-
-        if self.current_chat != None:
+        if self.current_chat: # if chat mode
+            if len(arg)==0:
+                self.print_cmd('Please enter your message.')
+                return False
             recipient = self.current_chat
             message = ' '.join(splitted)
 
-        if self.current_chat == None and splitted[0] in self.config['friends']:
-            recipient = self.config['friends'][splitted[0]]
+        else: # if chat mode off
+            if sanit_arg_count_exact(splitted, 0):
+                #input: send (empty argument)
+                self.print_cmd('Usage: send <username> or send <JID>')
+                return False
+
+            if self.config_find(splitted[0]): # if sending to friend
+                recipient = self.config_find(splitted[0])
+            elif sanit_is_jid(splitted[0]): # if sending to jid
+                recipient = splitted[0]
+            else: # error: username not defined or jid isnt jid
+                self.print_cmd(splitted[0] + ' is not recognized. Please enter valid JID or username.')
+                self.print_cmd('Usage: send <username> <message> or send <JID> <message>')
+                return False
+
             message = ' '.join(splitted[1:])
-
-        else:
-            recipient = splitted[0]
-            message = ' '.join(splitted[1:]) 
-
-        if len(message) == 0:
-            self.print_cmd('Please enter your message.')
-            return False
+            if len(message) == 0:
+                self.print_cmd('Please enter your message.')
+                return False
 
         self.xmpp_client.send_message(recipient, message)
         self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
@@ -231,7 +231,7 @@ class CryptoShell(cmd.Cmd):
         'removefriend name'
         splitted = arg.split(' ')
 
-        if splitted[0] not in self.config['friends']:
+        if self.config_find(splitted[0]):
             self.print_cmd('Not in your friend list.')
             return False
 
@@ -248,20 +248,20 @@ class CryptoShell(cmd.Cmd):
             self.print_cmd('Usage: chat <JID> or chat <username>')
             return False
 
-        if self.sanit_is_jid(arg):        
+        if sanit_is_jid(arg):
             self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
             self.current_chat = arg.split(' ')[0]
             self.prompt = '(' + self.current_chat.split('@')[0] + ') '
             return True
 
-        if not self.sanit_is_jid(arg) and self.config_find(arg):
+        if not sanit_is_jid(arg) and self.config_find(arg):
             arg = self.config_find(arg)
             self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
             self.current_chat = arg.split(' ')[0]
             self.prompt = '(' + self.current_chat.split('@')[0] + ') '
             return True
 
-        if not self.sanit_is_jid(arg) and not self.config_find(arg):
+        if not sanit_is_jid(arg) and not self.config_find(arg):
             self.print_cmd('Unknown JID or username, please check JID or try addfriend <username> <JID>')
             return False
 
@@ -309,14 +309,14 @@ class CryptoShell(cmd.Cmd):
         #self.print_cmd('DEBUG: ' + msg)
         pass
 
-    def config_find(self, username):
+    def config_find(self, param, section='friends'):
         """
-            Finds a username in friends in config, returns the jid, or None if not found
+            Finds a parameter in section in config, returns the value, or None if not found
         """
         if self.config:
-            if username in self.config['friends']:
-                return self.config['friends'][username]
-            return None
+            if self.config.has_option(section, param):
+                return self.config.get(section, param)
+        return None
 
 # End of class
 
