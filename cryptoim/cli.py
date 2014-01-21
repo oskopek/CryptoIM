@@ -107,17 +107,19 @@ class CryptoShell(cmd.Cmd):
         return True
 
     def do_addconnection(self, arg):
-        #Usage addconnection <username> <JID> <password>
+        """
+            Usage: addconnection <username> <JID> <password>
+        """
         splitted = arg.split(' ')
 
         if self.config_find(splitted[0]):
             self.print_cmd(splitted[0] + ' is already in your connection list')
             return False
-        if not self.sanit_arg_count_exact(splitted, 3):
+        if not sanit_arg_count_exact(splitted, 3):
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
             return False
-        if not self.sanit_is_jid(splitted[1]):
-            self.print_cmd('JID has form of username@host.')  
+        if not sanit_is_jid(splitted[1]):
+            self.print_cmd('JID has form of username@host.')
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
             return False
 
@@ -131,16 +133,18 @@ class CryptoShell(cmd.Cmd):
         return True
 
     def do_removeconnection(self, arg):
-        #Usage removeconnection <username>
+        """
+            Usage removeconnection <username>
+        """
         splitted = arg.split(' ')
 
         if not self.config_find(splitted[0]):
             self.print_cmd(splitted[0] + ' is not in your connection list')
             return False
-        if not self.sanit_arg_count_exact(splitted, 1):
+        if not sanit_arg_count_exact(splitted, 1):
             self.print_cmd('Usage: removeconnection <username>')
             return False
-        if self.sanit_is_jid(splitted[0]): 
+        if sanit_is_jid(splitted[0]):
             self.print_cmd('Usage: removeconnection <username>')
             return False
 
@@ -296,7 +300,7 @@ def sanit_arg_count_exact(input_array, number):
     """
     return sanit_arg_count(input_array, number, number)
 
-def sanit_is_jid (self, string):
+def sanit_is_jid (string):
     """
         returns true if the string is a JID
     """
@@ -305,14 +309,10 @@ def sanit_is_jid (self, string):
 
     splitted = string.split('@')
     for string_part in splitted:
-        string_part = stringpart.strip('.').strip('/')
+        string_part = string_part.strip('.').strip('/')
         if string_part().isalnum() == True:
             return True
         return False
-
-
-
-
 
 def address_format(jid, msg):
     """
