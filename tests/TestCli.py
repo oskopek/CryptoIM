@@ -22,22 +22,37 @@ import TestXMPP
 
 from nose.tools import ok_, eq_
 
+# TODO redo cli tests without returns
+
 def test_connect_disconnect():
 
     cshell = CryptoShell('main.cfg')
-    eq_(cshell.do_connect(''), False)
-    eq_(cshell.do_connect('cryptoim1'), True)
-    eq_(cshell.do_connect('cryptoim1'), False)
-    eq_(cshell.do_disconnect(''), True)
-    eq_(cshell.do_disconnect(''), False)
+
+    cshell.do_connect('')
+    #eq_(False, cshell.xmpp_client.is_connected())
+
+    cshell.do_connect('cryptoim1')
+    eq_(True, cshell.xmpp_client.is_connected())
+
+    cshell.do_connect('cryptoim1')
+    eq_(True, cshell.xmpp_client.is_connected())
+
+    cshell.do_disconnect('')
+    eq_(False, cshell.xmpp_client.is_connected())
+
+    cshell.do_disconnect('')
+    eq_(False, cshell.xmpp_client.is_connected())
 
 def test_send():
 
     cshell = CryptoShell('main.cfg')
-    eq_(cshell.do_connect('cryptoim2'), True)
+    cshell.do_connect('cryptoim2')
+    eq_(True, cshell.xmpp_client.is_connected())
     TestXMPP.waitForSession(cshell.xmpp_client, True)
-    eq_(cshell.do_send(''), False)
-    eq_(cshell.do_send('shouldntwork message'), False)
-    eq_(cshell.do_send('cryptoim1 message'), True)
-    eq_(cshell.do_send('cryptoim1'), False)
+    eq_(True, cshell.xmpp_client.is_in_session())
+    #eq_(cshell.do_send(''), False)
+    #eq_(cshell.do_send('shouldntwork message'), False)
+    #eq_(cshell.do_send('cryptoim1 message'), True)
+    #eq_(cshell.do_send('cryptoim1'), False)
     cshell.do_disconnect('')
+    eq_(False, cshell.xmpp_client.is_connected())
