@@ -108,6 +108,36 @@ class CryptoShell(cmd.Cmd):
         self.xmpp_client.connect_server()
         return True
 
+    def do_addconnection(self, arg):
+        #Usage addconnection <username> <JID> <password>
+        splitted = arg.split(' ')
+        
+        if not self.sanit_arg_count_exact(splitted, 3):
+            self.print_cmd('Usage: addconnection <username> <JID> <password>')
+            return False
+        if not self.sanit_is_jid(splitted[1]):
+            self.print_cmd('JID has form of username@host.')  
+            self.print_cmd('Usage: addconnection <username> <JID> <password>')
+
+        
+        self.config.add_section(splitted[0])
+        self.config.set(splitted[0], 'username', splitted[0])
+        self.config.set(splitted[0], 'host', (splitted[1].split('@') [1]) )
+        self.config.set(splitted[0], 'password', splitted[2])
+        
+        with open(self.config_file, 'w') as conf:
+            self.config.write(conf)
+        return True
+
+    def do_removeconnection(self, arg):
+        #Usage removeconnection <username>
+        splitted = arg.split(' ')
+
+        self.config.remove_section(splitted[0])
+        
+        with open(self.config_file, 'w') as conf:
+            self.config.write(conf)
+        return True
 
     def do_disconnect(self, arg):
         'disconnect'
@@ -240,6 +270,9 @@ class CryptoShell(cmd.Cmd):
                 return self.config['friends'][username]
             return None
 
+# End of class
+
+
 def sanit_arg_count(input_array, number_lo, number_hi):
     """
         Returns True, if length of input array is in <number_lo, number_hi>
@@ -254,17 +287,23 @@ def sanit_arg_count_exact(input_array, number):
     """
     return sanit_arg_count(input_array, number, number)
 
-def sanit_is_jid(string):
+def sanit_is_jid (self, string):
     """
         returns true if the string is a JID
     """
-    if '@' in string:
-        return True
-    return False
+    if '@' not in string:
+        return False
+
+    splitted = string.split('@')
+    for string_part in splitted:
+        string_part = stringpart.strip('.').strip('/')
+        if string_part().isalnum() == True:
+            return True
+        return False
 
 
 
-# End of class
+
 
 def address_format(jid, msg):
     """
