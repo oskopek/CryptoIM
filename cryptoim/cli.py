@@ -170,29 +170,43 @@ class CryptoShell(cmd.Cmd):
     
 
     def do_s(self, arg):
-        'send toJID msg'
+        'send toJID or username msg'
         return(self.do_send(arg))
 
     def do_send(self, arg):
-        'send toJID msg'
+        'send toJID or username msg'
         if not self.xmpp_client or not self.xmpp_client.is_in_session():
             self.print_cmd('Connect first!')
             return False
 
         splitted = arg.split(' ')
 
+        if self.current_chat == None and splitted[0] not in self.config['friends'] or not self.sanit_is_jid(splitted[0]):
+            #input: send blablabla message (username not defined, jid isnt jid, chatmode off)
+            self.print_cmd(splitted[0] + ' is not recognized. Please enter valid JID or username.')
+            self.print_cmd('Usage: send <username> <message> or send <JID> <message>')
+            return False
+
+        if self.current_chat == None and self.sanit_arg_count_exact(splitted, 0):
+            #input: send (empty argument, chatmode off)
+            self.print_cmd('Usage: send <username> or send <JID>')
+            return False
 
         if self.current_chat != None:
             recipient = self.current_chat
             message = ' '.join(splitted)
 
-        elif splitted[0] in self.config['friends']:
-            recipient = self.config_find(splitted[0])
+        if self.current_chat == None and splitted[0] in self.config['friends']:
+            recipient = self.config['friends'][splitted[0]]
             message = ' '.join(splitted[1:])
 
         else:
             recipient = splitted[0]
             message = ' '.join(splitted[1:]) 
+
+        if len(message) == 0:
+            self.print_cmd('Please enter your message.')
+            return False
 
         self.xmpp_client.send_message(recipient, message)
         self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
