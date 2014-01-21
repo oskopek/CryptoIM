@@ -112,14 +112,17 @@ class CryptoShell(cmd.Cmd):
         #Usage addconnection <username> <JID> <password>
         splitted = arg.split(' ')
         
+        if self.config_find(splitted[0]):
+            self.print_cmd(splitted[0] + ' is already in your connection list')
+            return False
         if not self.sanit_arg_count_exact(splitted, 3):
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
             return False
         if not self.sanit_is_jid(splitted[1]):
             self.print_cmd('JID has form of username@host.')  
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
+            return False
 
-        
         self.config.add_section(splitted[0])
         self.config.set(splitted[0], 'username', splitted[0])
         self.config.set(splitted[0], 'host', (splitted[1].split('@') [1]) )
@@ -132,6 +135,17 @@ class CryptoShell(cmd.Cmd):
     def do_removeconnection(self, arg):
         #Usage removeconnection <username>
         splitted = arg.split(' ')
+        
+        if not self.config_find(splitted[0]):
+            self.print_cmd(splitted[0] + ' is not in your connection list')
+            return False
+        if not self.sanit_arg_count_exact(splitted, 1):
+            self.print_cmd('Usage: removeconnection <username>')
+            return False
+        if self.sanit_is_jid(splitted[0]): 
+            self.print_cmd('Usage: removeconnection <username>')
+            return False
+
 
         self.config.remove_section(splitted[0])
         
