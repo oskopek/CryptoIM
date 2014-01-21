@@ -23,7 +23,7 @@ from cryptoim.common import __roundkey_separator, __key_expansion, __add_roundke
 def encrypt(plaintext, key):
     """
         plaintext = string
-        key = string (256 bytes)
+        key = string (256 bits)
     """
 
     messages = __split_message(plaintext)
