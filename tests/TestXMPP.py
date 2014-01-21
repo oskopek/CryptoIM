@@ -18,7 +18,7 @@
 """
 
 import cryptoim.xmpp as xmpp
-from cli_mock import CryptoShell
+from cryptoim.cli import CryptoShell
 
 from nose.tools import ok_, eq_, nottest
 import time
@@ -40,7 +40,7 @@ def init_xmpp_cli():
     """
         Initializes the xmpp_client and connects it
     """
-    crypto_shell = CryptoShell()
+    crypto_shell = CryptoShell('main.cfg')
 
     xmpp_cli = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
     xmpp_cli.connect_server(should_block=False)
@@ -90,7 +90,7 @@ def test_not_connect():
         Check for xmpp.XMPPClient.connect_server and disconnect_server
     """
 
-    crypto_shell = CryptoShell()
+    crypto_shell = CryptoShell('main.cfg')
 
     # Wrong host
     xmpp_client = xmpp.XMPPClient('cryptoim@jabber2.de', 'crypto_test', crypto_shell)
@@ -121,7 +121,7 @@ def check_receive_message(xmpp_client):
         Check for CryptoXMPP.message
     """
 
-    crypto_shell = CryptoShell()
+    crypto_shell = CryptoShell('main.cfg')
 
     # Assert connected
 

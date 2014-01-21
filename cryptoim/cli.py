@@ -38,6 +38,8 @@ class CryptoShell(cmd.Cmd):
     config = None
     config_file = None
     current_chat = None
+    msg_list = None
+    jid_list = None
 
 
     def __init__(self, config_file):
@@ -50,6 +52,10 @@ class CryptoShell(cmd.Cmd):
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
         self.config_file = config_file
+
+        # Logging
+        self.msg_list = []
+        self.jid_list = []
 
     # -- basic commands --
     def do_exit(self, arg):
@@ -213,6 +219,10 @@ class CryptoShell(cmd.Cmd):
         self.print_cmd(address_format(jid, msg))
         self.stdout.write(backup)
         self.stdout.flush()
+
+        # Log:
+        self.msg_list.append(msg)
+        self.jid_list.append(jid)
 
     def print_debug(self, msg):
         """
