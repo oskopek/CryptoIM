@@ -116,7 +116,7 @@ class CryptoShell(cmd.Cmd):
             return False
 
         if arg: # arg nonempty
-            self.print_cmd('Don\'t use any arguments!\tUsage: disconnect')
+            self.print_cmd('Usage: disconnect, not disconnect <argument>')
 
         self.xmpp_client.disconnect_server()
         self.print_cmd('Disconnected from server.')
@@ -150,7 +150,7 @@ class CryptoShell(cmd.Cmd):
         'addfriend name jid'
         splitted = arg.split(' ')
 
-        if splitted[0] in self.config['friends']:
+        if self.config_find(splitted[0]):
             self.print_cmd('Already in your friend list.')
             return False
 
@@ -231,6 +231,15 @@ class CryptoShell(cmd.Cmd):
         #self.print_cmd('DEBUG: ' + msg)
         pass
 
+    def config_find(self, username):
+        """
+            Finds a username in friends in config, returns the jid, or None if not found
+        """
+        if self.config:
+            if username in self.config['friends']:
+                return self.config['friends'][username]
+            return None
+
 def sanit_arg_count(input_array, number_lo, number_hi):
     """
         Returns True, if length of input array is in <number_lo, number_hi>
@@ -244,6 +253,16 @@ def sanit_arg_count_exact(input_array, number):
         Returns True, if length of input_array is equal to number
     """
     return sanit_arg_count(input_array, number, number)
+
+def sanit_is_jid(string):
+    """
+        returns true if the string is a JID
+    """
+    if '@' in string:
+        return True
+    return False
+
+
 
 # End of class
 
