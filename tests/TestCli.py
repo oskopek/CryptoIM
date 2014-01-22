@@ -25,6 +25,7 @@ from nose.tools import ok_, eq_
 def test_connect_disconnect():
 
     cshell = CryptoShell('main.cfg')
+    cshell.test_mode = True
     eq_(cshell.do_connect(''), False)
     eq_(cshell.do_connect('cryptoim1'), True)
     eq_(cshell.do_connect('cryptoim1'), False)
@@ -34,6 +35,7 @@ def test_connect_disconnect():
 def test_send():
 
     cshell = CryptoShell('main.cfg')
+    cshell.test_mode = True
     eq_(cshell.do_connect('cryptoim2'), True)
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send(''), False)

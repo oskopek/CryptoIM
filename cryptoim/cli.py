@@ -36,6 +36,7 @@ class CryptoShell(cmd.Cmd):
     prompt = '(cryptoim) '
     xmpp_client = None
     current_chat = None
+    test_mode = False
 
 
     def __init__(self, config_file):
@@ -79,10 +80,11 @@ class CryptoShell(cmd.Cmd):
 
         if sanit_arg_count(splitted, 0, 2) == False:
             self.print_cmd('Invalid number of arguments!')
-            return False
+            return self.return_cli(False)
+
         if self.xmpp_client and self.xmpp_client.is_connected():
             self.print_cmd('Already connected!')
-            return False
+            return self.return_cli(False)
 
         conn_jid = None
         conn_pass = None
@@ -95,7 +97,7 @@ class CryptoShell(cmd.Cmd):
                 conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
-                return False
+                return self.return_cli(False)
 
         elif sanit_arg_count_exact(splitted, 2) == True:
             conn_jid = splitted[0]
@@ -104,7 +106,7 @@ class CryptoShell(cmd.Cmd):
         conn_jid += '/cryptoim' # Adds a static resource
         self.xmpp_client = cryptoim.xmpp.XMPPClient(conn_jid, conn_pass, self)
         self.xmpp_client.connect_server()
-        return True
+        return self.return_cli(True)
 
 
     def do_disconnect(self, arg):
@@ -114,14 +116,14 @@ class CryptoShell(cmd.Cmd):
 
         if not self.xmpp_client or not self.xmpp_client.is_connected():
             self.print_cmd('Already disconnected!')
-            return False
+            return self.return_cli(False)
 
         if arg: # arg nonempty
             self.print_cmd('Usage: disconnect, not disconnect <argument>')
 
         self.xmpp_client.disconnect_server()
         self.print_cmd('Disconnected from server.')
-        return True
+        return self.return_cli(True)
 
 
     def do_addconnection(self, arg):
@@ -132,14 +134,14 @@ class CryptoShell(cmd.Cmd):
 
         if self.config_find(splitted[0]):
             self.print_cmd(splitted[0] + ' is already in your connection list')
-            return False
+            return self.return_cli(False)
         if not sanit_arg_count_exact(splitted, 3):
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
-            return False
+            return self.return_cli(False)
         if not sanit_is_jid(splitted[1]):
             self.print_cmd('JID has form of username@host.')
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
-            return False
+            return self.return_cli(False) 
 
         self.config.add_section(splitted[0])
         self.config.set(splitted[0], 'username', splitted[0])
@@ -148,7 +150,7 @@ class CryptoShell(cmd.Cmd):
 
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return True
+        return self.return_cli(True)
 
     def do_removeconnection(self, arg):
         """
@@ -158,17 +160,17 @@ class CryptoShell(cmd.Cmd):
 
         if not self.config_find(splitted[0]):
             self.print_cmd(splitted[0] + ' is not in your connection list')
-            return False
+            return self.return_cli(False)
 
         if not sanit_arg_count_exact(splitted, 1) or sanit_is_jid(splitted[0]):
             self.print_cmd('Usage: removeconnection <username>')
-            return False
+            return self.return_cli(False)
 
         self.config.remove_section(splitted[0])
 
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return True
+        return self.return_cli(True) 
 
     def do_s(self, arg):
         'send toJID or username msg'
@@ -178,14 +180,14 @@ class CryptoShell(cmd.Cmd):
         'send toJID or username msg'
         if not self.xmpp_client or not self.xmpp_client.is_in_session():
             self.print_cmd('Connect first!')
-            return False
+            return self.return_cli(False)
 
         splitted = arg.split(' ')
 
         if self.current_chat: # if chat mode
             if len(arg)==0:
                 self.print_cmd('Please enter your message.')
-                return False
+                return self.return_cli(False)
             recipient = self.current_chat
             message = ' '.join(splitted)
 
@@ -193,7 +195,7 @@ class CryptoShell(cmd.Cmd):
             if sanit_arg_count_exact(splitted, 0):
                 #input: send (empty argument)
                 self.print_cmd('Usage: send <username> or send <JID>')
-                return False
+                return self.return_cli(False)
 
             if self.config_find(splitted[0]): # if sending to friend
                 recipient = self.config_find(splitted[0])
@@ -202,17 +204,17 @@ class CryptoShell(cmd.Cmd):
             else: # error: username not defined or jid isnt jid
                 self.print_cmd(splitted[0] + ' is not recognized. Please enter valid JID or username.')
                 self.print_cmd('Usage: send <username> <message> or send <JID> <message>')
-                return False
+                return self.return_cli(False)
 
             message = ' '.join(splitted[1:])
             if len(message) == 0:
                 self.print_cmd('Please enter your message.')
-                return False
+                return self.return_cli(False)
 
         self.xmpp_client.send_message(recipient, message)
         self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
 
-        return True
+        return self.return_cli(True)
 
     def do_addfriend(self, arg):
         'addfriend name jid'
@@ -220,12 +222,12 @@ class CryptoShell(cmd.Cmd):
 
         if self.config_find(splitted[0]):
             self.print_cmd('Already in your friend list.')
-            return False
+            return 
 
         self.config.set('friends', splitted[0], splitted[1])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return True
+        return 
 
     def do_removefriend(self, arg):
         'removefriend name'
@@ -233,12 +235,12 @@ class CryptoShell(cmd.Cmd):
 
         if self.config_find(splitted[0]):
             self.print_cmd('Not in your friend list.')
-            return False
+            return 
 
         self.config.remove_option('friends', splitted[0])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return True
+        return 
 
     def do_chat(self, arg):
         """
@@ -246,24 +248,24 @@ class CryptoShell(cmd.Cmd):
         """
         if not arg:
             self.print_cmd('Usage: chat <JID> or chat <username>')
-            return False
+            return 
 
         if sanit_is_jid(arg):
             self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
             self.current_chat = arg.split(' ')[0]
             self.prompt = '(' + self.current_chat.split('@')[0] + ') '
-            return True
+            return 
 
         if not sanit_is_jid(arg) and self.config_find(arg):
             arg = self.config_find(arg)
             self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
             self.current_chat = arg.split(' ')[0]
             self.prompt = '(' + self.current_chat.split('@')[0] + ') '
-            return True
+            return 
 
         if not sanit_is_jid(arg) and not self.config_find(arg):
             self.print_cmd('Unknown JID or username, please check JID or try addfriend <username> <JID>')
-            return False
+            return 
 
     def do_stopchat(self, arg):
         """
@@ -271,14 +273,14 @@ class CryptoShell(cmd.Cmd):
         """
         if not self.current_chat:
             self.print_cmd('No open chat to close.')
-            return False
+            return 
         if arg is not None:
             self.print_cmd('Usage: stopchat, not stopchat <argument>')
 
         self.prompt = '(cryptoim) '
         self.current_chat = None
         self.print_cmd('Closing chat window.')
-        return True
+        return 
 
     # -- tools --
 
@@ -318,6 +320,12 @@ class CryptoShell(cmd.Cmd):
                 return self.config.get(section, param)
         return None
 
+    def return_cli(self, value):
+        if self.test_mode:
+            return value
+        else:
+            return 
+
 # End of class
 
 
@@ -354,3 +362,8 @@ def address_format(jid, msg):
         Formats a jid and message to correctly display in the log
     """
     return(jid + ': ' + msg)
+
+def test_cli(parameter):
+    if parameter == 'true':
+        return True
+    return False
