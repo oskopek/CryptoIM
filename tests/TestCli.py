@@ -44,7 +44,7 @@ def test_send():
     eq_(cshell.do_send('cryptoim1'), False)
     cshell.do_disconnect('')
 
-def test_chat():
+def test_chat_stopchat():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
@@ -56,6 +56,10 @@ def test_chat():
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send('Test message'), True)
     eq_(cshell.do_s('Test message for short version'), True)
+    eq_(cshell.do_stopchat(''), True)
+    eq_(cshell.do_stopchat(''), False)
+    eq_(cshell.do_send('Test message after stopchat'), False)
+    eq_(cshell.do_s('Alsto testing the short version'), False)
     cshell.do_disconnect('')
     
     

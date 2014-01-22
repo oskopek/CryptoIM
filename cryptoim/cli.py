@@ -273,14 +273,14 @@ class CryptoShell(cmd.Cmd):
         """
         if not self.current_chat:
             self.print_cmd('No open chat to close.')
-            return 
+            return self.return_cli(False)
         if arg is not None:
             self.print_cmd('Usage: stopchat, not stopchat <argument>')
 
         self.prompt = '(cryptoim) '
         self.current_chat = None
         self.print_cmd('Closing chat window.')
-        return 
+        return self.return_cli(True)
 
     # -- tools --
 
