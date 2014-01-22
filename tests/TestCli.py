@@ -69,3 +69,18 @@ def test_chat_stopchat_exit():
         exit_code = 0
     eq_(0, exit_code)
 
+
+def test_addfriend_removefriend():
+
+    cshell = CryptoShell('tests/test_config.cfg')
+    cshell.test_mode = True
+
+    eq_(cshell.do_addfriend('testfriend testfriend@jabber.de'), True)
+    eq_(cshell.do_addfriend('testfriend testfriend@jabber.de'), False)
+    eq_(cshell.do_addfriend(''), False)
+    eq_(cshell.do_removefriend('testfriend'), True)
+    eq_(cshell.do_removefriend(''), False)
+    eq_(cshell.do_removefriend('testfriend'), False)
+
+
+

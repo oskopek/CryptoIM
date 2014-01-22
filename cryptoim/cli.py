@@ -220,27 +220,35 @@ class CryptoShell(cmd.Cmd):
         'addfriend name jid'
         splitted = arg.split(' ')
 
+        if not sanit_arg_count_exact(splitted, 2):
+            self.print_cmd('Usage: addfriend <name> <JID>')
+            return self.return_cli(False)
+
         if self.config_find(splitted[0]):
             self.print_cmd('Already in your friend list.')
-            return
+            return self.return_cli(False)
 
         self.config.set('friends', splitted[0], splitted[1])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return
+        return self.return_cli(True)
 
     def do_removefriend(self, arg):
         'removefriend name'
         splitted = arg.split(' ')
 
-        if self.config_find(splitted[0]):
+        if not sanit_arg_count_exact(splitted, 1):
+            self.print_cmd('Usage: removefriend <name>')
+            return self.return_cli(False)
+
+        if not self.config_find(splitted[0]):
             self.print_cmd('Not in your friend list.')
-            return
+            return self.return_cli(False)
 
         self.config.remove_option('friends', splitted[0])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return
+        return self.return_cli(True)
 
     def do_chat(self, arg):
         """
