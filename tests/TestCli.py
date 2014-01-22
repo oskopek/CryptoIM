@@ -31,11 +31,15 @@ def test_connect_disconnect():
     eq_(cshell.do_connect('cryptoim1'), False)
     eq_(cshell.do_disconnect(''), True)
     eq_(cshell.do_disconnect(''), False)
+    eq_(cshell.do_connect('cryptoim1@jabber.de crypto_test'), True)
+    eq_(cshell.do_disconnect(''), True)
+    eq_(cshell.do_disconnect(''), False)
 
 def test_send():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
+    eq_(cshell.do_send('message before connection'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send(''), False)
@@ -64,7 +68,7 @@ def test_chat_stopchat_exit():
 
     exit_code = -1
     try:
-        cshell.do_exit('')
+        cshell.do_q('')
     except SystemExit:
         exit_code = 0
     eq_(0, exit_code)
@@ -79,6 +83,7 @@ def test_addfriend_removefriend():
     eq_(cshell.do_addfriend('testfriend testfriend@jabber.de'), False)
     eq_(cshell.do_addfriend(''), False)
     eq_(cshell.do_removefriend('testfriend'), True)
+    eq_(cshell.do_removefriend('testfriend another few lines'), False)
     eq_(cshell.do_removefriend(''), False)
     eq_(cshell.do_removefriend('testfriend'), False)
 
