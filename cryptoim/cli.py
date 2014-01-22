@@ -62,7 +62,7 @@ class CryptoShell(cmd.Cmd):
 
         self.do_disconnect(arg)
         self.print_cmd('Thank you for using CryptoIM!')
-        quit()
+        sys.exit(0)
 
     def do_q(self, arg):
         'Alias for quit'
@@ -141,7 +141,7 @@ class CryptoShell(cmd.Cmd):
         if not sanit_is_jid(splitted[1]):
             self.print_cmd('JID has form of username@host.')
             self.print_cmd('Usage: addconnection <username> <JID> <password>')
-            return self.return_cli(False) 
+            return self.return_cli(False)
 
         self.config.add_section(splitted[0])
         self.config.set(splitted[0], 'username', splitted[0])
@@ -170,7 +170,7 @@ class CryptoShell(cmd.Cmd):
 
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return self.return_cli(True) 
+        return self.return_cli(True)
 
     def do_s(self, arg):
         'send toJID or username msg'
@@ -222,12 +222,12 @@ class CryptoShell(cmd.Cmd):
 
         if self.config_find(splitted[0]):
             self.print_cmd('Already in your friend list.')
-            return 
+            return
 
         self.config.set('friends', splitted[0], splitted[1])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return 
+        return
 
     def do_removefriend(self, arg):
         'removefriend name'
@@ -235,12 +235,12 @@ class CryptoShell(cmd.Cmd):
 
         if self.config_find(splitted[0]):
             self.print_cmd('Not in your friend list.')
-            return 
+            return
 
         self.config.remove_option('friends', splitted[0])
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
-        return 
+        return
 
     def do_chat(self, arg):
         """
@@ -321,10 +321,14 @@ class CryptoShell(cmd.Cmd):
         return None
 
     def return_cli(self, value):
+        """
+            If in test mode, return value from param
+        """
+
         if self.test_mode:
             return value
         else:
-            return 
+            return
 
 # End of class
 
@@ -362,8 +366,3 @@ def address_format(jid, msg):
         Formats a jid and message to correctly display in the log
     """
     return(jid + ': ' + msg)
-
-def test_cli(parameter):
-    if parameter == 'true':
-        return True
-    return False

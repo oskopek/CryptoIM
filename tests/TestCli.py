@@ -61,6 +61,11 @@ def test_chat_stopchat_exit():
     eq_(cshell.do_send('Test message after stopchat'), False)
     eq_(cshell.do_s('Alsto testing the short version'), False)
     cshell.do_disconnect('')
-    #cshell.do_exit('')
-    
-    
+
+    exit_code = -1
+    try:
+        cshell.do_exit('')
+    except SystemExit:
+        exit_code = 0
+    eq_(0, exit_code)
+
