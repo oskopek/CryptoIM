@@ -44,7 +44,7 @@ def test_send():
     eq_(cshell.do_send('cryptoim1'), False)
     cshell.do_disconnect('')
 
-def test_chat_stopchat():
+def test_chat_stopchat_exit():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
@@ -61,5 +61,6 @@ def test_chat_stopchat():
     eq_(cshell.do_send('Test message after stopchat'), False)
     eq_(cshell.do_s('Alsto testing the short version'), False)
     cshell.do_disconnect('')
+    #cshell.do_exit('')
     
     
