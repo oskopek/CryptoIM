@@ -132,7 +132,7 @@ class CryptoShell(cmd.Cmd):
         """
         splitted = arg.split(' ')
 
-        if self.config_find(splitted[0]):
+        if self.config.has_section(splitted[0]):
             self.print_cmd(splitted[0] + ' is already in your connection list')
             return self.return_cli(False)
         if not sanit_arg_count_exact(splitted, 3):
@@ -158,7 +158,7 @@ class CryptoShell(cmd.Cmd):
         """
         splitted = arg.split(' ')
 
-        if not self.config_find(splitted[0]):
+        if not self.config.has_section(splitted[0]):
             self.print_cmd(splitted[0] + ' is not in your connection list')
             return self.return_cli(False)
 
@@ -274,6 +274,14 @@ class CryptoShell(cmd.Cmd):
         if not sanit_is_jid(arg) and not self.config_find(arg):
             self.print_cmd('Unknown JID or username, please check JID or try addfriend <username> <JID>')
             return self.return_cli(False)
+
+    def do_friendlist(self, arg):
+        """
+            Displays all friends in main.cfg ['friends'] section
+        """
+        for friend in self.config['friends']:
+            self.print_cmd(friend)
+    
 
     def do_stopchat(self, arg):
         """

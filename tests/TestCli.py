@@ -82,5 +82,20 @@ def test_addfriend_removefriend():
     eq_(cshell.do_removefriend(''), False)
     eq_(cshell.do_removefriend('testfriend'), False)
 
+def test_addconnection_removeconnection():
+    
+    cshell = CryptoShell('tests/test_config.cfg')
+    cshell.test_mode = True
+
+    eq_(cshell.do_addconnection('testuser2 testuser2@jabber.de testpass'), True)
+    eq_(cshell.do_addconnection('testuser2 testuser2@jabber.de testpass'), False)
+    eq_(cshell.do_addconnection('testuser2'), False)
+    eq_(cshell.do_addconnection('testuser2 thisisnotajid testpass'), False)
+    eq_(cshell.do_removeconnection('testuser3'), False)
+    eq_(cshell.do_removeconnection('testuser2 testuser3@jabber.de'), False)
+    eq_(cshell.do_removeconnection('testuser2@jabber.de'), False)
+    eq_(cshell.do_removeconnection('testuser2'), True)
+
+
 
 
