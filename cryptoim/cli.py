@@ -248,24 +248,24 @@ class CryptoShell(cmd.Cmd):
         """
         if not arg:
             self.print_cmd('Usage: chat <JID> or chat <username>')
-            return 
+            return self.return_cli(False)
 
         if sanit_is_jid(arg):
             self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
             self.current_chat = arg.split(' ')[0]
             self.prompt = '(' + self.current_chat.split('@')[0] + ') '
-            return 
+            return self.return_cli(True)
 
         if not sanit_is_jid(arg) and self.config_find(arg):
             arg = self.config_find(arg)
             self.print_cmd('Opening chat window with: ' + arg.split(' ')[0])
             self.current_chat = arg.split(' ')[0]
             self.prompt = '(' + self.current_chat.split('@')[0] + ') '
-            return 
+            return self.return_cli(True)
 
         if not sanit_is_jid(arg) and not self.config_find(arg):
             self.print_cmd('Unknown JID or username, please check JID or try addfriend <username> <JID>')
-            return 
+            return self.return_cli(False)
 
     def do_stopchat(self, arg):
         """
@@ -353,7 +353,7 @@ def sanit_is_jid (string):
     splitted = string.split('@')
     for string_part in splitted:
         string_part = string_part.strip('.').strip('/')
-        if string_part().isalnum() == True:
+        if string_part.isalnum() == True:
             return True
         return False
 

@@ -43,3 +43,19 @@ def test_send():
     eq_(cshell.do_send('cryptoim1 message'), True)
     eq_(cshell.do_send('cryptoim1'), False)
     cshell.do_disconnect('')
+
+def test_chat():
+
+    cshell = CryptoShell('main.cfg')
+    cshell.test_mode = True
+    eq_(cshell.do_chat(''), False)
+    eq_(cshell.do_chat('cryptoim1@jabber.de'), True)
+    eq_(cshell.do_chat('cryptoim1'), True)
+    eq_(cshell.do_chat('shouldntwork'), False)
+    eq_(cshell.do_connect('cryptoim2'), True)
+    TestXMPP.waitForSession(cshell.xmpp_client, True)
+    eq_(cshell.do_send('Test message'), True)
+    eq_(cshell.do_s('Test message for short version'), True)
+    cshell.do_disconnect('')
+    
+    
