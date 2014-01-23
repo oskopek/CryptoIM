@@ -140,4 +140,11 @@ def test_return_cli():
     eq_(cshell.return_cli('test'), None)
     eq_(cshell.return_cli(123), None)
 
+def test_create_config():
+    config_file = 'tests/test_config_nonexistant.cfg'
+    cshell = CryptoShell(config_file)
+    import os
+    os.remove(config_file)
+
+
 # TODO test tools
