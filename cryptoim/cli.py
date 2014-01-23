@@ -192,7 +192,7 @@ class CryptoShell(cmd.Cmd):
             message = ' '.join(splitted)
 
         else: # if chat mode off
-            if sanit_arg_count_exact(splitted, 0):
+            if not sanit_arg_count(splitted, 1, 2):
                 #input: send (empty argument)
                 self.print_cmd('Usage: send <username> or send <JID>')
                 return self.return_cli(False)
