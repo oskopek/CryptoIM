@@ -47,12 +47,13 @@ def test_connect_disconnect_jid():
     cshell.test_mode = True
     eq_(cshell.do_connect('cryptoim@jabber.de crypto_test'), True)
     eq_(cshell.do_disconnect(''), True)
+    eq_(cshell.do_disconnect(''), False)
 
 def test_send():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
-    eq_(cshell.do_send('cryptoim1 message'), False)
+    eq_(cshell.do_send('cryptoim1 message before connection'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send(''), False)
@@ -99,6 +100,7 @@ def test_addfriend_removefriend():
     eq_(cshell.do_addfriend('testfriend testfriend@jabber.de'), False)
     eq_(cshell.do_addfriend(''), False)
     eq_(cshell.do_removefriend('testfriend'), True)
+    eq_(cshell.do_removefriend('testfriend another few lines'), False)
     eq_(cshell.do_removefriend(''), False)
     eq_(cshell.do_removefriend('testfriend'), False)
 
