@@ -80,7 +80,6 @@ def __split_message(plaintext):
 
         messages.append(matrix)
     return messages
-    # TODO: Check if this works as expected
 
 def __sub_bytes(message):
     """
@@ -91,7 +90,6 @@ def __sub_bytes(message):
             hexadecimal = __convert_char_hex(message[i][j])
             message[i][j] = const.SBOX[int(hexadecimal[0], 16)][int(hexadecimal[1], 16)]
     return message
-    # TODO: Check if returns in decimal or hexadecimal
 
 def __shift_rows(message):
     """

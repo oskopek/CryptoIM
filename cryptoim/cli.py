@@ -34,10 +34,7 @@ class CryptoShell(cmd.Cmd):
 
     intro = 'Welcome to CryptoIM!   Type help or ? to list commands.\n'
     prompt = '(cryptoim) '
-    xmpp_client = None
-    current_chat = None
     test_mode = False
-
 
     def __init__(self, config_file):
         """
@@ -53,9 +50,12 @@ class CryptoShell(cmd.Cmd):
         if not os.path.exists(config_file):
             self.config.add_section('friends')
             with open(config_file, 'w') as c_file:
-                        self.config.write(c_file)
+                self.config.write(c_file)
 
         self.config_file = config_file
+
+        self.xmpp_client = None
+        self.current_chat = None
 
         # Logging
         self.received_msg_list = []
@@ -354,7 +354,6 @@ class CryptoShell(cmd.Cmd):
             return
 
 # End of class
-
 
 def sanit_arg_count(input_array, number_lo, number_hi):
     """
