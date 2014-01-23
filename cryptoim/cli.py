@@ -331,8 +331,8 @@ class CryptoShell(cmd.Cmd):
         """
             Prints debug messages
         """
-        #self.print_cmd('DEBUG: ' + msg)
-        pass
+        if self.test_mode:
+            self.print_cmd('DEBUG: ' + msg)
 
     def config_find(self, param, section='friends'):
         """
@@ -370,19 +370,31 @@ def sanit_arg_count_exact(input_array, number):
     """
     return sanit_arg_count(input_array, number, number)
 
-def sanit_is_jid (string):
+def sanit_is_jid(string):
     """
-        returns true if the string is a JID
+        Returns true if the string is a JID
     """
-    if '@' not in string:
+    if string.count('@') != 1 or string.count('/') > 1:
         return False
 
     splitted = string.split('@')
-    for string_part in splitted:
-        string_part = string_part.strip('.').strip('/')
-        if string_part.isalnum() == True:
-            return True
+    username = splitted[0]
+
+    host = splitted[1]
+    if host.count('.') > 1:
         return False
+    host = host.replace('.', '')
+
+    if '/' in host:
+        host_resource = host.split('/')
+        host = host_resource[0]
+        resource = host_resource[1]
+
+        # Test resource:
+        if not resource.isalnum():
+            return False
+
+    return username.isalnum() and host.isalnum()
 
 def address_format(jid, msg):
     """

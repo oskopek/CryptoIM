@@ -18,6 +18,7 @@
 """
 
 from cryptoim.cli import CryptoShell
+import cryptoim.cli as cli
 import TestXMPP
 
 from nose.tools import ok_, eq_
@@ -147,4 +148,22 @@ def test_create_config():
     os.remove(config_file)
 
 
-# TODO test tools
+# Test tools
+
+def test_sanit_is_jid():
+    is_jid = cli.sanit_is_jid
+    eq_(True, is_jid('test@jabber.de'))
+    eq_(True, is_jid('test@jabber.de/resourceHere123'))
+    eq_(True, is_jid('test@localhost'))
+    eq_(True, is_jid('tes1234tBigSmall@jabber.DE'))
+
+    eq_(False, is_jid('testjabber.de'))
+    eq_(False, is_jid('test/jabber@de'))
+    eq_(False, is_jid('test&jabber.de'))
+    eq_(False, is_jid('test@jabber&de'))
+    eq_(False, is_jid('te@st@jabber.de'))
+    eq_(False, is_jid('test@jabber..de'))
+    eq_(False, is_jid('te.st@jabber.de'))
+    eq_(False, is_jid('te&st@jabber.de'))
+    eq_(False, is_jid('test@jabber.de/resourceHere.123'))
+    eq_(False, is_jid('test@jabber.de/resource&&Here123'))
