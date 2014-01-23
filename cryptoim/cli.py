@@ -78,7 +78,7 @@ class CryptoShell(cmd.Cmd):
         'connect JID PASSWORD or connect CONNECTION_NAME'
         splitted = arg.split(' ')
 
-        if sanit_arg_count(splitted, 0, 2) == False:
+        if not sanit_arg_count(splitted, 0, 2):
             self.print_cmd('Invalid number of arguments!')
             return self.return_cli(False)
 
@@ -89,7 +89,7 @@ class CryptoShell(cmd.Cmd):
         conn_jid = None
         conn_pass = None
 
-        if sanit_arg_count_exact(splitted, 1) == True:
+        if sanit_arg_count_exact(splitted, 1):
             if splitted[0] in self.config.sections():
                 username = self.config.get(arg, 'Username') # self.config[arg]['Username']
                 host = self.config.get(arg, 'Host') # self.config[arg]['Host']
@@ -99,7 +99,7 @@ class CryptoShell(cmd.Cmd):
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
                 return self.return_cli(False)
 
-        elif sanit_arg_count_exact(splitted, 2) == True:
+        elif sanit_arg_count_exact(splitted, 2):
             conn_jid = splitted[0]
             conn_pass = splitted[1]
 
@@ -237,7 +237,7 @@ class CryptoShell(cmd.Cmd):
         'removefriend name'
         splitted = arg.split(' ')
 
-        if not sanit_arg_count_exact(splitted, 1):
+        if not arg:
             self.print_cmd('Usage: removefriend <name>')
             return self.return_cli(False)
 
@@ -279,9 +279,9 @@ class CryptoShell(cmd.Cmd):
         """
             Displays all friends in main.cfg ['friends'] section
         """
-        for friend in self.config['friends']:
-            self.print_cmd(friend)
-    
+        for friend in self.config.items('friends'):
+            self.print_cmd(' - '.join(friend))
+
 
     def do_stopchat(self, arg):
         """

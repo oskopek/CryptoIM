@@ -27,20 +27,39 @@ def test_connect_disconnect():
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
     eq_(cshell.do_connect(''), False)
+    eq_(cshell.do_connect('invalid number of arguments'), False)
     eq_(cshell.do_connect('cryptoim1'), True)
     eq_(cshell.do_connect('cryptoim1'), False)
-    eq_(cshell.do_disconnect(''), True)
+    eq_(cshell.do_disconnect('random_string'), True) # branch coverage
     eq_(cshell.do_disconnect(''), False)
+
+    exit_code = -1
+    try:
+        cshell.do_q('')
+    except SystemExit:
+        exit_code = 0
+    eq_(0, exit_code)
+
+
+def test_connect_disconnect_jid():
+
+    cshell = CryptoShell('main.cfg')
+    cshell.test_mode = True
+    eq_(cshell.do_connect('cryptoim@jabber.de crypto_test'), True)
+    eq_(cshell.do_disconnect(''), True)
 
 def test_send():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
+    eq_(cshell.do_send('cryptoim1 message'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send(''), False)
+    eq_(cshell.onecmd(''), None) # just empty line command - emptyline() test
     eq_(cshell.do_send('shouldntwork message'), False)
     eq_(cshell.do_send('cryptoim1 message'), True)
+    eq_(cshell.do_send('cryptoim2@jabber.de message'), True)
     eq_(cshell.do_send('cryptoim1'), False)
     cshell.do_disconnect('')
 
@@ -56,6 +75,7 @@ def test_chat_stopchat_exit():
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send('Test message'), True)
     eq_(cshell.do_s('Test message for short version'), True)
+    eq_(cshell.do_send(''), False)
     eq_(cshell.do_stopchat(''), True)
     eq_(cshell.do_stopchat(''), False)
     eq_(cshell.do_send('Test message after stopchat'), False)
@@ -83,7 +103,7 @@ def test_addfriend_removefriend():
     eq_(cshell.do_removefriend('testfriend'), False)
 
 def test_addconnection_removeconnection():
-    
+
     cshell = CryptoShell('tests/test_config.cfg')
     cshell.test_mode = True
 
@@ -96,6 +116,25 @@ def test_addconnection_removeconnection():
     eq_(cshell.do_removeconnection('testuser2@jabber.de'), False)
     eq_(cshell.do_removeconnection('testuser2'), True)
 
+def test_friendlist():
 
+    cshell = CryptoShell('main.cfg')
+    cshell.test_mode = True
+    eq_(cshell.do_friendlist(''), None)
+    eq_(cshell.do_friendlist('whatever string'), None)
 
+def test_return_cli():
 
+    cshell = CryptoShell('tests/test_config.cfg')
+    cshell.test_mode = True
+    eq_(cshell.return_cli(False), False)
+    eq_(cshell.return_cli(True), True)
+    eq_(cshell.return_cli('test'), 'test')
+    eq_(cshell.return_cli(123), 123)
+    cshell.test_mode = False
+    eq_(cshell.return_cli(False), None)
+    eq_(cshell.return_cli(True), None)
+    eq_(cshell.return_cli('test'), None)
+    eq_(cshell.return_cli(123), None)
+
+# TODO test tools
