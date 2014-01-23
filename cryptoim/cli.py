@@ -48,6 +48,13 @@ class CryptoShell(cmd.Cmd):
         cmd.Cmd.__init__(self)
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
+
+        import os
+        if not os.path.exists(config_file):
+            self.config.add_section('friends')
+            with open(config_file, 'w') as c_file:
+                        self.config.write(c_file)
+
         self.config_file = config_file
 
         # Logging

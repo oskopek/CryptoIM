@@ -25,6 +25,7 @@ setup(
     author = "CryptoIM Development Team",
     author_email = "skopekondrej@gmail.com",
     packages = find_packages(exclude=["tests"]),
+    scripts = ['main.py'],
     url = "http://pypi.python.org/pypi/CryptoIM/",
     license = "Apache License 2.0",
     description = "Crypto Instant Messenger",
