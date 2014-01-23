@@ -34,13 +34,27 @@ CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model si
 Building
 ========
 
-* **Build**: ``python setup.py build`` and ``sudo python setup.py install``
+1. **Build**: ``python setup.py build`` and ``sudo python setup.py install``
 
-* To **run**: ``python main.py``
+2. To **run**: ``python main.py``
 
-* To run **unit tests**: ``python setup.py nosetests``
+3. To run **unit tests**: ``python setup.py nosetests``
 
-* To **clean**, run: ``python setup.py clean --all``
+4. To **clean**, run: ``python setup.py clean --all``
+
+Building on Linux
+=================
+
+* Make sure to **install** these packages using your package manager: ``python`` and ``python-setuptools``
+
+* Follow steps 1. and 2. from **Building**
+
+Building on Windows
+===================
+
+* **Install** `Python <http://www.python.org/download/releases/3.3.3/#download>`_ and `Setuptools <https://pypi.python.org/pypi/setuptools#windows>`_.
+
+* Follow steps 1. and 2. from **Building**
 
 Contributing
 ============
