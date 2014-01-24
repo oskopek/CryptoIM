@@ -32,7 +32,7 @@ setup(
     keywords = "crypto instant messenger",
     test_suite = "nose.collector",
     classifiers = [
-        "Development Status :: 1 - Planning",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
