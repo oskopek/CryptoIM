@@ -140,6 +140,9 @@ def check_receive_message(xmpp_client):
     plaintext = 'Hello, CryptoIM check_receive_message!'
     ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.jid, plaintext)
 
+    while len(crypto_shell2.received_msg_list) < 1:
+        time.sleep(0.1)
+
     # Disconnect
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
@@ -147,12 +150,13 @@ def check_receive_message(xmpp_client):
     waitForConnection(xmpp_client2, False)
 
     # Assert that xmpp_client2 got it (it is bound to be received after disconnect if it waits)
-    ok_(0 != len(crypto_shell2.received_msg_list))
-    eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
     print('Received msg list: ', crypto_shell2.received_msg_list)
     print('Received jid list: ', crypto_shell2.received_jid_list)
-    eq_(plaintext, crypto_shell2.received_msg_list[-1], msg='If this test fails, rerun, probably a network/server error.')
-    eq_(xmpp_client.xmpp.jid, crypto_shell2.received_jid_list[-1], msg='If this test fails, rerun, probably a network/server error.')
+
+    ok_(0 != len(crypto_shell2.received_msg_list))
+    eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
+    eq_(plaintext, crypto_shell2.received_msg_list[-1])
+    eq_(xmpp_client.xmpp.jid, crypto_shell2.received_jid_list[-1])
 
 def waitForConnection(xmpp_client, should_be_connected):
     """
