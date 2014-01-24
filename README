@@ -71,13 +71,13 @@ Here are some ways *you* can contribute:
 * by writing specifications
 * by writing code (**no patch is too small**: fix typos, add comments, clean up inconsistent whitespace)
 * by refactoring code
-* by closing `issues <https://github.com/oskopek/QuickCI/issues>`_
+* by closing `issues <https://github.com/oskopek/CryptoIM/issues>`_
 * by reviewing patches
 
 Submitting an Issue
 ===================
 
-We use the `GitHub issue tracker <https://github.com/oskopek/QuickCI/issues>`_ to track bugs and features. Before
+We use the `GitHub issue tracker <https://github.com/oskopek/CryptoIM/issues>`_ to track bugs and features. Before
 submitting a bug report or feature request, check to make sure it hasn't
 already been submitted. When submitting a bug report, please include a `Gist <https://gist.github.com/>`_
 that includes a stack trace and any details that may be necessary to reproduce
