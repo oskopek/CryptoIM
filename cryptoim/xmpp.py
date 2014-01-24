@@ -36,9 +36,6 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
     """
     A simple SleekXMPP client.
     """
-    in_session = False
-    is_connected = False
-    parent = None
 
     def __init__(self, jid, password, parent):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
@@ -60,6 +57,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.add_event_handler('disconnected', self.disconnected)
 
         self.parent = parent
+        self.in_session = False
+        self.is_connected = False
 
     def connected(self, event):
         """
