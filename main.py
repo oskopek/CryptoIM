@@ -19,5 +19,5 @@
 
 from cryptoim.cli import CryptoShell
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     CryptoShell('main.cfg').cmdloop()

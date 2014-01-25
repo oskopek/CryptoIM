@@ -65,14 +65,18 @@ class CryptoShell(cmd.Cmd):
 
     # -- basic commands --
     def do_exit(self, arg):
-        'Quit CryptoIM'
+        """
+            Quit CryptoIM
+        """
 
         self.do_disconnect(arg)
         self.print_cmd('Thank you for using CryptoIM!')
         sys.exit(0)
 
     def do_q(self, arg):
-        'Alias for quit'
+        """
+            Alias for quit
+        """
         self.do_exit(arg)
 
 
@@ -82,7 +86,9 @@ class CryptoShell(cmd.Cmd):
 
     # -- xmpp commands --
     def do_connect(self, arg):
-        'connect JID PASSWORD or connect CONNECTION_NAME'
+        """
+            connect JID PASSWORD or connect CONNECTION_NAME
+        """
         splitted = arg.split(' ')
 
         if not sanit_arg_count(splitted, 0, 2):
@@ -118,7 +124,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_disconnect(self, arg):
         """
-            disconnect
+            Disconnect
         """
 
         if not self.xmpp_client or not self.xmpp_client.is_connected():
@@ -180,11 +186,15 @@ class CryptoShell(cmd.Cmd):
         return self.return_cli(True)
 
     def do_s(self, arg):
-        'send toJID or username msg'
+        """
+            send alias
+        """
         return(self.do_send(arg))
 
     def do_send(self, arg):
-        'send toJID or username msg'
+        """
+            send toJID or username msg
+        """
         if not self.xmpp_client or not self.xmpp_client.is_in_session():
             self.print_cmd('Connect first!')
             return self.return_cli(False)
@@ -224,7 +234,9 @@ class CryptoShell(cmd.Cmd):
         return self.return_cli(True)
 
     def do_addfriend(self, arg):
-        'addfriend name jid'
+        """
+            addfriend name jid
+        """
         splitted = arg.split(' ')
 
         if not sanit_arg_count_exact(splitted, 2):
@@ -241,7 +253,9 @@ class CryptoShell(cmd.Cmd):
         return self.return_cli(True)
 
     def do_removefriend(self, arg):
-        'removefriend name'
+        """
+            removefriend name
+        """
         splitted = arg.split(' ')
 
         if not arg:
@@ -284,8 +298,12 @@ class CryptoShell(cmd.Cmd):
 
     def do_friendlist(self, arg):
         """
-            Displays all friends in main.cfg ['friends'] section
+            Displays all friends from config file friends section
         """
+
+        if not arg:
+            self.print_cmd('Usage: friendlist, not friendlist <argument>')
+
         for friend in self.config.items('friends'):
             self.print_cmd(' - '.join(friend))
 
@@ -297,7 +315,7 @@ class CryptoShell(cmd.Cmd):
         if not self.current_chat:
             self.print_cmd('No open chat to close.')
             return self.return_cli(False)
-        if arg is not None:
+        if not arg:
             self.print_cmd('Usage: stopchat, not stopchat <argument>')
 
         self.prompt = '(cryptoim) '

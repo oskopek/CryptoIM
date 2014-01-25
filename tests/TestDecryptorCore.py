@@ -73,7 +73,7 @@ def test_decrypt():
         from string import ascii_letters
         from random import choice
 
-        rand = ""
+        rand = ''
         for _ in range(limit):
             rand += choice(ascii_letters)
         return rand

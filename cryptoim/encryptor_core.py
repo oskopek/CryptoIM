@@ -35,7 +35,7 @@ def encrypt_round(messages, roundkeys):
     """
         encrypt_round
     """
-    ciphertext = ""
+    ciphertext = ''
     for msg in messages:
         msg = __add_roundkey(msg, roundkeys[14])
         for i in range(14):
@@ -65,7 +65,7 @@ def __split_message(plaintext):
             message_chunks.append(message_chunk)
             message_chunk = ''
         if i == (len(plaintext)-1) and len(message_chunk) < 16:
-            message_chunk += (16-len(message_chunk)) * "\x00"
+            message_chunk += (16-len(message_chunk)) * '\x00'
             message_chunks.append(message_chunk)
             message_chunk = ''
     messages = []
