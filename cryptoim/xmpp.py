@@ -44,7 +44,6 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         if '/' in jid:
             jid = jid[:jid.index('/')]
         jid += '/cryptoim'
-        print('JID: ', jid)
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
 
         # The session_start event will be triggered when
@@ -175,7 +174,7 @@ class XMPPClient(object):
 
     xmpp = None
 
-    def __init__(self, jid, password, parent, loglevel=logging.DEBUG):
+    def __init__(self, jid, password, parent, loglevel=logging.CRITICAL):
         """
             Initializes the ClientXMPP, logging, etc
         """
