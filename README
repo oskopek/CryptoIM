@@ -26,11 +26,6 @@ A secure* instant messenger written in Python out of sheer fun.
 
 \* not really secure (at least not yet)
 
-Info
-====
-
-CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model similar to `this <http://nvie.com/posts/a-successful-git-branching-model/>`_.
-
 Building
 ========
 
@@ -42,19 +37,21 @@ Building
 
 4. To **clean**, run: ``python setup.py clean --all``
 
+5. To **edit** connection options, edit the ``main.cfg`` file.
+
 Building on Linux
 =================
 
 * Make sure to **install** these packages using your package manager: ``python`` and ``python-setuptools``
 
-* Follow steps 1. and 2. from **Building**
+* Follow steps 1., 2. and 5. from **Building**
 
 Building on Windows
 ===================
 
 * **Install** `Python <http://www.python.org/download/releases/3.3.3/#download>`_ and `Setuptools <https://pypi.python.org/pypi/setuptools#windows>`_.
 
-* Follow steps 1. and 2. from **Building**
+* Follow steps 1., 2. and 5. from **Building**
 
 Contributing
 ============
@@ -73,6 +70,11 @@ Here are some ways *you* can contribute:
 * by refactoring code
 * by closing `issues <https://github.com/oskopek/CryptoIM/issues>`_
 * by reviewing patches
+
+Info
+====
+
+CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model similar to `this <http://nvie.com/posts/a-successful-git-branching-model/>`_.
 
 Submitting an Issue
 ===================
