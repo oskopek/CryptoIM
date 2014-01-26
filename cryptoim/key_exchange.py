@@ -50,9 +50,39 @@ def make_public_key(prime, base, rnumber):
     pub_key = (base ** rnumber) % prime
     return pub_key
 
-def make_final_key(prime, pub_key, p_number):
+def make_final_key(prime, public, private):
     """
         Returns (pub_key^p_number) mod prime, the key used for encryption
     """
-    private_key = (pub_key ** p_number) % prime
-    return private_key
+    key = (public ** private) % prime
+    return key
+
+def encode_syn(prime, base, A):
+    """
+        Encodes the numbers in a standardized format
+    """
+    return 'SYN;%i;%i;%i' % (prime, base, A)
+
+def decode_syn(msg):
+    """
+        Decodes the numbers in a standardized format
+    """
+    cut = msg[5:] # Omit the first 4 chars ('SYN;')
+    spl = cut.split(';')
+    prime = int(spl[0])
+    base = int(spl[1])
+    A = int(spl[2])
+    return prime, base, A
+
+def encode_ack(B):
+    """
+        Encodes the number in a standardized format
+    """
+    return 'ACK;%i' % (B)
+
+def decode_ack(msg):
+    """
+        Decodes the numbers in a standardized format
+    """
+    cut = msg[5:] # Omit the first 4 chars ('SYN;')
+    return int(cut)
