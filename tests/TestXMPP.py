@@ -27,63 +27,66 @@ def test_xmpp():
     """
         Test for various xmpp methods: connect, send_message, receive message
     """
-    xmpp_cli = init_xmpp_cli()
-    check_connect(xmpp_cli)
+    xmpp_client, xmpp_client2 = init_xmpp_clients()
+    check_connect(xmpp_client, xmpp_client2)
 
-    xmpp_cli = init_xmpp_cli()
-    check_send_message(xmpp_cli)
+    xmpp_client, xmpp_client2 = init_xmpp_clients()
+    check_send_message(xmpp_client, xmpp_client2)
 
-    xmpp_cli = init_xmpp_cli()
-    check_receive_message(xmpp_cli)
+    xmpp_client, xmpp_client2 = init_xmpp_clients()
+    check_receive_message(xmpp_client, xmpp_client2)
 
-def init_xmpp_cli():
+def init_xmpp_clients():
     """
-        Initializes the xmpp_client and connects it
+        Initializes the xmpp_clients and connects them
     """
     crypto_shell = CryptoShell('main.cfg')
 
-    xmpp_cli = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
-    xmpp_cli.connect_server(should_block=False)
+    xmpp_client = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
+    xmpp_client.connect_server(should_block=False)
 
-    waitForConnection(xmpp_cli, True)
-    return xmpp_cli
+    crypto_shell2 = CryptoShell('main.cfg')
+    xmpp_client2 = xmpp.XMPPClient('cryptoim2@jabber.de', 'crypto_test2', crypto_shell2)
+    xmpp_client2.connect_server(should_block=False)
 
-def check_connect(xmpp_client):
+    waitForConnection(xmpp_client, True)
+    waitForConnection(xmpp_client2, True)
+    return xmpp_client, xmpp_client2
+
+def check_connect(xmpp_client, xmpp_client2):
     """
         Check for xmpp.XMPPClient.connect_server and disconnect_server
     """
 
     eq_(xmpp_client.is_connected(), True)
+    eq_(xmpp_client2.is_connected(), True)
 
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
+    xmpp_client2.disconnect_server()
+    waitForConnection(xmpp_client2, False)
 
-    # Uncomment the following to enable a second check -- note, will require a ~10s timeout
-    """
-    xmpp_client.connect_server(should_block=False)
-    waitForConnection(xmpp_client, True)
-
-    xmpp_client.disconnect_server()
-    waitForConnection(xmpp_client, False)
-    """
-
-def check_send_message(xmpp_client):
+def check_send_message(xmpp_client, xmpp_client2):
     """
         Check for xmpp.XMPPClient.send_message
     """
-    
+
     crypto_shell = xmpp_client.xmpp.parent
     waitForConnection(xmpp_client, True)
+    waitForConnection(xmpp_client2, True)
     waitForSession(xmpp_client, True)
+    waitForSession(xmpp_client2, True)
     msg = 'Hello, CryptoIM check_send_message!'
-    recipient = 'cryptoim2@jabber.de'
+    recipient = xmpp_client2.xmpp.jid
     xmpp_client.send_message(recipient, msg)
 
     while len(crypto_shell.sent_msg_list) < 1:
         time.sleep(0.1)
 
     xmpp_client.disconnect_server()
+    xmpp_client2.disconnect_server()
     waitForConnection(xmpp_client, False)
+    waitForConnection(xmpp_client2, False)
 
     # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)   
     ok_(0 != len(crypto_shell.sent_msg_list))
@@ -122,18 +125,14 @@ def assertDisconnect(xmpp_client):
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
 
-def check_receive_message(xmpp_client):
+def check_receive_message(xmpp_client, xmpp_client2):
     """
         Check for CryptoXMPP.message
     """
 
-    crypto_shell2 = CryptoShell('main.cfg')
+    crypto_shell2 = xmpp_client2.xmpp.parent
 
     # Assert connected
-
-    xmpp_client2 = xmpp.XMPPClient('cryptoim2@jabber.de', 'crypto_test2', crypto_shell2)
-    xmpp_client2.connect_server(should_block=False)
-
     waitForConnection(xmpp_client, True)
     waitForConnection(xmpp_client2, True)
     waitForSession(xmpp_client, True)
