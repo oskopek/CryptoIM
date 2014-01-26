@@ -211,7 +211,7 @@ class CryptoShell(cmd.Cmd):
             message = ' '.join(splitted)
 
         else: # if chat mode off
-            if not sanit_arg_count(splitted, 1, 2):
+            if sanit_arg_count_exact(splitted, 0):
                 #input: send (empty argument)
                 self.print_cmd('Usage: send <username> or send <JID>')
                 return self.return_cli(False)
@@ -275,7 +275,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_chat(self, arg):
         """
-            Usage: chat <JID>
+            Usage: chat <JID> or chat <username>
         """
         if not arg:
             self.print_cmd('Usage: chat <JID> or chat <username>')
