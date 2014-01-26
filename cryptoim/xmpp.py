@@ -62,6 +62,9 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.in_session = False
         self.is_connected = False
 
+        self.msg_queue = dict()
+        self.key_queue = dict()
+
     def connected(self, event):
         """
             Process the connected event.
@@ -114,44 +117,51 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
                    how it may be used.
         """
         sender = msg['from'].bare
+        text = msg['body']
 
-        if msg['type'] == 'SYN': # receiving
+        if text.startswith('SYN;'): # receiving
             prime, base, A = keyex.decode_syn(msg['body'])
+            print('prime: ', prime)
+            print('base: ', base)
+            print('A: ', A)
             b = keyex.generate_random(2, 100)
             B = keyex.make_public_key(prime, base, b)
-            key = keyex.make_final_key(prime, b, A)
+            key = str(keyex.make_final_key(prime, b, A))
 
-            self.send_message(mto = sender, mbody = keyex.encode_ack(B), mtype = 'ACK')
+            self.send_message(mto = sender, mbody = keyex.encode_ack(B), mtype = 'chat')
             self.key_queue[sender] = key
 
-        elif msg['type'] == 'ACK': # sending
+        elif text.startswith('ACK;'): # sending
             q_entry = self.msg_queue[sender]
-            msg = q_entry[0]
+            msg_text = q_entry[0]
             prime = q_entry[1]
             a = q_entry[2]
+            print('msg: ', msg_text)
+            print('prime: ', prime)
+            print('a: ', a)
             B = keyex.decode_ack(msg['body'])
-            key = keyex.make_final_key(prime, B, a)
-
-            ciphertext = encryptor.encrypt(msg, key)
-            self.xmpp.send_message(mto = sender, mbody = ciphertext, mtype = 'chat')
+            key = str(keyex.make_final_key(prime, B, a))
+            print('key: ', key)
+            ciphertext = encryptor.encrypt(msg_text, key)
+            self.send_message(mto = sender, mbody = ciphertext, mtype = 'chat')
 
             del q_entry # TODO check if it actually gets removed
 
             # Log:
-            self.xmpp.parent.sent_jid_list.append(sender)
-            self.xmpp.parent.sent_msg_list.append(msg)
+            self.parent.sent_jid_list.append(sender)
+            self.parent.sent_msg_list.append(msg_text)
 
         else:
-            ciphertext = msg['body']
+            ciphertext = text
             key = self.key_queue[sender]
             decrypted_message = decryptor.decrypt(ciphertext, key)
-            self.parent.print_msg(sender, decrypted_message)
+            self.print_msg(sender, decrypted_message)
 
             del key # TODO check if it actually gets removed
 
             # Log:
-            self.parent.received_jid_list.append(sender)
-            self.parent.received_msg_list.append(decrypted_message)
+            self.received_jid_list.append(sender)
+            self.received_msg_list.append(decrypted_message)
 
             #if msg['type'] in ('chat', 'normal'):
                 #msg.reply('Thanks for sending\n%(body)s' % msg).send()
@@ -165,7 +175,7 @@ class XMPPClient(object):
 
     xmpp = None
 
-    def __init__(self, jid, password, parent, loglevel=logging.CRITICAL):
+    def __init__(self, jid, password, parent, loglevel=logging.DEBUG):
         """
             Initializes the ClientXMPP, logging, etc
         """
@@ -182,9 +192,6 @@ class XMPPClient(object):
         self.xmpp.register_plugin('xep_0004') # Data Forms
         self.xmpp.register_plugin('xep_0060') # PubSub
         self.xmpp.register_plugin('xep_0199') # XMPP Ping
-
-        self.msg_queue = dict()
-        self.key_queue = dict()
 
 
     def connect_server(self, should_block=False, should_reattempt=True):
@@ -233,5 +240,5 @@ class XMPPClient(object):
         a = keyex.generate_random(2, 100)
         A = keyex.make_public_key(prime, base, a)
 
-        self.xmpp.send_message(mto = recipient, mbody = keyex.encode_syn(prime, base, A), mtype = 'SYN')
-        self.msg_queue[recipient] = (msg, prime, a)
+        self.xmpp.send_message(mto = recipient, mbody = keyex.encode_syn(prime, base, A), mtype = 'chat')
+        self.xmpp.msg_queue[recipient] = (msg, prime, a)
