@@ -67,7 +67,7 @@ def decode_syn(msg):
     """
         Decodes the numbers in a standardized format
     """
-    cut = msg[5:] # Omit the first 4 chars ('SYN;')
+    cut = msg[4:] # Omit the first 4 chars ('SYN;')
     spl = cut.split(';')
     prime = int(spl[0])
     base = int(spl[1])
@@ -82,7 +82,7 @@ def encode_ack(B):
 
 def decode_ack(msg):
     """
-        Decodes the numbers in a standardized format
+        Decodes the number in a standardized format
     """
-    cut = msg[5:] # Omit the first 4 chars ('SYN;')
+    cut = msg[4:] # Omit the first 4 chars ('ACK;')
     return int(cut)
