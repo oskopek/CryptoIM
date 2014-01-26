@@ -40,6 +40,11 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
     """
 
     def __init__(self, jid, password, parent):
+        # Add a static resource
+        if '/' in jid:
+            jid = jid[:jid.index('/')]
+        jid += '/cryptoim'
+        print('JID: ', jid)
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
 
         # The session_start event will be triggered when
@@ -116,17 +121,20 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
                    for stanza objects and the Message stanza to see
                    how it may be used.
         """
+
+        if msg['type'] not in ('chat', 'normal'):
+            return # Ignore nonchat messages
+
         sender = msg['from'].bare
         text = msg['body']
 
+        # DH key exchange: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange#Explanation_including_encryption_mathematics
+
         if text.startswith('SYN;'): # receiving
             prime, base, A = keyex.decode_syn(msg['body'])
-            print('prime: ', prime)
-            print('base: ', base)
-            print('A: ', A)
             b = keyex.generate_random(2, 100)
             B = keyex.make_public_key(prime, base, b)
-            key = str(keyex.make_final_key(prime, b, A))
+            key = str(keyex.make_final_key(prime, A, b))
 
             self.send_message(mto = sender, mbody = keyex.encode_ack(B), mtype = 'chat')
             self.key_queue[sender] = key
@@ -136,12 +144,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             msg_text = q_entry[0]
             prime = q_entry[1]
             a = q_entry[2]
-            print('msg: ', msg_text)
-            print('prime: ', prime)
-            print('a: ', a)
             B = keyex.decode_ack(msg['body'])
             key = str(keyex.make_final_key(prime, B, a))
-            print('key: ', key)
             ciphertext = encryptor.encrypt(msg_text, key)
             self.send_message(mto = sender, mbody = ciphertext, mtype = 'chat')
 
@@ -155,17 +159,13 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             ciphertext = text
             key = self.key_queue[sender]
             decrypted_message = decryptor.decrypt(ciphertext, key)
-            self.print_msg(sender, decrypted_message)
+            self.parent.print_msg(sender, decrypted_message)
 
             del key # TODO check if it actually gets removed
 
             # Log:
-            self.received_jid_list.append(sender)
-            self.received_msg_list.append(decrypted_message)
-
-            #if msg['type'] in ('chat', 'normal'):
-                #msg.reply('Thanks for sending\n%(body)s' % msg).send()
-            #print('DEBUG: MSG: %(body)s' % msg)
+            self.parent.received_jid_list.append(sender)
+            self.parent.received_msg_list.append(decrypted_message)
 
 
 class XMPPClient(object):
