@@ -29,8 +29,8 @@ def test_connect_disconnect():
     cshell.test_mode = True
     eq_(cshell.do_connect(''), False)
     eq_(cshell.do_connect('invalid number of arguments'), False)
-    eq_(cshell.do_connect('cryptoim1'), True)
-    eq_(cshell.do_connect('cryptoim1'), False)
+    eq_(cshell.do_connect('cryptoim'), True)
+    eq_(cshell.do_connect('cryptoim'), False)
     eq_(cshell.do_disconnect('random_string'), True) # branch coverage
     eq_(cshell.do_disconnect(''), False)
 
@@ -53,15 +53,15 @@ def test_send():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
-    eq_(cshell.do_send('cryptoim1 message before connection'), False)
+    eq_(cshell.do_send('cryptoim message before connection'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
     TestXMPP.waitForSession(cshell.xmpp_client, True)
     eq_(cshell.do_send(''), False)
     eq_(cshell.onecmd(''), None) # just empty line command - emptyline() test
     eq_(cshell.do_send('shouldntwork message'), False)
-    eq_(cshell.do_send('cryptoim1 message'), True)
+    eq_(cshell.do_send('cryptoim message'), True)
     eq_(cshell.do_send('cryptoim2@jabber.de message'), True)
-    eq_(cshell.do_send('cryptoim1'), False)
+    eq_(cshell.do_send('cryptoim'), False)
     cshell.do_disconnect('')
 
 def test_chat_stopchat_exit():
@@ -69,8 +69,8 @@ def test_chat_stopchat_exit():
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
     eq_(cshell.do_chat(''), False)
-    eq_(cshell.do_chat('cryptoim1@jabber.de'), True)
-    eq_(cshell.do_chat('cryptoim1'), True)
+    eq_(cshell.do_chat('cryptoim@jabber.de'), True)
+    eq_(cshell.do_chat('cryptoim'), True)
     eq_(cshell.do_chat('shouldntwork'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
     TestXMPP.waitForSession(cshell.xmpp_client, True)
