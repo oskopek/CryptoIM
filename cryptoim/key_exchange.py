@@ -33,14 +33,14 @@ def prime_pick():
     """
         Returns a random number from the const.PRIMES array
     """
-    rnd = generate_random(0, len(PRIMES))
+    rnd = generate_random(0, len(PRIMES) - 1)
     return PRIMES[rnd]
 
 def base_pick():
     """
         Returns a random number from the const.PRIMES array from indexes interval (0, 15)
     """
-    rnd = generate_random(0, 15)
+    rnd = generate_random(2, 15)
     return rnd
 
 def make_public_key(prime, base, rnumber):
