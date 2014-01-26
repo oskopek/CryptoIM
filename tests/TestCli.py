@@ -45,7 +45,7 @@ def test_connect_disconnect_jid():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
-    eq_(cshell.do_connect('cryptoim@jabber.de crypto_test'), True)
+    eq_(cshell.do_connect('cryptoim@jabber.de/random_resource_gets_stripped crypto_test'), True)
     eq_(cshell.do_disconnect(''), True)
     eq_(cshell.do_disconnect(''), False)
 

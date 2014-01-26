@@ -78,6 +78,7 @@ def check_send_message(xmpp_client, xmpp_client2):
     waitForSession(xmpp_client2, True)
     msg = 'Hello, CryptoIM check_send_message!'
     recipient = xmpp_client2.xmpp.jid
+    xmpp_client.xmpp.send_message(mto = recipient, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
     xmpp_client.send_message(recipient, msg)
 
     while len(crypto_shell.sent_msg_list) < 1:
@@ -89,7 +90,7 @@ def check_send_message(xmpp_client, xmpp_client2):
     waitForConnection(xmpp_client2, False)
 
     # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)   
-    ok_(0 != len(crypto_shell.sent_msg_list))
+    ok_(1 == len(crypto_shell.sent_msg_list))
     eq_(len(crypto_shell.sent_jid_list), len(crypto_shell.sent_msg_list))
     eq_(msg, crypto_shell.sent_msg_list[-1])
     eq_(recipient, crypto_shell.sent_jid_list[-1])
@@ -155,7 +156,7 @@ def check_receive_message(xmpp_client, xmpp_client2):
     print('Received msg list: ', crypto_shell2.received_msg_list)
     print('Received jid list: ', crypto_shell2.received_jid_list)
 
-    ok_(0 != len(crypto_shell2.received_msg_list))
+    ok_(1 == len(crypto_shell2.received_msg_list))
     eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
     eq_(plaintext, crypto_shell2.received_msg_list[-1])
     eq_(xmpp_client.xmpp.jid, crypto_shell2.received_jid_list[-1])
