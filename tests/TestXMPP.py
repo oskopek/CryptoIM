@@ -71,18 +71,21 @@ def check_send_message(xmpp_client):
     """
         Check for xmpp.XMPPClient.send_message
     """
-
+    
+    crypto_shell = xmpp_client.xmpp.parent
     waitForConnection(xmpp_client, True)
     waitForSession(xmpp_client, True)
     msg = 'Hello, CryptoIM check_send_message!'
     recipient = 'cryptoim2@jabber.de'
     xmpp_client.send_message(recipient, msg)
 
+    while len(crypto_shell.sent_msg_list) < 1:
+        time.sleep(0.1)
+
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
 
-    # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)
-    crypto_shell = xmpp_client.xmpp.parent
+    # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)   
     ok_(0 != len(crypto_shell.sent_msg_list))
     eq_(len(crypto_shell.sent_jid_list), len(crypto_shell.sent_msg_list))
     eq_(msg, crypto_shell.sent_msg_list[-1])
