@@ -23,19 +23,6 @@ from cryptoim.cli import CryptoShell
 from nose.tools import ok_, eq_, nottest
 import time
 
-def test_xmpp():
-    """
-        Test for various xmpp methods: connect, send_message, receive message
-    """
-    xmpp_client, xmpp_client2 = init_xmpp_clients()
-    check_connect(xmpp_client, xmpp_client2)
-
-    xmpp_client, xmpp_client2 = init_xmpp_clients()
-    check_send_message(xmpp_client, xmpp_client2)
-
-    xmpp_client, xmpp_client2 = init_xmpp_clients()
-    check_receive_message(xmpp_client, xmpp_client2)
-
 def init_xmpp_clients():
     """
         Initializes the xmpp_clients and connects them
@@ -53,11 +40,11 @@ def init_xmpp_clients():
     waitForConnection(xmpp_client2, True)
     return xmpp_client, xmpp_client2
 
-def check_connect(xmpp_client, xmpp_client2):
+def test_connect():
     """
-        Check for xmpp.XMPPClient.connect_server and disconnect_server
+        Test for xmpp.XMPPClient.connect_server and disconnect_server
     """
-
+    xmpp_client, xmpp_client2 = init_xmpp_clients()
     eq_(xmpp_client.is_connected(), True)
     eq_(xmpp_client2.is_connected(), True)
 
@@ -66,11 +53,11 @@ def check_connect(xmpp_client, xmpp_client2):
     xmpp_client2.disconnect_server()
     waitForConnection(xmpp_client2, False)
 
-def check_send_message(xmpp_client, xmpp_client2):
+def test_send_message():
     """
-        Check for xmpp.XMPPClient.send_message
+        Test for xmpp.XMPPClient.send_message
     """
-
+    xmpp_client, xmpp_client2 = init_xmpp_clients()
     crypto_shell = xmpp_client.xmpp.parent
     waitForConnection(xmpp_client, True)
     waitForConnection(xmpp_client2, True)
@@ -126,11 +113,11 @@ def assertDisconnect(xmpp_client):
     xmpp_client.disconnect_server()
     waitForConnection(xmpp_client, False)
 
-def check_receive_message(xmpp_client, xmpp_client2):
+def test_receive_message():
     """
-        Check for CryptoXMPP.message
+        Test for CryptoXMPP.message (receive message)
     """
-
+    xmpp_client, xmpp_client2 = init_xmpp_clients()
     crypto_shell2 = xmpp_client2.xmpp.parent
 
     # Assert connected
