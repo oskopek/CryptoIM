@@ -27,7 +27,6 @@ Original LICENSE:
 
 import logging
 import sleekxmpp
-import random
 
 import cryptoim.encryptor_core as encryptor
 import cryptoim.decryptor_core as decryptor

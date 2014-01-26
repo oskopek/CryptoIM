@@ -84,7 +84,7 @@ def test_send_message():
 
 def test_not_connect():
     """
-        Check for xmpp.XMPPClient.connect_server and disconnect_server
+        Failproofing test for xmpp.XMPPClient.connect_server and disconnect_server
     """
 
     crypto_shell = CryptoShell('main.cfg')
