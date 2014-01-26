@@ -124,7 +124,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_disconnect(self, arg):
         """
-           Usage: Disconnect 
+           Usage: disconnect 
         """
 
         if not self.xmpp_client or not self.xmpp_client.is_connected():
