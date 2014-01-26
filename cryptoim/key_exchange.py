@@ -40,7 +40,7 @@ def base_pick():
     """
         Returns a random number from the const.PRIMES array from indexes interval (0, 15)
     """
-    rnd = generate_random(0, 15)
+    rnd = generate_random(1, 15)
     return rnd
 
 def make_public_key(prime, base, rnumber):
