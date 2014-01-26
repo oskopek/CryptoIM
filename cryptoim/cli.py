@@ -75,7 +75,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_q(self, arg):
         """
-            Alias for quit
+            Usage: q (Exit)
         """
         self.do_exit(arg)
 
@@ -87,7 +87,8 @@ class CryptoShell(cmd.Cmd):
     # -- xmpp commands --
     def do_connect(self, arg):
         """
-            connect JID PASSWORD or connect CONNECTION_NAME
+           Usage: connect <JID> <PASSWORD> or connect <CONNECTION_NAME> 
+            (Connects to your JID, if you dont have connection use addconnection)
         """
         splitted = arg.split(' ')
 
@@ -123,7 +124,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_disconnect(self, arg):
         """
-            Disconnect
+           Usage: Disconnect 
         """
 
         if not self.xmpp_client or not self.xmpp_client.is_connected():
@@ -166,7 +167,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_removeconnection(self, arg):
         """
-            Usage removeconnection <username>
+            Usage: removeconnection <username>
         """
         splitted = arg.split(' ')
 
@@ -186,13 +187,14 @@ class CryptoShell(cmd.Cmd):
 
     def do_s(self, arg):
         """
-            send alias
+            Usage: s <JID> <msg> or s <username> <msg> 
+            (Shorthand for send) 
         """
         return(self.do_send(arg))
 
     def do_send(self, arg):
         """
-            send toJID or username msg
+            Usage: send <JID> <msg> or send <username> <msg>
         """
         if not self.xmpp_client or not self.xmpp_client.is_in_session():
             self.print_cmd('Connect first!')
@@ -234,7 +236,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_addfriend(self, arg):
         """
-            addfriend name jid
+            Usage: addfriend <name> <JID>
         """
         splitted = arg.split(' ')
 
@@ -253,7 +255,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_removefriend(self, arg):
         """
-            removefriend name
+            Usage: removefriend <name>
         """
         splitted = arg.split(' ')
 
@@ -272,7 +274,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_chat(self, arg):
         """
-            chat JID
+            Usage: chat <JID>
         """
         if not arg:
             self.print_cmd('Usage: chat <JID> or chat <username>')
@@ -309,7 +311,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_stopchat(self, arg):
         """
-            stopchat
+            Usage: stopchat (Stops current chat)
         """
         if not self.current_chat:
             self.print_cmd('No open chat to close.')
