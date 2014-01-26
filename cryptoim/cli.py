@@ -87,7 +87,7 @@ class CryptoShell(cmd.Cmd):
     # -- xmpp commands --
     def do_connect(self, arg):
         """
-           Usage: connect <JID> <PASSWORD> or connect <CONNECTION_NAME> 
+            Usage: connect <JID> <PASSWORD> or connect <CONNECTION_NAME>
             (Connects to your JID, if you dont have connection use addconnection)
         """
         splitted = arg.split(' ')
@@ -125,7 +125,7 @@ class CryptoShell(cmd.Cmd):
 
     def do_disconnect(self, arg):
         """
-           Usage: disconnect 
+           Usage: disconnect
         """
 
         if not self.xmpp_client or not self.xmpp_client.is_connected():
@@ -188,8 +188,8 @@ class CryptoShell(cmd.Cmd):
 
     def do_s(self, arg):
         """
-            Usage: s <JID> <msg> or s <username> <msg> 
-            (Shorthand for send) 
+            Usage: s <JID> <msg> or s <username> <msg>
+            (Shorthand for send)
         """
         return(self.do_send(arg))
 
