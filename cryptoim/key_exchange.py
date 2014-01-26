@@ -33,7 +33,7 @@ def prime_pick():
     """
         Returns a random number from the const.PRIMES array
     """
-    rnd = generate_random(0, len(PRIMES))
+    rnd = generate_random(0, len(PRIMES) - 1)
     return PRIMES[rnd]
 
 def base_pick():

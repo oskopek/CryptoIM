@@ -37,7 +37,7 @@ def test_prime_pick():
     prime_pick = k_ex.prime_pick
 
     prime = prime_pick()
-    eq_(type(prime), int or long)
+    eq_(type(prime), int)
 
 def test_base_pick():
     """
@@ -46,7 +46,7 @@ def test_base_pick():
     base_pick = k_ex.base_pick
 
     base = base_pick()
-    eq_(type(base), int or long)
+    eq_(type(base), int)
 
 def test_make_public_key():
     """
@@ -64,7 +64,7 @@ def test_make_public_key():
     public_key = make_public_key(prime, base, rnumber)
     manual_public_key = (base**rnumber)%prime
     
-    eq_(type(public_key), int or long)
+    ok_(type(public_key) == int or type(public_key) == long)
     eq_(public_key, manual_public_key)
 
 def test_make_final_key():
@@ -86,7 +86,7 @@ def test_make_final_key():
         A = make_public_key(p, g, a)
         B = make_public_key(p, g, b)
         
-        eq_(type(make_final_key(p, B, a)), int or long)
-        eq_(type(make_final_key(p, A, b)), int or long)   
+        ok_(type(make_final_key(p, B, a)) == int or type(make_final_key(p, B, a)) == long)
+        ok_(type(make_final_key(p, A, b)) == int or type(make_final_key(p, A, b)) == long)   
         eq_(make_final_key(p, B, a), make_final_key(p, A, b))
 
