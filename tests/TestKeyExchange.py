@@ -25,7 +25,7 @@ def test_generate_random():
         Test for key_exchange.generate_random
     """
     generate_random = k_ex.generate_random
-    
+
     random_numero = generate_random(1, 100)
     eq_(type(random_numero), int or long)
     ok_(random_numero >= 1 and random_numero <= 100)
@@ -56,14 +56,14 @@ def test_make_public_key():
     prime_pick = k_ex.prime_pick
     generate_random = k_ex.generate_random
     base_pick = k_ex.base_pick
-    
+
     prime = prime_pick()
     base = base_pick()
     rnumber = generate_random(1, 100)
-    
+
     public_key = make_public_key(prime, base, rnumber)
     manual_public_key = (base**rnumber)%prime
-    
+
     ok_(type(public_key) == int or type(public_key) == long)
     eq_(public_key, manual_public_key)
 
@@ -77,16 +77,18 @@ def test_make_final_key():
     base_pick = k_ex.base_pick
     make_final_key = k_ex.make_final_key
 
-    for i in range(100):
-        a = generate_random(1, 100)
-        b = generate_random(1, 100)
+    for i in range(10):
+        a = generate_random(2, 100)
+        b = generate_random(2, 100)
         p = prime_pick()
         g = base_pick()
-    
+
         A = make_public_key(p, g, a)
         B = make_public_key(p, g, b)
-        
-        ok_(type(make_final_key(p, B, a)) == int or type(make_final_key(p, B, a)) == long)
-        ok_(type(make_final_key(p, A, b)) == int or type(make_final_key(p, A, b)) == long)   
-        eq_(make_final_key(p, B, a), make_final_key(p, A, b))
 
+        keyA = make_final_key(p, B, a)
+        keyB = make_final_key(p, A, b)
+
+        ok_(type(keyA) == int or type(keyA) == long)
+        ok_(type(keyB) == int or type(keyB) == long)
+        eq_(keyA, keyB)

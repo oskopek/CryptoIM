@@ -41,7 +41,6 @@ def test_connect_disconnect():
         exit_code = 0
     eq_(0, exit_code)
 
-
 def test_connect_disconnect_jid():
 
     cshell = CryptoShell('main.cfg')
@@ -90,7 +89,6 @@ def test_chat_stopchat_exit():
     except SystemExit:
         exit_code = 0
     eq_(0, exit_code)
-
 
 def test_addfriend_removefriend():
 
@@ -147,9 +145,7 @@ def test_create_config():
     import os
     os.remove(config_file)
 
-
 # Test tools
-
 def test_sanit_is_jid():
     is_jid = cli.sanit_is_jid
     eq_(True, is_jid('test@jabber.de'))
