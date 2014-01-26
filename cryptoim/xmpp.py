@@ -106,7 +106,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.send_presence()
         self.get_roster()
         self.in_session = True
-        self.parent.print_debug('Session started!')
+        self.parent.print_cmd('Connected!')
 
     def message(self, msg):
         """

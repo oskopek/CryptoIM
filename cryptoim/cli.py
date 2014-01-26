@@ -119,6 +119,7 @@ class CryptoShell(cmd.Cmd):
 
         self.xmpp_client = cryptoim.xmpp.XMPPClient(conn_jid, conn_pass, self)
         self.xmpp_client.connect_server()
+        self.print_cmd('Connecting...')
         return self.return_cli(True)
 
 
