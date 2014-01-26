@@ -211,17 +211,14 @@ class CryptoShell(cmd.Cmd):
             message = ' '.join(splitted)
 
         else: # if chat mode off
-            if sanit_arg_count_exact(splitted, 0):
-                #input: send (empty argument)
-                self.print_cmd('Usage: send <username> or send <JID>')
-                return self.return_cli(False)
 
             if self.config_find(splitted[0]): # if sending to friend
                 recipient = self.config_find(splitted[0])
             elif sanit_is_jid(splitted[0]): # if sending to jid
                 recipient = splitted[0]
             else: # error: username not defined or jid isnt jid
-                self.print_cmd(splitted[0] + ' is not recognized. Please enter valid JID or username.')
+                if splitted[0]:
+                    self.print_cmd(splitted[0] + ' is not recognized. Please enter valid JID or username.')
                 self.print_cmd('Usage: send <username> <message> or send <JID> <message>')
                 return self.return_cli(False)
 
