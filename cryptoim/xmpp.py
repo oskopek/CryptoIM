@@ -74,6 +74,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         """
 
         self.is_connected = True
+        self.parent.print_debug('Connection started.')
 
     def disconnected(self, event):
         """
@@ -81,6 +82,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         """
 
         self.is_connected = False
+        self.parent.print_debug('Connection ended.')
 
     def session_end(self, event):
         """
@@ -88,6 +90,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         """
 
         self.in_session = False
+        self.parent.print_debug('Session ended.')
 
     def start(self, event):
         """
@@ -106,6 +109,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.get_roster()
         self.in_session = True
         self.parent.print_cmd('Connected!')
+        self.parent.print_debug('Session started.')
 
     def message(self, msg):
         """
