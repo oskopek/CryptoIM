@@ -42,7 +42,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         # Add a static resource
         if '/' in jid:
             jid = jid[:jid.index('/')]
-        jid += '/cryptoim'
+        #jid += '/cryptoim'
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
 
         # The session_start event will be triggered when
