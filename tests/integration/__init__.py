@@ -14,6 +14,6 @@
    limitations under the License.
 """
 
-from . import TestCli, TestXMPP
+from tests.integration import TestCli, TestXMPP
 
 __all__ = ['TestCli', 'TestXMPP', ]

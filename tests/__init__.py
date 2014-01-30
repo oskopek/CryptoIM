@@ -14,4 +14,4 @@
    limitations under the License.
 """
 
-from . import integration, unit
+import tests.integration, tests.unit
