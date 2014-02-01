@@ -26,6 +26,9 @@ A secure* instant messenger written in Python out of sheer fun.
 
 \* not really secure (at least not yet)
 
+.. image:: http://cdn.imghack.se/images/47f573797aea70092c62defa3a35b3fe.png
+    :alt: CryptoIM snapshot
+
 Building
 ========
 
@@ -83,7 +86,7 @@ We use the `GitHub issue tracker <https://github.com/oskopek/CryptoIM/issues>`_ 
 submitting a bug report or feature request, check to make sure it hasn't
 already been submitted. When submitting a bug report, please include a `Gist <https://gist.github.com/>`_
 that includes a stack trace and any details that may be necessary to reproduce
-the bug, including your Java version and operating system.
+the bug, including your Python version and operating system.
 
 Submitting a Pull Request
 =========================

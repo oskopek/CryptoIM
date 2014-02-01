@@ -19,7 +19,7 @@
 
 from cryptoim.cli import CryptoShell
 import cryptoim.cli as cli
-import TestXMPP
+from tests.integration import TestXMPP
 
 from nose.tools import ok_, eq_
 
