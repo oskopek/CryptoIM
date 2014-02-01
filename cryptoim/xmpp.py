@@ -61,6 +61,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.add_event_handler('connected', self.connected)
         self.add_event_handler('disconnected', self.disconnected)
 
+        self.auto_subscribe = True
+
         self.parent = parent
         self.in_session = False
         self.is_connected = False
@@ -127,7 +129,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         if msg['type'] not in ('chat', 'normal'):
             return # Ignore nonchat messages
 
-        sender = msg['from'].bare
+        sender = msg['from']
         text = msg['body']
 
         # DH key exchange: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange#Explanation_including_encryption_mathematics
@@ -138,35 +140,35 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             B = keyex.make_public_key(prime, base, b)
             key = str(keyex.make_final_key(prime, A, b))
 
-            self.send_message(mto = sender, mbody = keyex.encode_ack(B), mtype = 'chat')
-            self.key_queue[sender] = key
+            self.send_message(mto = sender.full, mbody = keyex.encode_ack(B), mtype = 'chat')
+            self.key_queue[sender.full] = key
 
         elif text.startswith('ACK;'): # sending
-            q_entry = self.msg_queue[sender]
+            q_entry = self.msg_queue[sender.full]
             msg_text = q_entry[0]
             prime = q_entry[1]
             a = q_entry[2]
             B = keyex.decode_ack(msg['body'])
             key = str(keyex.make_final_key(prime, B, a))
             ciphertext = encryptor.encrypt(msg_text, key)
-            self.send_message(mto = sender, mbody = ciphertext, mtype = 'chat')
+            self.send_message(mto = sender.full, mbody = ciphertext, mtype = 'chat')
 
             del q_entry # TODO check if it actually gets removed
 
             # Log:
-            self.parent.sent_jid_list.append(sender)
+            self.parent.sent_jid_list.append(sender.full)
             self.parent.sent_msg_list.append(msg_text)
 
         else:
             ciphertext = text
-            key = self.key_queue[sender]
+            key = self.key_queue[sender.full]
             decrypted_message = decryptor.decrypt(ciphertext, key)
-            self.parent.print_msg(sender, decrypted_message)
+            self.parent.print_msg(sender.bare, decrypted_message)
 
             del key # TODO check if it actually gets removed
 
             # Log:
-            self.parent.received_jid_list.append(sender)
+            self.parent.received_jid_list.append(sender.full)
             self.parent.received_msg_list.append(decrypted_message)
 
 

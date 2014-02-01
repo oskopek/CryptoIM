@@ -228,7 +228,7 @@ class CryptoShell(cmd.Cmd):
                 return self.return_cli(False)
 
         self.xmpp_client.send_message(recipient, message)
-        self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
+        self.print_cmd(address_format(self.xmpp_client.xmpp.boundjid.bare, message))
 
         return self.return_cli(True)
 

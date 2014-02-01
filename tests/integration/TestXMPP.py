@@ -64,7 +64,7 @@ def test_send_message():
     waitForSession(xmpp_client, True)
     waitForSession(xmpp_client2, True)
     msg = 'Hello, CryptoIM check_send_message!'
-    recipient = xmpp_client2.xmpp.jid
+    recipient = xmpp_client2.xmpp.boundjid.full
     xmpp_client.xmpp.send_message(mto = recipient, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
     xmpp_client.send_message(recipient, msg)
 
@@ -128,7 +128,7 @@ def test_receive_message():
 
     # Send and receive message
     plaintext = 'Hello, CryptoIM check_receive_message!'
-    ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.jid, plaintext)
+    ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.boundjid.full, plaintext)
 
     while len(crypto_shell2.received_msg_list) < 1:
         time.sleep(0.1)
@@ -146,7 +146,9 @@ def test_receive_message():
     ok_(1 == len(crypto_shell2.received_msg_list))
     eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
     eq_(plaintext, crypto_shell2.received_msg_list[-1])
-    eq_(xmpp_client.xmpp.jid, crypto_shell2.received_jid_list[-1])
+    eq_(xmpp_client.xmpp.boundjid.full, crypto_shell2.received_jid_list[-1])
+
+# Test tools
 
 def waitForConnection(xmpp_client, should_be_connected):
     """
@@ -163,4 +165,3 @@ def waitForSession(xmpp_client, should_be_in_session):
     while not xmpp_client.is_in_session() == should_be_in_session:
         time.sleep(0.1)
     eq_(xmpp_client.is_in_session(), should_be_in_session)
-
