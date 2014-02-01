@@ -17,8 +17,8 @@
    limitations under the License.
 """
 
-import cmd, sys, copy
-import base64
+import cmd, sys, copy, base64
+
 import cryptoim.xmpp
 
 if sys.version_info < (3, 0):
@@ -111,7 +111,7 @@ class CryptoShell(cmd.Cmd):
                 conn_jid = username + '@' + host
                 conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
                 self.print_cmd(conn_pass)
-                conn_pass = self.decode_base64(conn_pass)
+                conn_pass = decode_base64(conn_pass)
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
                 return self.return_cli(False)
@@ -164,7 +164,7 @@ class CryptoShell(cmd.Cmd):
         self.config.add_section(splitted[0])
         self.config.set(splitted[0], 'username', splitted[0])
         self.config.set(splitted[0], 'host', (splitted[1].split('@') [1]) )
-        self.config.set(splitted[0], 'password', self.encode_base64(splitted[2]))
+        self.config.set(splitted[0], 'password', encode_base64(splitted[2]).rstrip('='))
 
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
@@ -374,20 +374,6 @@ class CryptoShell(cmd.Cmd):
         else:
             return
 
-    def decode_base64(self, string):
-        """
-            Decode base64, padding being optional.
-        """
-        string = string.encode('utf-8')
-        missing_padding = 4 - len(string) % 4
-        if missing_padding:
-            string += b'='* missing_padding
-        return base64.decodestring(string)   
-
-    def encode_base64(string):
-        return base64.b64encode(string)
-
-
 # End of class
 
 def sanit_arg_count(input_array, number_lo, number_hi):
@@ -435,3 +421,19 @@ def address_format(jid, msg):
         Formats a jid and message to correctly display in the log
     """
     return(jid + ': ' + msg)
+
+def decode_base64(string):
+    """
+        Decodes base64, padding being optional
+    """
+    string = string.encode('utf-8')
+    missing_padding = 4 - len(string) % 4
+    if missing_padding:
+        string += b'='* missing_padding
+    return base64.b64decode(string)
+
+def encode_base64(string):
+    """
+        Encodes base64
+    """
+    return base64.b64encode(string)
