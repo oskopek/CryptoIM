@@ -140,8 +140,8 @@ def test_receive_message():
     waitForConnection(xmpp_client2, False)
 
     # Assert that xmpp_client2 got it (it is bound to be received after disconnect if it waits)
-    print('Received msg list: ', crypto_shell2.received_msg_list)
-    print('Received jid list: ', crypto_shell2.received_jid_list)
+    print(('Received msg list: ', crypto_shell2.received_msg_list))
+    print(('Received jid list: ', crypto_shell2.received_jid_list))
 
     ok_(1 == len(crypto_shell2.received_msg_list))
     eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
