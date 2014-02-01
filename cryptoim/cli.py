@@ -430,10 +430,11 @@ def decode_base64(string):
     missing_padding = 4 - len(string) % 4
     if missing_padding:
         string += b'='* missing_padding
-    return base64.b64decode(string)
+    return base64.b64decode(string).decode('utf-8')
 
 def encode_base64(string):
     """
         Encodes base64
     """
-    return base64.b64encode(string)
+    string = string.encode('utf-8')
+    return base64.b64encode(string).decode('utf-8')
