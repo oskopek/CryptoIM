@@ -12,7 +12,9 @@ Used Third Party Code
 
 SleekXMPP
 =========
-::
+
+License::
+
     Copyright (c) 2010 Nathanael C. Fritz
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
