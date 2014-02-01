@@ -18,7 +18,7 @@
 """
 
 import cmd, sys, copy
-
+import base64
 import cryptoim.xmpp
 
 if sys.version_info < (3, 0):
@@ -90,6 +90,7 @@ class CryptoShell(cmd.Cmd):
             Usage: connect <JID> <PASSWORD> or connect <CONNECTION_NAME>
             (Connects to your JID, if you dont have connection use addconnection)
         """
+
         splitted = arg.split(' ')
 
         if not sanit_arg_count(splitted, 0, 2):
@@ -109,6 +110,8 @@ class CryptoShell(cmd.Cmd):
                 host = self.config.get(arg, 'Host') # self.config[arg]['Host']
                 conn_jid = username + '@' + host
                 conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
+                self.print_cmd(conn_pass)
+                conn_pass = self.decode_base64(conn_pass)
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
                 return self.return_cli(False)
@@ -144,6 +147,7 @@ class CryptoShell(cmd.Cmd):
         """
             Usage: addconnection <username> <JID> <password>
         """
+
         splitted = arg.split(' ')
 
         if self.config.has_section(splitted[0]):
@@ -160,7 +164,7 @@ class CryptoShell(cmd.Cmd):
         self.config.add_section(splitted[0])
         self.config.set(splitted[0], 'username', splitted[0])
         self.config.set(splitted[0], 'host', (splitted[1].split('@') [1]) )
-        self.config.set(splitted[0], 'password', splitted[2])
+        self.config.set(splitted[0], 'password', self.encode_base64(splitted[2]))
 
         with open(self.config_file, 'w') as conf:
             self.config.write(conf)
@@ -369,6 +373,20 @@ class CryptoShell(cmd.Cmd):
             return value
         else:
             return
+
+    def decode_base64(self, string):
+        """
+            Decode base64, padding being optional.
+        """
+        string = string.encode('utf-8')
+        missing_padding = 4 - len(string) % 4
+        if missing_padding:
+            string += b'='* missing_padding
+        return base64.decodestring(string)   
+
+    def encode_base64(string):
+        return base64.b64encode(string)
+
 
 # End of class
 
