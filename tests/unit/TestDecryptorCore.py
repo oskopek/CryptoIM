@@ -18,76 +18,21 @@
 """
 
 import cryptoim.decryptor_core as decryptor_core
-import cryptoim.encryptor_core as encryptor_core
+from tests.unit.common import *
+
 from nose.tools import ok_, eq_
-import random, string
-
-
-def random_message_range(lo, hi):
-    length = random.randint(lo, hi)
-    return ''.join(random.choice(string.printable) for _ in range(length))
-
-def random_message(limit):
-    return random_message_range(1, limit)
-
-def test_random_encrypt_decrypt():
-    test_count = 10
-    limit = 100
-
-    for _ in range(test_count):
-        originaltext = random_message(limit)
-        key = random_message(limit)
-        ciphertext = encryptor_core.encrypt(originaltext, key)
-        check_decrypt(originaltext, ciphertext, key)
-
-def check_decrypt(originaltext, ciphertext, key):
-    decryptedtext = decryptor_core.decrypt(ciphertext, key)
-    eq_(originaltext, decryptedtext)
-
-def test_random_key():
-    length = 100
-    originaltext = 'Secret message!'
-    key = random_message_range(length, length)
-    ciphertext = encryptor_core.encrypt(originaltext, key)
-    check_decrypt(originaltext, ciphertext, key)
-
-def test_long_string():
-    length = 1000
-    originaltext = random_message_range(length, length)
-    key = 'This is a secret key!'
-    ciphertext = encryptor_core.encrypt(originaltext, key)
-    check_decrypt(originaltext, ciphertext, key)
-
 
 def test_decrypt():
-    """
-        Test for decryptor_core.decrypt
-    """
+
     decrypt = decryptor_core.decrypt
-    encrypt = encryptor_core.encrypt
-
-    def rand_str(limit):
-        """
-            rand_str
-        """
-        from string import ascii_letters
-        from random import choice
-
-        rand = ''
-        for _ in range(limit):
-            rand += choice(ascii_letters)
-        return rand
 
     message = 'This is a test message'
-    key = rand_str(32)
-    ctext = encrypt(message, key)
-    ptext = decrypt(ctext, key)
-    eq_(message, ptext)
+    ciphertext = '5fec00953baae86a9b99796be672edcef8e893a9882c55ba29661d1ab62efa45' # manually encrypted
+    key = 'This is a test key'
+    plaintext = decrypt(ciphertext, key)
+    eq_(message, plaintext)
 
 def test_ciphertext_fission():
-    """
-       Test for decryptor_core.__ciphertext_fission
-    """
 
     ciphertext_fission = decryptor_core.__ciphertext_fission
 
@@ -100,25 +45,23 @@ def test_ciphertext_fission():
 
 
 def test_rsub_bytes():
-    """
-       Test for decryptor_core.__rsub_bytes
-    """
 
     rsub_bytes = decryptor_core.__rsub_bytes
-    sub_bytes = encryptor_core.__sub_bytes
 
     input_mat = [[0x00, 0x01, 0x02, 0x03],
                  [0xab, 0xcd, 0xef, 0xff],
                  [0x1a, 0x2b, 0x3c, 0x4d],
                  [0x2c, 0xe1, 0x12, 0x3a]]
 
-    subbed_mat = sub_bytes(input_mat)
+    # Manually subbed using encryptor_core.__sub_bytes
+    subbed_mat = [[82, 9, 106, 213],
+                  [14, 128, 97, 125],
+                  [67, 11, 109, 101],
+                  [66, 224, 57, 162]]
+
     eq_(input_mat, rsub_bytes(subbed_mat))
 
 def test_rshift_rows():
-    """
-       Test for decryptor_core.__rshift_rows
-    """
 
     rshift_rows = decryptor_core.__rshift_rows
 

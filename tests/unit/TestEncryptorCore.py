@@ -18,54 +18,29 @@
 """
 
 import cryptoim.encryptor_core as encryptor_core
+from tests.unit.common import *
+
 from nose.tools import ok_, eq_
 
 def test_encrypt():
-    """
-        Test for encryptor_core.encrypt
-    """
+
     encrypt = encryptor_core.encrypt
-    message = 'This is a test message!'
 
-    def rand_str(limit):
-        """
-            rand_str
-        """
-        from string import ascii_letters
-        from random import choice
-
-        rand = ""
-        for _ in range(limit):
-            rand += choice(ascii_letters)
-        return rand
-
-    key = rand_str(256)
-    eq_(len(key), 256)
-
-    encrypted_str = encrypt(message, key)
-    print(encrypted_str)
-    ok_(len(encrypted_str) >= 0, 'Length wasn\'t supposed to be 0')
-
-    encrypted1 = encrypt('014730f80ac625fe84f026c60bfd547d', '0000000000000000000000000000000000000000000000000000000000000000')
-    print(encrypted1)
-    #expected1 = '5c9d844ed46f9885085e5d6a4f94c7d7'
-    ok_(len(encrypted1) >= 0, 'Length wasn\'t supposed to be 0')
-    # TODO eq_(encrypted1, expected1)
-
+    message = 'This is a test message'
+    encrypted_message = '5fec00953baae86a9b99796be672edcef8e893a9882c55ba29661d1ab62efa45' # manually encrypted
+    key = 'This is a test key'
+    ciphertext = encrypt(message, key)
+    eq_(encrypted_message, ciphertext)
 
 def test_g_mul():
-    """
-        Test for encryptor_core.__g_mul
-    """
+
     g_mul = encryptor_core.__g_mul
 
     eq_(g_mul(0x01, 0x02), 0x02)
     eq_(g_mul(0xFF, 0x03), 0x1a)
 
 def test_sub_bytes():
-    """
-        Test for encryptor.core.__sub_bytes
-    """
+
     sub_bytes = encryptor_core.__sub_bytes
 
     input_mat = [[0x01, 0x02, 0xFF, 0xAB],
@@ -81,9 +56,7 @@ def test_sub_bytes():
     eq_(sub_bytes(input_mat), expected_mat)
 
 def test_message_fusion():
-    """
-        Test for encryptor_core.__message_fusion
-    """
+
     message_fusion = encryptor_core.__message_fusion
 
     input_mat = [   [39, 225, 248, 242],
@@ -102,9 +75,6 @@ def test_message_fusion():
     eq_(len(message_fusion(input_mat_zeros)), 32)
 
 def test_key_expansion():
-    """
-        Test for encryptor_core.__key_separator
-    """
 
     key_expansion = encryptor_core.__key_expansion
 
@@ -124,9 +94,6 @@ def test_key_expansion():
     eq_(len(key_expansion(key)), 256)
 
 def test_mix_columns():
-    """
-       Test for encryptor_core.__mix_columns
-    """
 
     mix_columns = encryptor_core.__mix_columns
 

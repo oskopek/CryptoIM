@@ -25,48 +25,55 @@ RAND = random.SystemRandom()
 
 def generate_random(limit_lo, limit_hi):
     """
-        Returns a random integer inside the (limit_lo, limit_hi) interval
+        Returns a random integer inside the (limit_lo, limit_hi) interval.
     """
+
     return RAND.randint(limit_lo, limit_hi)
 
 def prime_pick():
     """
-        Returns a random number from the const.PRIMES array
+        Returns a random number from the const.PRIMES array.
     """
+
     rnd = generate_random(0, len(PRIMES) - 1)
     return PRIMES[rnd]
 
 def base_pick():
     """
-        Returns a random number from the const.PRIMES array from indexes interval (0, 15)
+        Returns a random number from the const.PRIMES array from indexes interval (0, 15).
     """
+
     rnd = generate_random(2, 15)
     return rnd
 
 def make_public_key(prime, base, rnumber):
     """
-        Returns (base^number) mod prime, the public key used for the key exchange
+        Returns (base^number) mod prime, the public key used for the key exchange.
     """
+
     pub_key = (base ** rnumber) % prime
     return pub_key
 
 def make_final_key(prime, public, private):
     """
-        Returns (pub_key^p_number) mod prime, the key used for encryption
+        Returns (pub_key^p_number) mod prime, the key used for encryption.
     """
+
     key = (public ** private) % prime
     return key
 
 def encode_syn(prime, base, A):
     """
-        Encodes the numbers in a standardized format
+        Encodes the numbers in a standardized format.
     """
+
     return 'SYN;%i;%i;%i' % (prime, base, A)
 
 def decode_syn(msg):
     """
-        Decodes the numbers in a standardized format
+        Decodes the numbers in a standardized format.
     """
+
     cut = msg[4:] # Omit the first 4 chars ('SYN;')
     spl = cut.split(';')
     prime = int(spl[0])
@@ -76,13 +83,15 @@ def decode_syn(msg):
 
 def encode_ack(B):
     """
-        Encodes the number in a standardized format
+        Encodes the number in a standardized format.
     """
+
     return 'ACK;%i' % (B)
 
 def decode_ack(msg):
     """
-        Decodes the number in a standardized format
+        Decodes the number in a standardized format.
     """
+
     cut = msg[4:] # Omit the first 4 chars ('ACK;')
     return int(cut)

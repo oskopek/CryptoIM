@@ -14,6 +14,6 @@
    limitations under the License.
 """
 
-from tests.unit import TestDecryptorCore, TestEncryptorCore, TestKeyExchange
+from tests.unit import TestDecryptorCore, TestEncryptorCore, TestKeyExchange, common
 
-__all__ = ['TestDecryptorCore', 'TestEncryptorCore', 'TestKeyExchange']
+__all__ = ['TestDecryptorCore', 'TestEncryptorCore', 'TestKeyExchange', 'common', ]
