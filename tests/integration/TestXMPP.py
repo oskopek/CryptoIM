@@ -23,151 +23,154 @@ from cryptoim.cli import CryptoShell
 from nose.tools import ok_, eq_, nottest
 import time
 
-def init_xmpp_clients():
+def init_messengers():
     """
-        Initializes the xmpp_clients and connects them
+        Initializes the messengers and connects them
     """
+
     crypto_shell = CryptoShell('main.cfg')
 
-    xmpp_client = xmpp.XMPPClient('cryptoim@jabber.de', 'crypto_test', crypto_shell)
-    xmpp_client.connect_server(should_block=False)
+    messenger = xmpp.XMPPMessenger('cryptoim@jabber.de', 'crypto_test', crypto_shell)
+    messenger.connect_server(should_block=False)
 
     crypto_shell2 = CryptoShell('main.cfg')
-    xmpp_client2 = xmpp.XMPPClient('cryptoim2@jabber.de', 'crypto_test2', crypto_shell2)
-    xmpp_client2.connect_server(should_block=False)
+    messenger2 = xmpp.XMPPMessenger('cryptoim2@jabber.de', 'crypto_test2', crypto_shell2)
+    messenger2.connect_server(should_block=False)
 
-    waitForConnection(xmpp_client, True)
-    waitForConnection(xmpp_client2, True)
-    return xmpp_client, xmpp_client2
+    waitForConnection(messenger, True)
+    waitForConnection(messenger2, True)
+    return messenger, messenger2
 
 def test_connect():
-    """
-        Test for xmpp.XMPPClient.connect_server and disconnect_server
-    """
-    xmpp_client, xmpp_client2 = init_xmpp_clients()
-    eq_(xmpp_client.is_connected(), True)
-    eq_(xmpp_client2.is_connected(), True)
 
-    xmpp_client.disconnect_server()
-    waitForConnection(xmpp_client, False)
-    xmpp_client2.disconnect_server()
-    waitForConnection(xmpp_client2, False)
+    messenger, messenger2 = init_messengers()
+    eq_(messenger.is_connected(), True)
+    eq_(messenger2.is_connected(), True)
+
+    messenger.disconnect_server()
+    waitForConnection(messenger, False)
+    messenger2.disconnect_server()
+    waitForConnection(messenger2, False)
 
 def test_send_message():
-    """
-        Test for xmpp.XMPPClient.send_message
-    """
-    xmpp_client, xmpp_client2 = init_xmpp_clients()
-    crypto_shell = xmpp_client.xmpp.parent
-    waitForConnection(xmpp_client, True)
-    waitForConnection(xmpp_client2, True)
-    waitForSession(xmpp_client, True)
-    waitForSession(xmpp_client2, True)
+
+    messenger, messenger2 = init_messengers()
+    waitForConnection(messenger, True)
+    waitForConnection(messenger2, True)
+    waitForSession(messenger, True)
+    waitForSession(messenger2, True)
     msg = 'Hello, CryptoIM check_send_message!'
-    recipient = xmpp_client2.xmpp.boundjid.full
-    xmpp_client.send_message(recipient, msg)
+    recipient = messenger2.client.boundjid.full
+    messenger.send_message(recipient, msg)
 
-    waitForNonEmptyList(crypto_shell.sent_msg_list)
+    waitForNonEmptyList(messenger.client.sent_msg_list)
 
-    xmpp_client.disconnect_server()
-    xmpp_client2.disconnect_server()
-    waitForConnection(xmpp_client, False)
-    waitForConnection(xmpp_client2, False)
+    messenger.disconnect_server()
+    messenger2.disconnect_server()
+    waitForConnection(messenger, False)
+    waitForConnection(messenger2, False)
 
-    # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)   
-    ok_(1 == len(crypto_shell.sent_msg_list))
-    eq_(len(crypto_shell.sent_jid_list), len(crypto_shell.sent_msg_list))
-    eq_(msg, crypto_shell.sent_msg_list[-1])
-    eq_(recipient, crypto_shell.sent_jid_list[-1])
+    # Assert that messenger sent the message (it is bound to be sent after disconnect if it waits)
+    ok_(1 == len(messenger.client.sent_msg_list))
+    eq_(len(messenger.client.sent_jid_list), len(messenger.client.sent_msg_list))
+    eq_(msg, messenger.client.sent_msg_list[-1])
+    eq_(recipient, messenger.client.sent_jid_list[-1])
 
-def test_not_connect():
-    """
-        Failproofing test for xmpp.XMPPClient.connect_server and disconnect_server
-    """
+def test_connect_fail():
 
     crypto_shell = CryptoShell('main.cfg')
 
     # Wrong host
-    xmpp_client = xmpp.XMPPClient('cryptoim@jabber2.de', 'crypto_test', crypto_shell)
-    assertDisconnect(xmpp_client)
+    messenger = xmpp.XMPPMessenger('cryptoim@jabber2.de', 'crypto_test', crypto_shell)
+    assertDisconnect(messenger)
 
 
     # Wrong pass
-    xmpp_client = xmpp.XMPPClient('cryptoim@jabber.de', 'wrong_pass', crypto_shell)
-    assertDisconnect(xmpp_client)
+    messenger = xmpp.XMPPMessenger('cryptoim@jabber.de', 'wrong_pass', crypto_shell)
+    assertDisconnect(messenger)
 
     # Wrong name
-    xmpp_client = xmpp.XMPPClient('cryptoim0@jabber.de', 'crypto_test', crypto_shell)
-    assertDisconnect(xmpp_client)
+    messenger = xmpp.XMPPMessenger('cryptoim0@jabber.de', 'crypto_test', crypto_shell)
+    assertDisconnect(messenger)
 
-def assertDisconnect(xmpp_client):
-    """
-        Conencts, disconnects and asserts it happened
-    """
-    xmpp_client.connect_server(should_block=False, should_reattempt=False)
+def assertDisconnect(messenger):
 
-    waitForConnection(xmpp_client, False)
+    messenger.connect_server(should_block=False, should_reattempt=False)
 
-    xmpp_client.disconnect_server()
-    waitForConnection(xmpp_client, False)
+    waitForConnection(messenger, False)
+
+    messenger.disconnect_server()
+    waitForConnection(messenger, False)
 
 def test_receive_message():
-    """
-        Test for CryptoXMPP.message (receive message)
-    """
-    xmpp_client, xmpp_client2 = init_xmpp_clients()
-    crypto_shell2 = xmpp_client2.xmpp.parent
+
+    messenger, messenger2 = init_messengers()
 
     # Assert connected
-    waitForConnection(xmpp_client, True)
-    waitForConnection(xmpp_client2, True)
-    waitForSession(xmpp_client, True)
-    waitForSession(xmpp_client2, True)
+    waitForConnection(messenger, True)
+    waitForConnection(messenger2, True)
+    waitForSession(messenger, True)
+    waitForSession(messenger2, True)
 
     # Send and receive message
     plaintext = 'Hello, CryptoIM check_receive_message!'
-    xmpp_client.xmpp.send_message(mto = xmpp_client2.xmpp.boundjid.full, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
-    ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.boundjid.full, plaintext)
+    messenger.client.send_message(mto = messenger2.client.boundjid.full, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
+    ciphertext = messenger.send_message(messenger2.client.boundjid.full, plaintext)
 
-    waitForNonEmptyList(crypto_shell2.received_msg_list)
+    waitForNonEmptyList(messenger2.client.received_msg_list)
 
     # Disconnect
-    xmpp_client.disconnect_server()
-    waitForConnection(xmpp_client, False)
-    xmpp_client2.disconnect_server()
-    waitForConnection(xmpp_client2, False)
+    messenger.disconnect_server()
+    waitForConnection(messenger, False)
+    messenger2.disconnect_server()
+    waitForConnection(messenger2, False)
 
-    # Assert that xmpp_client2 got it (it is bound to be received after disconnect if it waits)
-    print(('Received msg list: ', crypto_shell2.received_msg_list))
-    print(('Received jid list: ', crypto_shell2.received_jid_list))
+    # Assert that messenger2 got it (it is bound to be received after disconnect if it waits)
+    print(('Received msg list: ', messenger2.client.received_msg_list))
+    print(('Received jid list: ', messenger2.client.received_jid_list))
 
-    ok_(1 == len(crypto_shell2.received_msg_list))
-    eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
-    eq_(plaintext, crypto_shell2.received_msg_list[-1])
-    eq_(xmpp_client.xmpp.boundjid.full, crypto_shell2.received_jid_list[-1])
+    ok_(1 == len(messenger2.client.received_msg_list))
+    eq_(len(messenger2.client.received_jid_list), len(messenger2.client.received_msg_list))
+    eq_(plaintext, messenger2.client.received_msg_list[-1])
+    eq_(messenger.client.boundjid.full, messenger2.client.received_jid_list[-1])
 
 # Test tools
 
-def waitForNonEmptyList(lst):
+def waitForNonEmptyList(lst, timeout=100):
+    """
+        Waits until the list is non-empty.
+        Timeout is set to 100 (in tenths of a second).
+    """
+
     counter = 0
     while len(lst) < 1:
-        if counter > 100: break #10 secs
+        if counter > timeout: break
         time.sleep(0.1)
         counter += 1
     ok_(len(lst) > 0)
 
-def waitForConnection(xmpp_client, should_be_connected):
+def waitForConnection(messenger, should_be_connected, timeout=100):
     """
-        Waits until a connection is estabilished
+        Waits until a connection is estabilished.
+        Timeout is set to 100 (in tenths of a second).
     """
-    while not xmpp_client.is_connected() == should_be_connected:
-        time.sleep(0.1)
-    eq_(xmpp_client.is_connected(), should_be_connected)
 
-def waitForSession(xmpp_client, should_be_in_session):
-    """
-        Waits until a session is estabilished
-    """
-    while not xmpp_client.is_in_session() == should_be_in_session:
+    counter = 0
+    while not messenger.is_connected() == should_be_connected:
+        if counter > timeout: break
         time.sleep(0.1)
-    eq_(xmpp_client.is_in_session(), should_be_in_session)
+        counter += 1
+    eq_(messenger.is_connected(), should_be_connected)
+
+def waitForSession(messenger, should_be_in_session, timeout=100):
+    """
+        Waits until a session is estabilished.
+        Timeout is set to 100 (in tenths of a second).
+    """
+
+    counter = 0
+    while not messenger.is_in_session() == should_be_in_session:
+        if counter > timeout: break
+        time.sleep(0.1)
+        counter += 1
+    eq_(messenger.is_in_session(), should_be_in_session)
