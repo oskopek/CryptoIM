@@ -14,7 +14,9 @@ install:
   - python setup.py install
 
 script:
-  - python setup.py nosetests
+  - python setup.py nosetests # Run all tests
+#  - python setup.py nosetests --where=tests/unit # Run unit tests
+#  - python setup.py nosetests --where=tests/integration # Run integration tests
 
 after_success:
         - coveralls #--data_file coverage.xml
