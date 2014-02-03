@@ -32,29 +32,31 @@ A secure* instant messenger written in Python out of sheer fun.
 Building
 ========
 
-1. **Build**: ``python setup.py build`` and ``sudo python setup.py install``
+1. **Get the source code** `at GitHub <https://github.com/oskopek/CryptoIM>`_.
 
-2. To **run**: ``python main.py``
+2. **Build**: ``python setup.py build`` and ``sudo python setup.py install``
 
-3. To run **unit tests**: ``python setup.py nosetests``
+3. To **run**: ``python main.py``
 
-4. To **clean**, run: ``python setup.py clean --all``
+4. To run **unit tests**: ``python setup.py nosetests``
 
-5. To **edit** connection options, edit the ``main.cfg`` file.
+5. To **clean**, run: ``python setup.py clean --all``
+
+6. To **edit** connection options, edit the ``main.cfg`` file.
 
 Building on Linux
 =================
 
 * Make sure to **install** these packages using your package manager: ``python`` and ``python-setuptools``
 
-* Follow steps 1., 2. and 5. from **Building**
+* Follow steps 2., 3. and 6. from **Building**
 
 Building on Windows
 ===================
 
 * **Install** `Python <http://www.python.org/download/releases/3.3.3/#download>`_ and `Setuptools <https://pypi.python.org/pypi/setuptools#windows>`_.
 
-* Follow steps 1., 2. and 5. from **Building**
+* Follow steps 2., 3. and 6. from **Building**
 
 Contributing
 ============
