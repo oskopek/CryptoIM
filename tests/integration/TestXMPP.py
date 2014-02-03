@@ -64,12 +64,10 @@ def test_send_message():
     waitForSession(xmpp_client, True)
     waitForSession(xmpp_client2, True)
     msg = 'Hello, CryptoIM check_send_message!'
-    recipient = xmpp_client2.xmpp.jid
-    xmpp_client.xmpp.send_message(mto = recipient, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
+    recipient = xmpp_client2.xmpp.boundjid.full
     xmpp_client.send_message(recipient, msg)
 
-    while len(crypto_shell.sent_msg_list) < 1:
-        time.sleep(0.1)
+    waitForNonEmptyList(crypto_shell.sent_msg_list)
 
     xmpp_client.disconnect_server()
     xmpp_client2.disconnect_server()
@@ -128,10 +126,10 @@ def test_receive_message():
 
     # Send and receive message
     plaintext = 'Hello, CryptoIM check_receive_message!'
-    ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.jid, plaintext)
+    xmpp_client.xmpp.send_message(mto = xmpp_client2.xmpp.boundjid.full, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
+    ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.boundjid.full, plaintext)
 
-    while len(crypto_shell2.received_msg_list) < 1:
-        time.sleep(0.1)
+    waitForNonEmptyList(crypto_shell2.received_msg_list)
 
     # Disconnect
     xmpp_client.disconnect_server()
@@ -146,7 +144,17 @@ def test_receive_message():
     ok_(1 == len(crypto_shell2.received_msg_list))
     eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
     eq_(plaintext, crypto_shell2.received_msg_list[-1])
-    eq_(xmpp_client.xmpp.jid, crypto_shell2.received_jid_list[-1])
+    eq_(xmpp_client.xmpp.boundjid.full, crypto_shell2.received_jid_list[-1])
+
+# Test tools
+
+def waitForNonEmptyList(lst):
+    counter = 0
+    while len(lst) < 1:
+        if counter > 100: break #10 secs
+        time.sleep(0.1)
+        counter += 1
+    ok_(len(lst) > 0)
 
 def waitForConnection(xmpp_client, should_be_connected):
     """
@@ -163,4 +171,3 @@ def waitForSession(xmpp_client, should_be_in_session):
     while not xmpp_client.is_in_session() == should_be_in_session:
         time.sleep(0.1)
     eq_(xmpp_client.is_in_session(), should_be_in_session)
-

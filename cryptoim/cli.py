@@ -230,9 +230,9 @@ class CryptoShell(cmd.Cmd):
             if len(message) == 0:
                 self.print_cmd('Please enter your message.')
                 return self.return_cli(False)
-
+        self.print_debug('Sending ' + message + ' to ' + recipient)
         self.xmpp_client.send_message(recipient, message)
-        self.print_cmd(address_format(self.xmpp_client.xmpp.jid, message))
+        self.print_cmd(address_format(self.xmpp_client.xmpp.boundjid.bare, message))
 
         return self.return_cli(True)
 
