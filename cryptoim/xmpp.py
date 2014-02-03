@@ -39,10 +39,9 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
     """
 
     def __init__(self, jid, password, parent):
-        # Add a static resource
-        if '/' in jid:
-            jid = jid[:jid.index('/')]
-        #jid += '/cryptoim'
+        # Strip the resource, let the server generate one
+        jid = strip_resource(jid)
+
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
 
         # The session_start event will be triggered when
@@ -61,13 +60,17 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.add_event_handler('connected', self.connected)
         self.add_event_handler('disconnected', self.disconnected)
 
+        # Accept and create bidirectional subscription requests:
+        self.auto_authorize = True
         self.auto_subscribe = True
 
         self.parent = parent
         self.in_session = False
         self.is_connected = False
 
+        # Make sure to only store bare JIDs here!
         self.msg_queue = dict()
+        # Store full JIDs here
         self.key_queue = dict()
 
     def connected(self, event):
@@ -107,7 +110,7 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
                      event does not provide any additional
                      data.
         """
-        self.send_presence()
+        self.send_presence(ppriority=120)
         self.get_roster()
         self.in_session = True
         self.parent.print_cmd('Connected!')
@@ -143,8 +146,10 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             self.send_message(mto = sender.full, mbody = keyex.encode_ack(B), mtype = 'chat')
             self.key_queue[sender.full] = key
 
+
+
         elif text.startswith('ACK;'): # sending
-            q_entry = self.msg_queue[sender.full]
+            q_entry = self.msg_queue[sender.bare]
             msg_text = q_entry[0]
             prime = q_entry[1]
             a = q_entry[2]
@@ -176,10 +181,10 @@ class XMPPClient(object):
     """
         The XMPP client object, used as a wrapper for the SleekXMPP client.
     """
-
+    LOG_LEVEL = logging.CRITICAL
     xmpp = None
 
-    def __init__(self, jid, password, parent, loglevel=logging.CRITICAL):
+    def __init__(self, jid, password, parent, loglevel=LOG_LEVEL):
         """
             Initializes the ClientXMPP, logging, etc
         """
@@ -245,4 +250,12 @@ class XMPPClient(object):
         A = keyex.make_public_key(prime, base, a)
 
         self.xmpp.send_message(mto = recipient, mbody = keyex.encode_syn(prime, base, A), mtype = 'chat')
-        self.xmpp.msg_queue[recipient] = (msg, prime, a)
+        self.xmpp.msg_queue[strip_resource(recipient)] = (msg, prime, a) # Do not store resource in msg_queue
+
+def strip_resource(jid):
+    """
+        Strips all the characters after a forward-slash '/', inclusive
+    """
+    if '/' in jid:
+        jid = jid[:jid.index('/')]
+    return jid
