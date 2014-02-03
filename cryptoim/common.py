@@ -19,7 +19,11 @@
 
 def __key_expansion(key):
     """
-        key_expansion
+        Input: key - String
+        
+        Output: extendedkey - String
+
+        This method extends the key to the desired length using hash methods.
     """
     import hashlib
     extendedkey = ''
@@ -32,9 +36,13 @@ def __key_expansion(key):
 
 def __roundkey_separator(extendedkey):
     """
-        Returns list of 16 matrices, these are 128 bit roundkeys used for encryption,
-        from there 16 matrices will be only 14 used. For opimization purpose was used
-        index k instead of another cycle.
+        Input: extendedkey - String
+        
+        Output: roundkeys - List of lists of lists (list of 4x4 matrix) 
+
+        Method converts extendedkey into list of 16 matrices, these are 
+        128 bit roundkeys used for encryption/decryption. For opimalization
+        purposes was used index k instead of another cycle.
     """
     k = 0
     roundkeys = []
@@ -52,7 +60,14 @@ def __roundkey_separator(extendedkey):
 
 def __add_roundkey(message, roundkey):
     """
-        add_roundkey
+        Input: message - List of lists (4x4 Matrix)
+               roundkey - List of lists (4x4 Matrix)
+
+        Output: message - List of lists (4x4 Matrix)
+
+        In this method, each element of the original matrix is XORed with
+        corresponding element of roundkey. This way a matrix with new values
+        is created.
     """
     # Uses one matrix of each as input
     for i in range(4):
@@ -62,7 +77,9 @@ def __add_roundkey(message, roundkey):
 
 def __convert_char_hex(message_char):
     """
-        convert_char_hex
+        Input: message_char - string (one character)
+
+        Output: hex_str - string (hexadecimal value of that character)
     """
     hex_str = hex(message_char)[2:]
     if len(hex_str) % 2 == 1:

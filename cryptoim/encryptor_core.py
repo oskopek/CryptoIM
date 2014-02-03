@@ -22,17 +22,17 @@ from cryptoim.common import __roundkey_separator, __key_expansion, __add_roundke
 
 def encrypt(plaintext, key):
     """
-        Input: plaintex - String
+        Input: plaintext - String
                key - String
 
         Output: ciphertext - String
  
         Main encrypt method. This method prepares input values for the
-        actual encryption and calls in the encrpytion method (encrypt_round). 
+        actual encryption and calls in the encryption method (encrypt_round). 
         First it calls __split_message method, which "cuts" the message to 
         chunks with desired length (128 bits) puts them into matrices (4x4), each element
-        of this matrix is 8 bits (1 bytes), and then calls in the 
-        __roundkey_separator method from the cryptoim.common file. This method creates 
+        of this matrix is 8 bits (1 byte), and then calls in the 
+        __roundkey_separator method from the cryptoim.common module. This method creates 
         matrix (4x4) of roundkeys, each of desired length (128 bits). 
     """
 
@@ -48,15 +48,15 @@ def encrypt_round(messages, roundkeys):
 
         Output: ciphertext - String
 
-        Encryption method using provided lists of roundkeys and message "chunks".
-        Encryption algorith used is Advanced Encryption Standart. It consists of 
+        Encryption method is using provided lists of roundkeys and message "chunks".
+        Encryption algorithm used is Advanced Encryption Standard. It consists of 
         four steps, which repeat demanded number of times (in our case we used 14
         repetitions, plus initial and final round). Method uses following methods(steps):
-        crptoim.common.__add_roundkey, __sub_bytes, __shift_rows, __mix_columns.
+        cryptoim.common.__add_roundkey, __sub_bytes, __shift_rows, __mix_columns.
         You can find more information here: 
         http://en.wikipedia.org/wiki/Advanced_Encryption_Standard
         
-        NOTE: This algorithm doesnt use standart __split_message.
+        NOTE: This algorithm doesnt use standard __split_message.
 
         After algorithm proceeeds throught the steps, it concatenates encrypted message 
         chunks to the final ciphertext using __message_fusion method. 
@@ -98,8 +98,8 @@ def __shift_rows(message):
         Output: message - List of lists (4x4 Matrix)
 
         ShiftRows step of the algorithm. This step rotates elements in rows each by different
-        amount depending on the row. First row stays the same, second is rotated to left by one
-        third is rotated to left by two, and fourth is rotated to left by three.
+        amount depending on the row. First row stays the same, second is rotated to the left by one
+        third is rotated to the left by two, and fourth is rotated to the left by three.
     """
     for i in range(4):
         message[i] = message[i][i:] + message[i][:i]
@@ -162,7 +162,7 @@ def __split_message(plaintext):
         Output: messages - List of lists of lists (List of 4x4 Matrices)
 
         Splits message into 128 bits (16 characters) chunks and each of these
-        chunks is then transformed into matrix with decimal value. These matrices
+        chunks is then transformed into matrix with decimal values. These matrices
         are stored into list, creating a list of matrices.
     """
     message_chunks = []
@@ -195,6 +195,7 @@ def __message_fusion(message):
         Input: messages - List of lists (4x4 matrix)
 
         Output: result_string - String (Obviously)
+
         This method fuses the matrix back to string. Takes each byte (1 element of matrix) 
         and converts it to letter, which it concatenates to the result string.
     """
