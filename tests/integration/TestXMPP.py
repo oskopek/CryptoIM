@@ -58,7 +58,6 @@ def test_send_message():
         Test for xmpp.XMPPClient.send_message
     """
     xmpp_client, xmpp_client2 = init_xmpp_clients()
-    crypto_shell = xmpp_client.xmpp.parent
     waitForConnection(xmpp_client, True)
     waitForConnection(xmpp_client2, True)
     waitForSession(xmpp_client, True)
@@ -67,18 +66,18 @@ def test_send_message():
     recipient = xmpp_client2.xmpp.boundjid.full
     xmpp_client.send_message(recipient, msg)
 
-    waitForNonEmptyList(crypto_shell.sent_msg_list)
+    waitForNonEmptyList(xmpp_client.xmpp.sent_msg_list)
 
     xmpp_client.disconnect_server()
     xmpp_client2.disconnect_server()
     waitForConnection(xmpp_client, False)
     waitForConnection(xmpp_client2, False)
 
-    # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)   
-    ok_(1 == len(crypto_shell.sent_msg_list))
-    eq_(len(crypto_shell.sent_jid_list), len(crypto_shell.sent_msg_list))
-    eq_(msg, crypto_shell.sent_msg_list[-1])
-    eq_(recipient, crypto_shell.sent_jid_list[-1])
+    # Assert that xmpp_client sent the message (it is bound to be sent after disconnect if it waits)
+    ok_(1 == len(xmpp_client.xmpp.sent_msg_list))
+    eq_(len(xmpp_client.xmpp.sent_jid_list), len(xmpp_client.xmpp.sent_msg_list))
+    eq_(msg, xmpp_client.xmpp.sent_msg_list[-1])
+    eq_(recipient, xmpp_client.xmpp.sent_jid_list[-1])
 
 def test_not_connect():
     """
@@ -116,7 +115,6 @@ def test_receive_message():
         Test for CryptoXMPP.message (receive message)
     """
     xmpp_client, xmpp_client2 = init_xmpp_clients()
-    crypto_shell2 = xmpp_client2.xmpp.parent
 
     # Assert connected
     waitForConnection(xmpp_client, True)
@@ -129,7 +127,7 @@ def test_receive_message():
     xmpp_client.xmpp.send_message(mto = xmpp_client2.xmpp.boundjid.full, mbody = 'test', mtype = 'error') # Test for dropping non-chat messages
     ciphertext = xmpp_client.send_message(xmpp_client2.xmpp.boundjid.full, plaintext)
 
-    waitForNonEmptyList(crypto_shell2.received_msg_list)
+    waitForNonEmptyList(xmpp_client2.xmpp.received_msg_list)
 
     # Disconnect
     xmpp_client.disconnect_server()
@@ -138,13 +136,13 @@ def test_receive_message():
     waitForConnection(xmpp_client2, False)
 
     # Assert that xmpp_client2 got it (it is bound to be received after disconnect if it waits)
-    print(('Received msg list: ', crypto_shell2.received_msg_list))
-    print(('Received jid list: ', crypto_shell2.received_jid_list))
+    print(('Received msg list: ', xmpp_client2.xmpp.received_msg_list))
+    print(('Received jid list: ', xmpp_client2.xmpp.received_jid_list))
 
-    ok_(1 == len(crypto_shell2.received_msg_list))
-    eq_(len(crypto_shell2.received_jid_list), len(crypto_shell2.received_msg_list))
-    eq_(plaintext, crypto_shell2.received_msg_list[-1])
-    eq_(xmpp_client.xmpp.boundjid.full, crypto_shell2.received_jid_list[-1])
+    ok_(1 == len(xmpp_client2.xmpp.received_msg_list))
+    eq_(len(xmpp_client2.xmpp.received_jid_list), len(xmpp_client2.xmpp.received_msg_list))
+    eq_(plaintext, xmpp_client2.xmpp.received_msg_list[-1])
+    eq_(xmpp_client.xmpp.boundjid.full, xmpp_client2.xmpp.received_jid_list[-1])
 
 # Test tools
 

@@ -41,13 +41,12 @@ class CryptoShell(cmd.Cmd):
             CryptoShell init
         """
 
-        # super().__init__() # Python 3 only
         cmd.Cmd.__init__(self)
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
 
-        import os
-        if not os.path.exists(config_file):
+        from os import path
+        if not path.exists(config_file):
             self.config.add_section('friends')
             with open(config_file, 'w') as c_file:
                 self.config.write(c_file)
@@ -56,12 +55,6 @@ class CryptoShell(cmd.Cmd):
 
         self.xmpp_client = None
         self.current_chat = None
-
-        # Logging
-        self.received_msg_list = []
-        self.received_jid_list = []
-        self.sent_msg_list = []
-        self.sent_jid_list = []
 
     # -- basic commands --
     def do_exit(self, arg):

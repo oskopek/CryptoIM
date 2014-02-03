@@ -25,17 +25,15 @@ Original LICENSE:
     See the file NOTICE.rst file for copying permission.
 """
 
-import logging
-import sleekxmpp
+import logging, sleekxmpp
 
 import cryptoim.encryptor_core as encryptor
 import cryptoim.decryptor_core as decryptor
 import cryptoim.key_exchange as keyex
 
 class CryptoXMPP(sleekxmpp.ClientXMPP):
-
     """
-    A simple SleekXMPP client.
+        A simple SleekXMPP client.
     """
 
     def __init__(self, jid, password, parent):
@@ -72,6 +70,20 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         self.msg_queue = dict()
         # Store full JIDs here
         self.key_queue = dict()
+
+        # Logging
+        self.received_msg_list = []
+        self.received_jid_list = []
+        self.sent_msg_list = []
+        self.sent_jid_list = []
+
+        # Setup the ClientXMPP and register plugins. Note that while plugins may
+        # have interdependencies, the order in which you register them does
+        # not matter.
+        self.register_plugin('xep_0030') # Service Discovery
+        self.register_plugin('xep_0004') # Data Forms
+        self.register_plugin('xep_0060') # PubSub
+        self.register_plugin('xep_0199') # XMPP Ping
 
     def connected(self, event):
         """
@@ -161,8 +173,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             del q_entry # TODO check if it actually gets removed
 
             # Log:
-            self.parent.sent_jid_list.append(sender.full)
-            self.parent.sent_msg_list.append(msg_text)
+            self.sent_jid_list.append(sender.full)
+            self.sent_msg_list.append(msg_text)
 
         else:
             ciphertext = text
@@ -173,44 +185,37 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             del key # TODO check if it actually gets removed
 
             # Log:
-            self.parent.received_jid_list.append(sender.full)
-            self.parent.received_msg_list.append(decrypted_message)
+            self.received_jid_list.append(sender.full)
+            self.received_msg_list.append(decrypted_message)
 
 
 class XMPPClient(object):
     """
-        The XMPP client object, used as a wrapper for the SleekXMPP client.
+        Used as a simple wrapper for CryptoXMPP
     """
     LOG_LEVEL = logging.CRITICAL
     xmpp = None
 
     def __init__(self, jid, password, parent, loglevel=LOG_LEVEL):
         """
-            Initializes the ClientXMPP, logging, etc
+            Initializes the CryptoXMPP and logging
         """
 
         # Setup logging.
         logging.basicConfig(level=loglevel,
                             format='%(levelname)-8s %(message)s')
 
-        # Setup the ClientXMPP and register plugins. Note that while plugins may
-        # have interdependencies, the order in which you register them does
-        # not matter.
+        # Setup the actual client
         self.xmpp = CryptoXMPP(jid, password, parent)
-        self.xmpp.register_plugin('xep_0030') # Service Discovery
-        self.xmpp.register_plugin('xep_0004') # Data Forms
-        self.xmpp.register_plugin('xep_0060') # PubSub
-        self.xmpp.register_plugin('xep_0199') # XMPP Ping
-
 
     def connect_server(self, should_block=False, should_reattempt=True):
         """
-            Connects the ClientXMPP to the server, specify thread blocking.
+            Connects the CryptoXMPP to the server,
+            specifying thread blocking and reattempting on failed connection.
         """
 
-        # Connect to the XMPP server and start processing XMPP stanzas.
         if self.xmpp.connect(reattempt=should_reattempt):
-            # If you do not have the dnspython library installed, you will need
+            # TODO If you do not have the dnspython library installed, you will need
             # to manually specify the name of the server if it does not match
             # the one in the JID. For example, to use Google Talk you would
             # need to use:
@@ -221,21 +226,21 @@ class XMPPClient(object):
 
     def disconnect_server(self):
         """
-            Disconnects the ClientXMPP from the server.
+            Disconnects the CryptoXMPP from the server.
         """
 
         self.xmpp.disconnect(wait=True)
 
     def is_connected(self):
         """
-            Checks if the ClientXMPP is currently connected to the server.
+            Checks if the CryptoXMPP is currently connected to the server.
         """
 
         return self.xmpp.is_connected
 
     def is_in_session(self):
         """
-            Checks if the ClientXMPP is currently in a session
+            Checks if the CryptoXMPP is currently in a session
         """
 
         return self.xmpp.in_session
@@ -244,6 +249,7 @@ class XMPPClient(object):
         """
             Sends a chat message to the designated recipient.
         """
+
         prime = keyex.prime_pick()
         base = keyex.base_pick()
         a = keyex.generate_random(2, 100)
@@ -252,10 +258,13 @@ class XMPPClient(object):
         self.xmpp.send_message(mto = recipient, mbody = keyex.encode_syn(prime, base, A), mtype = 'chat')
         self.xmpp.msg_queue[strip_resource(recipient)] = (msg, prime, a) # Do not store resource in msg_queue
 
+# Tool functions:
+
 def strip_resource(jid):
     """
         Strips all the characters after a forward-slash '/', inclusive
     """
+
     if '/' in jid:
         jid = jid[:jid.index('/')]
     return jid
