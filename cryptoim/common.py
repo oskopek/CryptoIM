@@ -41,7 +41,7 @@ def __roundkey_separator(extendedkey):
         Output: roundkeys - List of lists of lists (list of 4x4 matrix) 
 
         Method converts extendedkey into list of 16 matrices, these are 
-        128 bit roundkeys used for encryption/decryption. For opimalization
+        128 bit roundkeys used for encryption/decryption. For optimalization
         purposes was used index k instead of another cycle.
     """
     k = 0

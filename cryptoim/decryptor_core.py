@@ -50,10 +50,10 @@ def decrypt_round(ciphertexts, roundkeys):
         Output: plaintext - String
 
         Decryption method is using provided lists of roundkeys and ciphertext "chunks".
-        Decryption does the same as encryption only in reversed steps. (See encryptor_core)
+        Decryption does the same as encryption only in reversed steps. See encryptor_core
         documentation for more info.
         
-        After algorithm proceeeds throught the steps, it concatenates decrypted message 
+        After algorithm proceeeds through the steps, it concatenates decrypted message 
         chunks to the final plaintext using __message_completion method. 
     """
     plaintext = ''
@@ -165,6 +165,9 @@ def __g_mul(a, b):
         http://en.wikipedia.org/wiki/Rijndael_mix_columns
 
         We put them into cryptoim.const, it returns result of multiplication according to tables.
+
+        NOTE: "It looks the same, but isn't..." Purpose of this method is same as the one at encryptor
+        but they differ in numbers.
     """
     if b == 9:
         a = __convert_char_hex(a)
