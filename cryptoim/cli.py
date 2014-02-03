@@ -110,7 +110,6 @@ class CryptoShell(cmd.Cmd):
                 host = self.config.get(arg, 'Host') # self.config[arg]['Host']
                 conn_jid = username + '@' + host
                 conn_pass = self.config.get(arg, 'Password') # self.config[arg]['Password']
-                self.print_cmd(conn_pass)
                 conn_pass = decode_base64(conn_pass)
             else:
                 self.print_cmd('Connection ' + splitted[0] + ' doesn\'t exist')
