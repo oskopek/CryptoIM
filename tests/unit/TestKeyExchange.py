@@ -21,9 +21,7 @@ import cryptoim.key_exchange as k_ex
 from nose.tools import ok_, eq_
 
 def test_generate_random():
-    """
-        Test for key_exchange.generate_random
-    """
+
     generate_random = k_ex.generate_random
 
     random_numero = generate_random(1, 100)
@@ -31,27 +29,21 @@ def test_generate_random():
     ok_(random_numero >= 1 and random_numero <= 100)
 
 def test_prime_pick():
-    """
-        Test for key_exchange.prime_prick
-    """
+
     prime_pick = k_ex.prime_pick
 
     prime = prime_pick()
     eq_(type(prime), int)
 
 def test_base_pick():
-    """
-        Test for key_exchange.base_pick
-    """
+
     base_pick = k_ex.base_pick
 
     base = base_pick()
     eq_(type(base), int)
 
 def test_make_public_key():
-    """
-        Test for key_exchange.make_public_key
-    """
+
     make_public_key = k_ex.make_public_key
     prime_pick = k_ex.prime_pick
     generate_random = k_ex.generate_random
@@ -68,9 +60,7 @@ def test_make_public_key():
     eq_(public_key, manual_public_key)
 
 def test_make_final_key():
-    """
-        Test for key_exchange.make_final_key
-    """
+
     make_public_key = k_ex.make_public_key
     prime_pick = k_ex.prime_pick
     generate_random = k_ex.generate_random

@@ -26,32 +26,37 @@ A secure* instant messenger written in Python out of sheer fun.
 
 \* not really secure (at least not yet)
 
+.. image:: http://cdn.imghack.se/images/47f573797aea70092c62defa3a35b3fe.png
+    :alt: CryptoIM snapshot
+
 Building
 ========
 
-1. **Build**: ``python setup.py build`` and ``sudo python setup.py install``
+1. **Get the source code** `at GitHub <https://github.com/oskopek/CryptoIM>`_.
 
-2. To **run**: ``python main.py``
+2. **Build**: ``python setup.py build`` and ``sudo python setup.py install``
 
-3. To run **unit tests**: ``python setup.py nosetests``
+3. To **run**: ``python main.py``
 
-4. To **clean**, run: ``python setup.py clean --all``
+4. To run **unit tests**: ``python setup.py nosetests``
 
-5. To **edit** connection options, edit the ``main.cfg`` file.
+5. To **clean**, run: ``python setup.py clean --all``
+
+6. To **edit** connection options, edit the ``main.cfg`` file.
 
 Building on Linux
 =================
 
 * Make sure to **install** these packages using your package manager: ``python`` and ``python-setuptools``
 
-* Follow steps 1., 2. and 5. from **Building**
+* Follow steps 2., 3. and 6. from **Building**
 
 Building on Windows
 ===================
 
 * **Install** `Python <http://www.python.org/download/releases/3.3.3/#download>`_ and `Setuptools <https://pypi.python.org/pypi/setuptools#windows>`_.
 
-* Follow steps 1., 2. and 5. from **Building**
+* Follow steps 2., 3. and 6. from **Building**
 
 Contributing
 ============
@@ -83,7 +88,7 @@ We use the `GitHub issue tracker <https://github.com/oskopek/CryptoIM/issues>`_ 
 submitting a bug report or feature request, check to make sure it hasn't
 already been submitted. When submitting a bug report, please include a `Gist <https://gist.github.com/>`_
 that includes a stack trace and any details that may be necessary to reproduce
-the bug, including your Java version and operating system.
+the bug, including your Python version and operating system.
 
 Submitting a Pull Request
 =========================

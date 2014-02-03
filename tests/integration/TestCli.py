@@ -19,7 +19,7 @@
 
 from cryptoim.cli import CryptoShell
 import cryptoim.cli as cli
-import TestXMPP
+from tests.integration import TestXMPP
 
 from nose.tools import ok_, eq_
 
@@ -55,7 +55,7 @@ def test_send():
     cshell.test_mode = True
     eq_(cshell.do_send('cryptoim message before connection'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
-    TestXMPP.waitForSession(cshell.xmpp_client, True)
+    TestXMPP.waitForSession(cshell.messenger, True)
     eq_(cshell.do_send(''), False)
     eq_(cshell.onecmd(''), None) # just empty line command - emptyline() test
     eq_(cshell.do_send('shouldntwork message'), False)
@@ -64,7 +64,7 @@ def test_send():
     eq_(cshell.do_send('cryptoim'), False)
     cshell.do_disconnect('')
 
-def test_chat_stopchat_exit():
+def test_chat_closechat_exit():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
@@ -73,12 +73,12 @@ def test_chat_stopchat_exit():
     eq_(cshell.do_chat('cryptoim'), True)
     eq_(cshell.do_chat('shouldntwork'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
-    TestXMPP.waitForSession(cshell.xmpp_client, True)
+    TestXMPP.waitForSession(cshell.messenger, True)
     eq_(cshell.do_send('Test message'), True)
     eq_(cshell.do_s('Test message for short version'), True)
     eq_(cshell.do_send(''), False)
-    eq_(cshell.do_stopchat(''), True)
-    eq_(cshell.do_stopchat(''), False)
+    eq_(cshell.do_closechat(''), True)
+    eq_(cshell.do_closechat(''), False)
     eq_(cshell.do_send('Test message after stopchat'), False)
     eq_(cshell.do_s('Alsto testing the short version'), False)
     cshell.do_disconnect('')
