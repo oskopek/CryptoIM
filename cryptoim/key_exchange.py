@@ -62,12 +62,12 @@ def make_final_key(prime, public, private):
     key = (public ** private) % prime
     return key
 
-def encode_syn(prime, base, A):
+def encode_syn(prime, base, a_public):
     """
         Encodes the numbers in a standardized format.
     """
 
-    return 'SYN;%i;%i;%i' % (prime, base, A)
+    return 'SYN;%i;%i;%i' % (prime, base, a_public)
 
 def decode_syn(msg):
     """
@@ -78,15 +78,15 @@ def decode_syn(msg):
     spl = cut.split(';')
     prime = int(spl[0])
     base = int(spl[1])
-    A = int(spl[2])
-    return prime, base, A
+    a_public = int(spl[2])
+    return prime, base, a_public
 
-def encode_ack(B):
+def encode_ack(b_public):
     """
         Encodes the number in a standardized format.
     """
 
-    return 'ACK;%i' % (B)
+    return 'ACK;%i' % (b_public)
 
 def decode_ack(msg):
     """

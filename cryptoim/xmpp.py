@@ -134,12 +134,12 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
         # DH key exchange: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange#Explanation_including_encryption_mathematics
 
         if text.startswith('SYN;'): # receiving
-            prime, base, A = keyex.decode_syn(msg['body'])
+            prime, base, a_public = keyex.decode_syn(msg['body'])
             b = keyex.generate_random(2, 100)
-            B = keyex.make_public_key(prime, base, b)
-            key = str(keyex.make_final_key(prime, A, b))
+            b_public = keyex.make_public_key(prime, base, b)
+            key = str(keyex.make_final_key(prime, a_public, b))
 
-            self.send_message(mto = sender.full, mbody = keyex.encode_ack(B), mtype = 'chat')
+            self.send_message(mto = sender.full, mbody = keyex.encode_ack(b_public), mtype = 'chat')
             self.key_queue[sender.full] = key
 
         elif text.startswith('ACK;'): # sending
@@ -147,8 +147,8 @@ class CryptoXMPP(sleekxmpp.ClientXMPP):
             msg_text = q_entry[0]
             prime = q_entry[1]
             a = q_entry[2]
-            B = keyex.decode_ack(msg['body'])
-            key = str(keyex.make_final_key(prime, B, a))
+            b_public = keyex.decode_ack(msg['body'])
+            key = str(keyex.make_final_key(prime, b_public, a))
             ciphertext = encryptor.encrypt(msg_text, key)
             self.send_message(mto = sender.full, mbody = ciphertext, mtype = 'chat')
 
@@ -174,6 +174,7 @@ class XMPPMessenger(object):
     """
         A simple high-level wrapper for CryptoXMPP
     """
+
     LOG_LEVEL = logging.CRITICAL
 
     def __init__(self, jid, password, shell, loglevel=LOG_LEVEL):
@@ -235,8 +236,8 @@ class XMPPMessenger(object):
         prime = keyex.prime_pick()
         base = keyex.base_pick()
         a = keyex.generate_random(2, 100)
-        A = keyex.make_public_key(prime, base, a)
-        syn_msg = keyex.encode_syn(prime, base, A)
+        a_public = keyex.make_public_key(prime, base, a)
+        syn_msg = keyex.encode_syn(prime, base, a_public)
 
         self.client.send_message(mto = recipient, mbody = syn_msg, mtype = 'chat')
         self.client.msg_queue[strip_resource(recipient)] = (msg, prime, a) # Do not store resource in the msg_queue

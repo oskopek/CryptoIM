@@ -26,14 +26,14 @@ def encrypt(plaintext, key):
                key - String
 
         Output: ciphertext - String
- 
+
         Main encrypt method. This method prepares input values for the
-        actual encryption and calls in the encryption method (encrypt_round). 
-        First it calls __split_message method, which "cuts" the message to 
+        actual encryption and calls in the encryption method (encrypt_round).
+        First it calls __split_message method, which "cuts" the message to
         chunks with desired length (128 bits) puts them into matrices (4x4), each element
-        of this matrix is 8 bits (1 byte), and then calls in the 
-        __roundkey_separator method from the cryptoim.common module. This method creates 
-        matrix (4x4) of roundkeys, each of desired length (128 bits). 
+        of this matrix is 8 bits (1 byte), and then calls in the
+        __roundkey_separator method from the cryptoim.common module. This method creates
+        matrix (4x4) of roundkeys, each of desired length (128 bits).
     """
 
     messages = __split_message(plaintext)
@@ -49,18 +49,20 @@ def encrypt_round(messages, roundkeys):
         Output: ciphertext - String
 
         Encryption method is using provided lists of roundkeys and message "chunks".
-        Encryption algorithm used is Advanced Encryption Standard. It consists of 
+        Encryption algorithm used is Advanced Encryption Standard. It consists of
         four steps, which repeat demanded number of times (in our case we used 14
         repetitions, plus initial and final round). Method uses following methods(steps):
         cryptoim.common.__add_roundkey, __sub_bytes, __shift_rows, __mix_columns.
-        You can find more information here: 
+
+        You can find more information here:
         http://en.wikipedia.org/wiki/Advanced_Encryption_Standard
-        
+
         NOTE: This algorithm doesnt use standard __split_message.
 
-        After algorithm proceeeds throught the steps, it concatenates encrypted message 
-        chunks to the final ciphertext using __message_fusion method. 
+        After algorithm proceeeds throught the steps, it concatenates encrypted message
+        chunks to the final ciphertext using __message_fusion method.
     """
+
     ciphertext = ''
     for msg in messages:
         msg = __add_roundkey(msg, roundkeys[14])
@@ -78,13 +80,14 @@ def encrypt_round(messages, roundkeys):
 def __sub_bytes(message):
     """
         Input: message - List of lists (4x4 Matrix)
-        
+
         Output: message - List of lists (4x4 Matrix)
 
         SubBytes step of the algorithm. For every byte (element of 4x4 Mat), it creates
         hexadecimal equivalent, which is then substitued according to look up table (SBOX)
         which can be found in cryptoim.const.
     """
+
     for i in range(4):
         for j in range(4):
             hexadecimal = __convert_char_hex(message[i][j])
@@ -94,7 +97,7 @@ def __sub_bytes(message):
 def __shift_rows(message):
     """
         Input: message - List of lists (4x4 Matrix)
-        
+
         Output: message - List of lists (4x4 Matrix)
 
         ShiftRows step of the algorithm. This step rotates elements in rows each by different
@@ -105,7 +108,6 @@ def __shift_rows(message):
         message[i] = message[i][i:] + message[i][:i]
     return message
 
-# 'state_mat' is the main State matrix, 'temp_mat' is a temp matrix of the same dimensions as 'state_mat'.
 def __mix_columns(state_mat):
     """
         Input: state_mat - List of lists (4x4 Matrix)
@@ -113,11 +115,15 @@ def __mix_columns(state_mat):
         Output temp_mat - List of lists (4x4 Matrix)
 
         MixColumns step of the algorithm. Every column is multiplied by fixed matrix. Using the vector math
-        and galois multiplication, it creates irreversible linear transformation. Basically each column is 
-        multiplied by some number and added back. 
-        More about this process: 
+        and galois multiplication, it creates irreversible linear transformation. Basically each column is
+        multiplied by some number and added back.
+
+        More about this process:
         http://en.wikipedia.org/wiki/Rijndael_mix_columns
+
+        The 'state_mat' is the main state matrix, 'temp_mat' is a temp matrix of the same dimensions as 'state_mat'.
     """
+
     import copy
 
     g_mul = __g_mul
@@ -138,14 +144,17 @@ def __g_mul(a, b):
                b - Integer
 
         Output: result - Integer
- 
+
         Galois multiplication or bitwise multiplication. This method is used in MixColumns step.
         Because of lack of better solution, we decided to use look up tables for results in this
-        one. Tables can be found on wiki:
+        one.
+
+        Tables can be found on wiki:
         http://en.wikipedia.org/wiki/Rijndael_mix_columns
 
         We put them into cryptoim.const, it returns result of multiplication according to tables.
     """
+
     if b == 2:
         a = __convert_char_hex(a)
         result = const.GALOIS_TWO[int(a[0], 16)][int(a[1], 16)]
@@ -165,6 +174,7 @@ def __split_message(plaintext):
         chunks is then transformed into matrix with decimal values. These matrices
         are stored into list, creating a list of matrices.
     """
+
     message_chunks = []
     message_chunk = ''
     for i in range(len(plaintext)):
@@ -189,16 +199,16 @@ def __split_message(plaintext):
         messages.append(matrix)
     return messages
 
-
 def __message_fusion(message):
     """
         Input: messages - List of lists (4x4 matrix)
 
         Output: result_string - String (Obviously)
 
-        This method fuses the matrix back to string. Takes each byte (1 element of matrix) 
+        This method fuses the matrix back to string. Takes each byte (1 element of matrix)
         and converts it to letter, which it concatenates to the result string.
     """
+
     result_string = ''
     for i in range(4):
         for j in range(4):
