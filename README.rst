@@ -2,7 +2,7 @@
 CryptoIM
 ========
 
-.. image:: https://travis-ci.org/oskopek/CryptoIM.png?branch=develop
+.. image:: https://travis-ci.org/oskopek/CryptoIM.svg?branch=develop
     :target: https://travis-ci.org/oskopek/CryptoIM
     :alt: TravisCI
 
