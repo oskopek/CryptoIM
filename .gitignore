@@ -40,6 +40,7 @@ nosetests.xml
 *.kate-swp
 *~
 *.swp
+.idea/
 
 # OS
 .directory
