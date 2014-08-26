@@ -2,12 +2,12 @@
 CryptoIM
 ========
 
-.. image:: https://travis-ci.org/oskopek/CryptoIM.svg?branch=develop
+.. image:: https://travis-ci.org/oskopek/CryptoIM.svg?branch=master
     :target: https://travis-ci.org/oskopek/CryptoIM
     :alt: TravisCI
 
-.. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png?branch=develop
-    :target: https://coveralls.io/r/oskopek/CryptoIM?branch=develop
+.. image:: https://coveralls.io/repos/oskopek/CryptoIM/badge.png?branch=master
+    :target: https://coveralls.io/r/oskopek/CryptoIM?branch=master
     :alt: Coveralls
 
 .. image:: https://pypip.in/v/CryptoIM/badge.png
