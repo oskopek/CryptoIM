@@ -79,7 +79,7 @@ Here are some ways *you* can contribute:
 Info
 ====
 
-CryptoIM uses `semantic versioning <http://semver.org/>`_ and branching model similar to `this <http://nvie.com/posts/a-successful-git-branching-model/>`_.
+CryptoIM uses `semantic versioning <http://semver.org/>`_.
 
 Submitting an Issue
 ===================
