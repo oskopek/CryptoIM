@@ -30,11 +30,11 @@ def init_messengers():
 
     crypto_shell = CryptoShell('main.cfg')
 
-    messenger = xmpp.XMPPMessenger('cryptoim@jabber.de', 'crypto_test', crypto_shell)
+    messenger = xmpp.XMPPMessenger('cryptoim@jabbim.sk', 'crypto_test', crypto_shell)
     messenger.connect_server(should_block=False)
 
     crypto_shell2 = CryptoShell('main.cfg')
-    messenger2 = xmpp.XMPPMessenger('cryptoim2@jabber.de', 'crypto_test2', crypto_shell2)
+    messenger2 = xmpp.XMPPMessenger('cryptoim2@jabbim.sk', 'crypto_test2', crypto_shell2)
     messenger2.connect_server(should_block=False)
 
     waitForConnection(messenger, True)
@@ -81,16 +81,15 @@ def test_connect_fail():
     crypto_shell = CryptoShell('main.cfg')
 
     # Wrong host
-    messenger = xmpp.XMPPMessenger('cryptoim@jabber2.de', 'crypto_test', crypto_shell)
+    messenger = xmpp.XMPPMessenger('cryptoim@jabbim2.sk', 'crypto_test', crypto_shell)
     assertDisconnect(messenger)
 
-
     # Wrong pass
-    messenger = xmpp.XMPPMessenger('cryptoim@jabber.de', 'wrong_pass', crypto_shell)
+    messenger = xmpp.XMPPMessenger('cryptoim@jabbim.sk', 'wrong_pass', crypto_shell)
     assertDisconnect(messenger)
 
     # Wrong name
-    messenger = xmpp.XMPPMessenger('cryptoim0@jabber.de', 'crypto_test', crypto_shell)
+    messenger = xmpp.XMPPMessenger('cryptoim0@jabbim.sk', 'crypto_test', crypto_shell)
     assertDisconnect(messenger)
 
 def assertDisconnect(messenger):

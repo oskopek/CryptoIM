@@ -45,7 +45,7 @@ def test_connect_disconnect_jid():
 
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
-    eq_(cshell.do_connect('cryptoim@jabber.de/random_resource_gets_stripped crypto_test'), True)
+    eq_(cshell.do_connect('cryptoim@jabbim.sk/random_resource_gets_stripped crypto_test'), True)
     eq_(cshell.do_disconnect(''), True)
     eq_(cshell.do_disconnect(''), False)
 
@@ -60,7 +60,7 @@ def test_send():
     eq_(cshell.onecmd(''), None) # just empty line command - emptyline() test
     eq_(cshell.do_send('shouldntwork message'), False)
     eq_(cshell.do_send('cryptoim message'), True)
-    eq_(cshell.do_send('cryptoim2@jabber.de message'), True)
+    eq_(cshell.do_send('cryptoim2@jabbim.sk message'), True)
     eq_(cshell.do_send('cryptoim'), False)
     cshell.do_disconnect('')
 
@@ -69,7 +69,7 @@ def test_chat_closechat_exit():
     cshell = CryptoShell('main.cfg')
     cshell.test_mode = True
     eq_(cshell.do_chat(''), False)
-    eq_(cshell.do_chat('cryptoim@jabber.de'), True)
+    eq_(cshell.do_chat('cryptoim@jabbim.sk'), True)
     eq_(cshell.do_chat('cryptoim'), True)
     eq_(cshell.do_chat('shouldntwork'), False)
     eq_(cshell.do_connect('cryptoim2'), True)
@@ -95,8 +95,8 @@ def test_addfriend_removefriend():
     cshell = CryptoShell('tests/test_config.cfg')
     cshell.test_mode = True
 
-    eq_(cshell.do_addfriend('testfriend testfriend@jabber.de'), True)
-    eq_(cshell.do_addfriend('testfriend testfriend@jabber.de'), False)
+    eq_(cshell.do_addfriend('testfriend testfriend@jabbim.sk'), True)
+    eq_(cshell.do_addfriend('testfriend testfriend@jabbim.sk'), False)
     eq_(cshell.do_addfriend(''), False)
     eq_(cshell.do_removefriend('testfriend'), True)
     eq_(cshell.do_removefriend('testfriend another few lines'), False)
@@ -108,14 +108,14 @@ def test_addconnection_removeconnection():
     cshell = CryptoShell('tests/test_config.cfg')
     cshell.test_mode = True
 
-    eq_(cshell.do_addconnection('testuser2 testuser2@jabber.de testpass'), True)
-    eq_(cshell.do_addconnection('testuser2 testuser2@jabber.de testpass'), False)
+    eq_(cshell.do_addconnection('testuser2 testuser2@jabbim.sk testpass'), True)
+    eq_(cshell.do_addconnection('testuser2 testuser2@jabbim.sk testpass'), False)
     eq_(cshell.do_addconnection('testuser2'), False)
     eq_(cshell.do_addconnection('testuser3'), False)
     eq_(cshell.do_addconnection('testuser3 thisisnotajid testpass'), False)
     eq_(cshell.do_removeconnection('testuser3'), False)
-    eq_(cshell.do_removeconnection('testuser2 testuser3@jabber.de'), False)
-    eq_(cshell.do_removeconnection('testuser2@jabber.de'), False)
+    eq_(cshell.do_removeconnection('testuser2 testuser3@jabbim.sk'), False)
+    eq_(cshell.do_removeconnection('testuser2@jabbim.sk'), False)
     eq_(cshell.do_removeconnection('testuser2'), True)
 
 def test_friendlist():
@@ -148,18 +148,18 @@ def test_create_config():
 # Test tools
 def test_sanit_is_jid():
     is_jid = cli.sanit_is_jid
-    eq_(True, is_jid('test@jabber.de'))
-    eq_(True, is_jid('test@jabber.de/resourceHere123'))
+    eq_(True, is_jid('test@jabbim.sk'))
+    eq_(True, is_jid('test@jabbim.sk/resourceHere123'))
     eq_(True, is_jid('test@localhost'))
-    eq_(True, is_jid('tes1234tBigSmall@jabber.DE'))
+    eq_(True, is_jid('tes1234tBigSmall@jabbim.SK'))
 
-    eq_(False, is_jid('testjabber.de'))
-    eq_(False, is_jid('test/jabber@de'))
-    eq_(False, is_jid('test&jabber.de'))
-    eq_(False, is_jid('test@jabber&de'))
-    eq_(False, is_jid('te@st@jabber.de'))
-    eq_(False, is_jid('test@jabber..de'))
-    eq_(False, is_jid('te.st@jabber.de'))
-    eq_(False, is_jid('te&st@jabber.de'))
-    eq_(False, is_jid('test@jabber.de/resourceHere.123'))
-    eq_(False, is_jid('test@jabber.de/resource&&Here123'))
+    eq_(False, is_jid('testjabbim.sk'))
+    eq_(False, is_jid('test/jabber@sk'))
+    eq_(False, is_jid('test&jabbim.sk'))
+    eq_(False, is_jid('test@jabber&sk'))
+    eq_(False, is_jid('te@st@jabbim.sk'))
+    eq_(False, is_jid('test@jabber..sk'))
+    eq_(False, is_jid('te.st@jabbim.sk'))
+    eq_(False, is_jid('te&st@jabbim.sk'))
+    eq_(False, is_jid('test@jabbim.sk/resourceHere.123'))
+    eq_(False, is_jid('test@jabbim.sk/resource&&Here123'))
