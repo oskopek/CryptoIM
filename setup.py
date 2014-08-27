@@ -43,6 +43,7 @@ setup(
     long_description = open('README').read(),
     install_requires = [
         'nose >= 1.3.0',
+        'nose-exclude >= 0.2.0',
         'python-coveralls >= 2.4.2',
         'sleekxmpp >= 1.1.11'
     ],
